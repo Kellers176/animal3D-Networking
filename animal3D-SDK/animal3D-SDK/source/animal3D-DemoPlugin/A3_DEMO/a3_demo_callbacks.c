@@ -35,6 +35,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <GL/glew.h>
 
 
 //-----------------------------------------------------------------------------
@@ -46,7 +47,7 @@ void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 	a3ui16 const port_server = 60006;
 	a3ui16 const port_client = 60005;
 	a3ui16 const maxConnections_server = 16;
-	a3ui16 const maxConnections_client = 1;
+	a3ui16 const maxConnections_client = 4;
 
 	if (isServer)
 	{
@@ -66,6 +67,35 @@ void a3demo_stopNetworking(a3_DemoState* demoState)
 	if (a3netDisconnect(demoState->net) > 0)
 		if (a3netShutdown(demoState->net) > 0)
 			printf("\n SHUT DOWN NETWORKING \n");
+}
+
+void a3demoTestInput(a3_DemoState* demoState)
+{
+	//DO INPUT
+
+	//if (demoState->keyboard->key.key['b'])
+	//key is scurrent state, key0 is the previous state in a3_KeyboardInput
+	//if one is true and the other is false, its been changed
+
+	if (a3keyboardGetState(demoState->keyboard, a3key_B) > 0)
+	{
+		///this will give you the b key
+	}
+}
+void a3demoTestRender(a3_DemoState const* demoState)
+{
+	//clear color
+	glClear(GL_COLOR_BUFFER_BIT);
+
+
+	//draw text
+	a3textDraw(demoState->text, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+		"%+.3f", (float)demoState->renderTimer->totalTime);
+}
+
+void a3demoTestUpdate(a3_DemoState* demoState)
+{
+	//DO UPDATE
 }
 
 
@@ -99,14 +129,14 @@ inline void a3demoCB_keyCharPress_main(a3_DemoState *demoState, a3i32 asciiKey,
 	const a3ui32 demoSubMode, const a3ui32 demoOutput,
 	const a3ui32 demoSubModeCount, const a3ui32 demoOutputCount)
 {
-	switch (asciiKey)
-	{
-		// sub-modes
-	case '>':
-		break;
-	case '<':
-		break;
-
+//	switch (asciiKey)
+//	{
+//		// sub-modes
+//	case '>':
+//		break;
+//	case '<':
+//		break;
+//
 		// toggle active camera
 //	case 'v':
 //		demoState->activeCamera = (demoState->activeCamera + 1) % demoStateMaxCount_cameraObject;
@@ -116,32 +146,32 @@ inline void a3demoCB_keyCharPress_main(a3_DemoState *demoState, a3i32 asciiKey,
 //		break;
 
 		// toggle skybox
-	case 'b':
-		demoState->displaySkybox = 1 - demoState->displaySkybox;
-		break;
-
-		// toggle hidden volumes
-	case 'h':
-		demoState->displayHiddenVolumes = 1 - demoState->displayHiddenVolumes;
-		break;
-
-		// toggle pipeline overlay
-	case 'o':
-		demoState->displayPipeline = 1 - demoState->displayPipeline;
-		break;
-	}
+//	case 'b':
+//		demoState->displaySkybox = 1 - demoState->displaySkybox;
+//		break;
+//
+//		// toggle hidden volumes
+//	case 'h':
+//		demoState->displayHiddenVolumes = 1 - demoState->displayHiddenVolumes;
+//		break;
+//
+//		// toggle pipeline overlay
+//	case 'o':
+//		demoState->displayPipeline = 1 - demoState->displayPipeline;
+//		break;
+//	}
 }
 
 inline void a3demoCB_keyCharHold_main(a3_DemoState *demoState, a3i32 asciiKey)
 {
-	// handle special cases immediately
-	switch (asciiKey)
-	{
-	case 'l':
-		break;
-	case 'L':
-		break;
-	}
+//	// handle special cases immediately
+//	switch (asciiKey)
+//	{
+//	case 'l':
+//		break;
+//	case 'L':
+//		break;
+//	}
 }
 
 
@@ -243,18 +273,22 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hot
 		// create directory for data
 		a3fileStreamMakeDirectory("./data");
 
+		//networkinggg
+		//demoState->peer = RakNet::RakPeerInterface::GetInstance();
+
+
 
 		// set default GL state
-		a3demo_setDefaultGraphicsState();
+		//a3demo_setDefaultGraphicsState();
 
 		// geometry
-		a3demo_loadGeometry(demoState);
+		//a3demo_loadGeometry(demoState);
 
 		// shaders
-		a3demo_loadShaders(demoState);
+		//a3demo_loadShaders(demoState);
 
 		// scene objects
-		a3demo_initScene(demoState);
+	//	a3demo_initScene(demoState);
 	}
 
 	// return persistent state pointer
@@ -279,11 +313,11 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_unload(a3_DemoState *demoState, a3boolean h
 		a3textRelease(demoState->text);
 
 		// free graphics objects
-		a3demo_unloadGeometry(demoState);
-		a3demo_unloadShaders(demoState);
+		//a3demo_unloadGeometry(demoState);
+		//a3demo_unloadShaders(demoState);
 
 		// validate unload
-		a3demo_validateUnload(demoState);
+		//a3demo_validateUnload(demoState);
 
 		// erase other stuff
 		a3trigFree();
@@ -318,12 +352,13 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 		if (a3timerUpdate(demoState->renderTimer) > 0)
 		{
 			// render timer ticked, update demo state and draw
+			a3demoTestInput(demoState);
 			a3demo_input(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessInbound(demoState->net);
-			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
+//			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessOutbound(demoState->net);
-			a3demo_render(demoState);
-
+			a3demoTestRender(demoState);
+//			a3demo_render(demoState);
 			// update input
 			a3mouseUpdate(demoState->mouse);
 			a3keyboardUpdate(demoState->keyboard);
@@ -353,10 +388,10 @@ A3DYLIBSYMBOL void a3demoCB_windowDeactivate(a3_DemoState *demoState)
 {
 	// reset input; it won't track events if the window is inactive, 
 	//	active controls will freeze and you'll get strange behaviors
-	a3keyboardReset(demoState->keyboard);
-	a3mouseReset(demoState->mouse);
-	a3XboxControlReset(demoState->xcontrol);
-	a3XboxControlSetRumble(demoState->xcontrol, 0, 0);
+	//a3keyboardReset(demoState->keyboard);
+	//a3mouseReset(demoState->mouse);
+	//a3XboxControlReset(demoState->xcontrol);
+	//a3XboxControlSetRumble(demoState->xcontrol, 0, 0);
 }
 
 // window moves
@@ -368,8 +403,8 @@ A3DYLIBSYMBOL void a3demoCB_windowMove(a3_DemoState *demoState, a3i32 newWindowP
 // window resizes
 A3DYLIBSYMBOL void a3demoCB_windowResize(a3_DemoState *demoState, a3i32 newWindowWidth, a3i32 newWindowHeight)
 {
-	a3ui32 i;
-	a3_DemoCamera *camera;
+	//a3ui32 i;
+	//a3_DemoCamera *camera;
 
 	// account for borders here
 	const a3i32 frameBorder = 0;
@@ -400,11 +435,11 @@ A3DYLIBSYMBOL void a3demoCB_windowResize(a3_DemoState *demoState, a3i32 newWindo
 
 	// viewing info for projection matrix
 	// initialize cameras dependent on viewport
-	for (i = 0, camera = demoState->camera + i; i < demoStateMaxCount_cameraObject; ++i, ++camera)
-	{
-		camera->aspect = frameAspect;
-		a3demo_updateCameraProjection(camera);
-	}
+	//for (i = 0, camera = demoState->camera + i; i < demoStateMaxCount_cameraObject; ++i, ++camera)
+	//{
+	//	camera->aspect = frameAspect;
+	//	a3demo_updateCameraProjection(camera);
+	//}
 }
 
 // any key is pressed
@@ -599,24 +634,24 @@ A3DYLIBSYMBOL void a3demoCB_mouseRelease(a3_DemoState *demoState, a3i32 button, 
 A3DYLIBSYMBOL void a3demoCB_mouseWheel(a3_DemoState *demoState, a3i32 delta, a3i32 cursorX, a3i32 cursorY)
 {
 	// controlled camera when zooming
-	a3_DemoCamera *camera;
+	//a3_DemoCamera *camera;
 
 	// persistent state update
-	a3mouseSetStateWheel(demoState->mouse, (a3_MouseWheelState)delta);
-	a3mouseSetPosition(demoState->mouse, cursorX, cursorY);
-
-	switch (demoState->demoMode)
-	{
-		// main render pipeline
-	case demoStateMode_main:
-		// can use this to change zoom
-		// zoom should be faster farther away
-		camera = demoState->camera + demoState->activeCamera;
-		camera->fovy -= camera->ctrlZoomSpeed * (camera->fovy / a3real_oneeighty) * (a3f32)delta;
-		camera->fovy = a3clamp(camera->ctrlZoomSpeed, a3real_oneeighty - camera->ctrlZoomSpeed, camera->fovy);
-		a3demo_updateCameraProjection(camera);
-		break;
-	}
+	//a3mouseSetStateWheel(demoState->mouse, (a3_MouseWheelState)delta);
+	//a3mouseSetPosition(demoState->mouse, cursorX, cursorY);
+	//
+	//switch (demoState->demoMode)
+	//{
+	//	// main render pipeline
+	//case demoStateMode_main:
+	//	// can use this to change zoom
+	//	// zoom should be faster farther away
+	//	camera = demoState->camera + demoState->activeCamera;
+	//	camera->fovy -= camera->ctrlZoomSpeed * (camera->fovy / a3real_oneeighty) * (a3f32)delta;
+	//	camera->fovy = a3clamp(camera->ctrlZoomSpeed, a3real_oneeighty - camera->ctrlZoomSpeed, camera->fovy);
+	//	a3demo_updateCameraProjection(camera);
+	//	break;
+	//}
 }
 
 // mouse moves
