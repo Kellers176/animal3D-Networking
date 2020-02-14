@@ -80,6 +80,17 @@ void a3demoTestInput(a3_DemoState* demoState)
 	if (a3keyboardGetState(demoState->keyboard, a3key_B) > 0)
 	{
 		///this will give you the b key
+
+		// call a3demoCB_keyCharPress_main() for reaction to key press
+	}
+
+	//
+	if (a3keyboardGetState(demoState->keyboard, a3key_0) > 0)
+	{
+		///this will give you the b key
+
+		// call a3demoCB_keyCharPress_main() for reaction to key press
+		a3demoCB_keyCharPress_main(demoState, a3key_0, demoState->demoSubMode, demoState->demoOutputMode, demoState->demoSubModeCount, demoState->demoOutputCount);
 	}
 }
 void a3demoTestRender(a3_DemoState const* demoState)
@@ -87,7 +98,7 @@ void a3demoTestRender(a3_DemoState const* demoState)
 	//clear color
 	glClear(GL_COLOR_BUFFER_BIT);
 
-
+	//-1,-1,-1 is bottom left corner
 	//draw text
 	a3textDraw(demoState->text, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
 		"%+.3f", (float)demoState->renderTimer->totalTime);
