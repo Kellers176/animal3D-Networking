@@ -69,30 +69,6 @@ void a3demo_stopNetworking(a3_DemoState* demoState)
 			printf("\n SHUT DOWN NETWORKING \n");
 }
 
-void a3demoTestInput(a3_DemoState* demoState)
-{
-	//DO INPUT
-
-	//if (demoState->keyboard->key.key['b'])
-	//key is scurrent state, key0 is the previous state in a3_KeyboardInput
-	//if one is true and the other is false, its been changed
-
-	if (a3keyboardGetState(demoState->keyboard, a3key_B) > 0)
-	{
-		///this will give you the b key
-
-		// call a3demoCB_keyCharPress_main() for reaction to key press
-	}
-
-	//
-	if (a3keyboardGetState(demoState->keyboard, a3key_0) > 0)
-	{
-		///this will give you the b key
-
-		// call a3demoCB_keyCharPress_main() for reaction to key press
-		a3demoCB_keyCharPress_main(demoState, a3key_0, demoState->demoSubMode, demoState->demoOutputMode, demoState->demoSubModeCount, demoState->demoOutputCount);
-	}
-}
 void a3demoTestRender(a3_DemoState const* demoState)
 {
 	//clear color
@@ -230,6 +206,37 @@ extern "C"
 //-----------------------------------------------------------------------------
 // callback implementations
 
+void a3demoTestInput(a3_DemoState* demoState)
+{
+	//DO INPUT
+
+	//if (demoState->keyboard->key.key['b'])
+	//key is scurrent state, key0 is the previous state in a3_KeyboardInput
+	//if one is true and the other is false, its been changed
+
+	if (a3keyboardGetState(demoState->keyboard, a3key_B) > 0)
+	{
+		///this will give you the b key
+
+		// call a3demoCB_keyCharPress_main() for reaction to key press
+	}
+
+	//
+	if (a3keyboardGetState(demoState->keyboard, a3key_0) > 0)
+	{
+		///this will give you the b key
+
+		// call a3demoCB_keyCharPress_main() for reaction to key press
+		//a3demoCB_keyCharPress_main(demoState, a3key_0, demoState->demoSubMode, demoState->demoOutputMode, demoState->demoSubModeCount, demoState->demoOutputCount);
+	}
+	if (a3keyboardGetState(demoState->keyboard, a3key_H) > 0)
+	{
+		///this will give you the b key
+		// call a3demoCB_keyCharPress_main() for reaction to key pres
+		a3demoCB_keyCharPress(demoState, a3key_H);
+		//demoState->numberOfLettersInMessage++;
+	}
+}
 // demo is loaded
 A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hotbuild)
 {
@@ -261,7 +268,6 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hot
 		// stack object will be deleted at the end of the function
 		// good idea to set the whole block of memory to zero
 		memset(demoState, 0, stateSize);
-
 		// set up trig table (A3DM)
 		a3trigInit(trigSamplesPerDegree, demoState->trigTable);
 
@@ -275,6 +281,7 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hot
 		demoState->textInit = 1;
 		demoState->textMode = 1;
 		demoState->textModeCount = 3;	// 0=off, 1=controls, 2=data
+		demoState->numberOfLettersInMessage = 0;
 
 
 		// enable asset streaming between loads
@@ -510,7 +517,10 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 	case '2':
 		a3demo_startNetworking(demoState, 0);
 		break;
-
+	case 'H':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'H';
+		demoState->numberOfLettersInMessage++;
+		break;
 
 		// reload (T) or toggle (t) text
 	case 'T':

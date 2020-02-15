@@ -130,7 +130,8 @@ extern "C"
 		// pointer to fast trig table
 		a3f32 trigTable[4096 * 4];
 
-
+		char messageText[512];
+		int numberOfLettersInMessage;
 		//---------------------------------------------------------------------
 		// scene variables and objects
 

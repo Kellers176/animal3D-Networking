@@ -30,6 +30,7 @@
 #include "RakNet/RakNetTypes.h"
 #include "RakNet/BitStream.h"
 #include "RakNet/GetTime.h"
+#include "a3_Networking_CircleData.h"
 
 
 //-----------------------------------------------------------------------------
@@ -227,6 +228,13 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 						RakNet::RakString rs;
 						bs_in.Read(rs);
 						printf("%s\n", rs.C_String());
+
+						// get the circle data
+						CircleData* temp = (CircleData*)packet->data;
+
+						// draw the circle data
+
+
 					}
 					break;
 
