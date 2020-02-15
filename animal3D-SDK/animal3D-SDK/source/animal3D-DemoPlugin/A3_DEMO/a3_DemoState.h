@@ -132,6 +132,7 @@ extern "C"
 
 		char messageText[512];
 		int numberOfLettersInMessage;
+		a3boolean enterPressed;
 		//---------------------------------------------------------------------
 		// scene variables and objects
 

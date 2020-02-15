@@ -76,7 +76,21 @@ void a3demoTestRender(a3_DemoState const* demoState)
 	//-1,-1,-1 is bottom left corner
 	//draw text
 	
-	a3textDraw(demoState->text, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, demoState->messageText);
+	a3textDraw(demoState->text, -0.99f, -0.95f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, demoState->messageText);
+	
+}
+void a3demoProcessInput(a3_DemoState* demoState)
+{
+	if (demoState->enterPressed)
+	{
+		//a3textDraw(demoState->text, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, demoState->messageText);
+		for (int i = 0; i < sizeof(demoState->messageText); i++)
+		{
+			demoState->messageText[i] = 0;
+		}
+		demoState->enterPressed = false;
+		demoState->numberOfLettersInMessage = 0;
+	}
 	
 }
 
@@ -206,36 +220,6 @@ extern "C"
 //-----------------------------------------------------------------------------
 // callback implementations
 
-void a3demoTestInput(a3_DemoState* demoState)
-{
-	//DO INPUT
-
-	//if (demoState->keyboard->key.key['b'])
-	//key is scurrent state, key0 is the previous state in a3_KeyboardInput
-	//if one is true and the other is false, its been changed
-
-	if (a3keyboardGetState(demoState->keyboard, a3key_B) > 0)
-	{
-		///this will give you the b key
-
-		// call a3demoCB_keyCharPress_main() for reaction to key press
-	}
-
-	if (a3keyboardGetState(demoState->keyboard, a3key_H) > 0)
-	{
-		///this will give you the b key
-		// call a3demoCB_keyCharPress_main() for reaction to key pres
-		a3demoCB_keyCharPress(demoState, a3key_H);
-		demoState->numberOfLettersInMessage++;
-	}
-	if (a3keyboardGetState(demoState->keyboard, a3key_E) > 0)
-	{
-		///this will give you the b key
-		// call a3demoCB_keyCharPress_main() for reaction to key pres
-		a3demoCB_keyCharPress(demoState, a3key_E);
-		demoState->numberOfLettersInMessage++;
-	}
-}
 // demo is loaded
 A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hotbuild)
 {
@@ -281,6 +265,8 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hot
 		demoState->textMode = 1;
 		demoState->textModeCount = 3;	// 0=off, 1=controls, 2=data
 		demoState->numberOfLettersInMessage = 0;
+
+		demoState->enterPressed = false;
 
 
 		// enable asset streaming between loads
@@ -372,6 +358,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 			//a3demoTestInput(demoState);
 			a3demo_input(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessInbound(demoState->net);
+			a3demoProcessInput(demoState);
 //			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessOutbound(demoState->net);
 			a3demoTestRender(demoState);
@@ -491,6 +478,18 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 
 	// persistent state update
 	a3keyboardSetStateASCII(demoState->keyboard, (a3byte)asciiKey);
+
+
+	if (asciiKey == 8)
+	{
+		demoState->numberOfLettersInMessage--;
+		demoState->messageText[demoState->numberOfLettersInMessage] = 0;
+
+	}
+	if (asciiKey == 13)
+	{
+		demoState->enterPressed = true;
+	}
 
 	// handle special cases immediately
 	switch (asciiKey)
