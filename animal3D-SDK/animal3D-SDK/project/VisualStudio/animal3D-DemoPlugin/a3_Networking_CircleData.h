@@ -18,9 +18,9 @@ struct CircleData
 	int mouseXPos;
 	int mouseYPos;
 	int sizeCircle;
-	
+
 	Color circleColor;
-	
+
 };
 #pragma pack(pop)
 
