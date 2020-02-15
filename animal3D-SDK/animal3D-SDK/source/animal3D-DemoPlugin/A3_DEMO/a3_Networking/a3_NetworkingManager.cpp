@@ -30,6 +30,8 @@
 #include "RakNet/RakNetTypes.h"
 #include "RakNet/BitStream.h"
 #include "RakNet/GetTime.h"
+
+#include "a3_Networking_EventSystem.h"
 #include "a3_Networking_CircleData.h"
 
 
