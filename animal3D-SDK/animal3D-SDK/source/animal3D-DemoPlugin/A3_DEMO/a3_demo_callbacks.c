@@ -73,11 +73,11 @@ void a3demoTestRender(a3_DemoState const* demoState)
 {
 	//clear color
 	glClear(GL_COLOR_BUFFER_BIT);
-
 	//-1,-1,-1 is bottom left corner
 	//draw text
-	a3textDraw(demoState->text, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-		"%+.3f", (float)demoState->renderTimer->totalTime);
+	
+	a3textDraw(demoState->text, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, demoState->messageText);
+	
 }
 
 void a3demoTestUpdate(a3_DemoState* demoState)
@@ -221,20 +221,19 @@ void a3demoTestInput(a3_DemoState* demoState)
 		// call a3demoCB_keyCharPress_main() for reaction to key press
 	}
 
-	//
-	if (a3keyboardGetState(demoState->keyboard, a3key_0) > 0)
-	{
-		///this will give you the b key
-
-		// call a3demoCB_keyCharPress_main() for reaction to key press
-		//a3demoCB_keyCharPress_main(demoState, a3key_0, demoState->demoSubMode, demoState->demoOutputMode, demoState->demoSubModeCount, demoState->demoOutputCount);
-	}
 	if (a3keyboardGetState(demoState->keyboard, a3key_H) > 0)
 	{
 		///this will give you the b key
 		// call a3demoCB_keyCharPress_main() for reaction to key pres
 		a3demoCB_keyCharPress(demoState, a3key_H);
-		//demoState->numberOfLettersInMessage++;
+		demoState->numberOfLettersInMessage++;
+	}
+	if (a3keyboardGetState(demoState->keyboard, a3key_E) > 0)
+	{
+		///this will give you the b key
+		// call a3demoCB_keyCharPress_main() for reaction to key pres
+		a3demoCB_keyCharPress(demoState, a3key_E);
+		demoState->numberOfLettersInMessage++;
 	}
 }
 // demo is loaded
@@ -370,7 +369,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 		if (a3timerUpdate(demoState->renderTimer) > 0)
 		{
 			// render timer ticked, update demo state and draw
-			a3demoTestInput(demoState);
+			//a3demoTestInput(demoState);
 			a3demo_input(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessInbound(demoState->net);
 //			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
@@ -517,84 +516,130 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 	case '2':
 		a3demo_startNetworking(demoState, 0);
 		break;
-	case 'H':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'H';
-		demoState->numberOfLettersInMessage++;
-		break;
 
 		// reload (T) or toggle (t) text
-	case 'T':
-		if (!a3textIsInitialized(demoState->text))
-		{
-			a3demo_initializeText(demoState->text);
-			demoState->textInit = 1;
-		}
-		else
-		{
-			a3textRelease(demoState->text);
-			demoState->textInit = 0;
-		}
+//	case 'T':
+//		if (!a3textIsInitialized(demoState->text))
+//		{
+//			a3demo_initializeText(demoState->text);
+//			demoState->textInit = 1;
+//		}
+//		else
+//		{
+//			a3textRelease(demoState->text);
+//			demoState->textInit = 0;
+//		}
+//		break;
+//	case 't':
+//		demoState->textMode = (demoState->textMode + 1) % demoState->textModeCount;
+//		break;
+	case ' ':
+		demoState->messageText[demoState->numberOfLettersInMessage] = ' ';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'a':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'a';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'b':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'b';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'c':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'c';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'd':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'd';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'e':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'e';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'f':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'f';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'g':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'g';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'h':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'h';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'i':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'i';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'j':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'j';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'k':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'k';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'l':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'l';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'm':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'm';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'n':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'n';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'o':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'o';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'p':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'p';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'q':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'q';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'r':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'r';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 's':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 's';
+		demoState->numberOfLettersInMessage++;
 		break;
 	case 't':
-		demoState->textMode = (demoState->textMode + 1) % demoState->textModeCount;
+		demoState->messageText[demoState->numberOfLettersInMessage] = 't';
+		demoState->numberOfLettersInMessage++;
 		break;
-
-		// reload all shaders in real-time
-	case 'P':
-		a3demo_unloadShaders(demoState);
-		a3demo_loadShaders(demoState);
+	case 'u':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'u';
+		demoState->numberOfLettersInMessage++;
 		break;
-
-
-		// change pipeline mode
-	case '.':
-		demoState->demoMode = (demoState->demoMode + 1) % demoState->demoModeCount;
+	case 'v':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'v';
+		demoState->numberOfLettersInMessage++;
 		break;
-	case ',':
-		demoState->demoMode = (demoState->demoMode + demoState->demoModeCount - 1) % demoState->demoModeCount;
+	case 'w':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'w';
+		demoState->numberOfLettersInMessage++;
 		break;
-
-		// change pipeline stage
-	case '>':
-		demoSubMode = demoState->demoSubMode[demoState->demoMode] = (demoSubMode + 1) % demoSubModeCount;
-		break;
-	case '<':
-		demoSubMode = demoState->demoSubMode[demoState->demoMode] = (demoSubMode + demoSubModeCount - 1) % demoSubModeCount;
-		break;
-
-		// change stage output
-	case '}':
-		demoState->demoOutputMode[demoState->demoMode][demoSubMode] = (demoOutput + 1) % demoOutputCount;
-		break;
-	case '{':
-		demoState->demoOutputMode[demoState->demoMode][demoSubMode] = (demoOutput + demoOutputCount - 1) % demoOutputCount;
-		break;
-
-
-		// toggle grid
-	case 'g':
-		demoState->displayGrid = 1 - demoState->displayGrid;
-		break;
-
-		// toggle world axes
 	case 'x':
-		demoState->displayWorldAxes = 1 - demoState->displayWorldAxes;
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'x';
+		demoState->numberOfLettersInMessage++;
 		break;
-
-		// toggle object axes
+	case 'y':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'y';
+		demoState->numberOfLettersInMessage++;
+		break;
 	case 'z':
-		demoState->displayObjectAxes = 1 - demoState->displayObjectAxes;
-		break;
-
-		// toggle tangent bases on vertices or other
-	case 'B':
-		demoState->displayTangentBases = 1 - demoState->displayTangentBases;
-		break;
-
-
-		// update animation
-	case 'm':
-		demoState->updateAnimation = 1 - demoState->updateAnimation;
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'z';
+		demoState->numberOfLettersInMessage++;
 		break;
 	}
 
