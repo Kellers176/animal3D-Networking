@@ -31,27 +31,9 @@
 #include "RakNet/BitStream.h"
 #include "RakNet/GetTime.h"
 
-// we couldnt make a file for these for whatever reason so network 
-// manager has to live with its mistakes
-struct Color
-{
-	int red;
-	int green;
-	int blue;
-	int alpha;
-};
+#include "a3_Networking_EventSystem.h"
+#include "a3_Networking_CircleData.h"
 
-#pragma pack(push,1)
-struct CircleData
-{
-	int mouseXPos;
-	int mouseYPos;
-	int sizeCircle;
-
-	Color circleColor;
-
-};
-#pragma pack(pop)
 
 //-----------------------------------------------------------------------------
 // networking stuff
