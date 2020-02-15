@@ -1,6 +1,4 @@
 
-#include <vector>
-
 #ifndef CIRCLE_DATA_H
 #define CIRCLE_DATA_H
 

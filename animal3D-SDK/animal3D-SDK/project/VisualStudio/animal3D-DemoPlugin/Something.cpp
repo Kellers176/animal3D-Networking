@@ -1,3 +1,4 @@
+/*
 #include "Something.h"
 
 Something::Something(int yesPlz)
@@ -10,8 +11,8 @@ void Something::HandleEvent(a3_Networking_Event* event)
 	myVar = 5;
 	otherStuff = 6;
 
-	//in main:
-	/*
+	//in main: // comment all this out
+	{
 	Something bob(7);
 	Something bill(9);
 
@@ -31,7 +32,8 @@ void Something::HandleEvent(a3_Networking_Event* event)
 
 	a3_Networking_EventSystem::Instance()->Shutdown();
 	
-	*/
+	}
 	
 
 }
+*/
