@@ -4,8 +4,19 @@
 #define OBJECT_INFO_H
 
 #pragma pack(push, 1)
-struct ObjectMoveInfo
+struct MoveInputData
 {
+	unsigned char typeId;
+	int objType;
+	a3_KeyboardKey input;
+};
+#pragma pack(push)
+
+#pragma pack(push, 1)
+struct ObjectPosInfo
+{
+	unsigned char typeId;
+	int objType;
 	float xMoveVal;
 	float yMoveVal;
 	float zMoveVal;

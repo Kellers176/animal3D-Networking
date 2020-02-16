@@ -32,7 +32,8 @@
 #include "RakNet/GetTime.h"
 
 #include "a3_Networking_EventSystem.h"
-#include "a3_Networking_CircleData.h"
+#include "a3_Networking_ObjectInfo.h"
+#include "MoveInputListener.h"
 
 
 //-----------------------------------------------------------------------------
@@ -43,6 +44,8 @@ enum a3_NetGameMessages
 	ID_CUSTOM_MESSAGE_START = ID_USER_PACKET_ENUM,
 
 	ID_GAME_MESSAGE_1,
+	ID_ADD_INPUT_TO_GAME_OBJECT,
+	ID_UPDATE_OBJECT_FOR_USER
 };
 
 
@@ -85,6 +88,17 @@ a3i32 a3netStartup(a3_NetworkingManager* net, a3ui16 port_inbound, a3ui16 port_o
 				net->maxConnect_inbound = maxConnect_inbound;
 				net->maxConnect_outbound = maxConnect_outbound;
 				net->peer = peer;
+
+				a3_Networking_Listener* eventUpInput;
+				a3_Networking_Listener* eventDownInput;
+				a3_Networking_Listener* eventLeftInput;
+				a3_Networking_Listener* eventRightInput;
+
+
+				a3_Networking_EventSystem::Instance()->addEvent("MoveObjectUp", eventUpInput);
+				a3_Networking_EventSystem::Instance()->addEvent("MoveObjectDown", eventDownInput);
+				a3_Networking_EventSystem::Instance()->addEvent("MoveObjectLeft", eventLeftInput);
+				a3_Networking_EventSystem::Instance()->addEvent("MoveObjectRight", eventRightInput);
 
 				return 1;
 			}
@@ -143,6 +157,8 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 		RakNet::Packet* packet;
 		RakNet::MessageID msg;
 		a3i32 count = 0;
+
+		MoveInputData* tempInputData;
 
 		for (packet = peer->Receive();
 			packet;
@@ -231,15 +247,33 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 						bs_in.Read(rs);
 						printf("%s\n", rs.C_String());
 
-						// get the circle data
-						CircleData* temp = (CircleData*)packet->data;
-
-						// draw the circle data
+						// get the input
 
 
 					}
 					break;
+				case ID_ADD_INPUT_TO_GAME_OBJECT:
+					
+					// get the input
+					tempInputData = (MoveInputData*)packet->data;
 
+					// send the input to the event system
+					if (tempInputData->input == a3key_upArrow)
+						a3_Networking_EventSystem::Instance()->sendEvent("MoveObjectUp");
+					if (tempInputData->input == a3key_downArrow)
+						a3_Networking_EventSystem::Instance()->sendEvent("MoveObjectDown");
+					if (tempInputData->input == a3key_leftArrow)
+						a3_Networking_EventSystem::Instance()->sendEvent("MoveObjectLeft");
+					if (tempInputData->input == a3key_rightArrow)
+						a3_Networking_EventSystem::Instance()->sendEvent("MoveObjectRight");
+
+					// event system will process it and return the new pos info
+
+					
+					break;
+				case ID_UPDATE_OBJECT_FOR_USER:
+					
+					break;
 				default:
 					printf("Message with identifier %i has arrived.\n", msg);
 					break;
