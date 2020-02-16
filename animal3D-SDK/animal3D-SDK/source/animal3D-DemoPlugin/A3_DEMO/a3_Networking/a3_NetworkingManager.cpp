@@ -35,6 +35,9 @@
 #include "a3_Networking_ObjectInfo.h"
 #include "MoveInputListener.h"
 
+#include "../a3_DemoState.h"
+
+
 
 //-----------------------------------------------------------------------------
 // networking stuff
@@ -153,7 +156,7 @@ a3i32 a3netDisconnect(a3_NetworkingManager* net)
 
 
 // process inbound packets
-a3i32 a3netProcessInbound(a3_NetworkingManager* net)
+a3i32 a3netProcessInbound(a3_DemoState *demoState, a3_NetworkingManager* net)
 {
 	if (net && net->peer)
 	{
@@ -163,6 +166,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 		a3i32 count = 0;
 
 		MoveInputData* tempInputData;
+		ObjectPosInfo* tempMoveObjInfo;
 
 		for (packet = peer->Receive();
 			packet;
@@ -276,7 +280,37 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					
 					break;
 				case ID_UPDATE_OBJECT_FOR_USER:
+
+					// get the infor from the server for the new move info
+					tempMoveObjInfo = (ObjectPosInfo*)packet->data;
+
+					// set the object pos to pos + move input
 					
+					if (tempMoveObjInfo->objType == demoState->sphereSelected)
+					{
+						demoState->sphereObject->position.x += tempMoveObjInfo->xMoveVal;
+						demoState->sphereObject->position.y += tempMoveObjInfo->yMoveVal;
+						demoState->sphereObject->position.z += tempMoveObjInfo->zMoveVal;
+					}
+					else if (tempMoveObjInfo->objType == demoState->cylinderSelected)
+					{
+						demoState->cylinderObject->position.x += tempMoveObjInfo->xMoveVal;
+						demoState->cylinderObject->position.y += tempMoveObjInfo->yMoveVal;
+						demoState->cylinderObject->position.z += tempMoveObjInfo->zMoveVal;
+					}
+					else if (tempMoveObjInfo->objType == demoState->torusSelected)
+					{
+						demoState->torusObject->position.x += tempMoveObjInfo->xMoveVal;
+						demoState->torusObject->position.y += tempMoveObjInfo->yMoveVal;
+						demoState->torusObject->position.z += tempMoveObjInfo->zMoveVal;
+					}
+					else if (tempMoveObjInfo->objType == demoState->teapotSelected)
+					{
+						demoState->teapotObject->position.x += tempMoveObjInfo->xMoveVal;
+						demoState->teapotObject->position.y += tempMoveObjInfo->yMoveVal;
+						demoState->teapotObject->position.z += tempMoveObjInfo->zMoveVal;
+					}
+
 					break;
 				default:
 					printf("Message with identifier %i has arrived.\n", msg);

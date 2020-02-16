@@ -268,10 +268,7 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hot
 		demoState->numberOfLettersInMessage = 0;
 
 		demoState->enterPressed = false;
-		demoState->cylinderPressed = false;
-		demoState->torusPressed = false;
-		demoState->spherePressed = false;
-		demoState->teapotPressed = false;
+		demoState->selectedObject = noneSelected;
 
 		// enable asset streaming between loads
 	//	demoState->streaming = 1;
@@ -361,7 +358,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 			// render timer ticked, update demo state and draw
 			//a3demoTestInput(demoState);
 			a3demo_input(demoState, demoState->renderTimer->secondsPerTick);
-			a3netProcessInbound(demoState->net);
+			a3netProcessInbound(demoState, demoState->net);
 			a3demoProcessInput(demoState);
 			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessOutbound(demoState->net);
@@ -523,56 +520,44 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 	case'6':
 	{
 		//Select sphere
-		demoState->cylinderPressed = false;
-		demoState->torusPressed = false;
-		demoState->spherePressed = true;
-		demoState->teapotPressed = false;
-		//const a3_DemoSceneObject* currentSceneObject, * endSceneObject;
+		demoState->selectedObject = sphereSelected;
 		break;
 	}
 	case '7':
 	{
 		//Select torus
-		demoState->cylinderPressed = false;
-		demoState->torusPressed = true;
-		demoState->spherePressed = false;
-		demoState->teapotPressed = false;
+		demoState->selectedObject = torusSelected;
 		break;
 	}
 
 	case '8':
 	{
 		//Select cylinder
-		demoState->cylinderPressed = true;
-		demoState->torusPressed = false;
-		demoState->spherePressed = false;
-		demoState->teapotPressed = false;
+		demoState->selectedObject = cylinderSelected;
 		break;
 	}
 	case'9':
 	{
 		//Select teapot
-		demoState->cylinderPressed = false;
-		demoState->torusPressed = false;
-		demoState->spherePressed = false;
-		demoState->teapotPressed = true;
+		demoState->selectedObject = teapotSelected;
+
 		break;
 	}
 	case 'i':
 	{
-		if (demoState->spherePressed)
+		if (demoState->selectedObject == sphereSelected)
 		{
 			demoState->sphereObject->position.z += 2;
 		}
-		else if (demoState->cylinderPressed)
+		else if (demoState->selectedObject == cylinderSelected)
 		{
 			demoState->cylinderObject->position.z += 2;
 		}
-		else if (demoState->torusPressed)
+		else if (demoState->selectedObject == torusSelected)
 		{
 			demoState->torusObject->position.z += 2;
 		}
-		else if (demoState->teapotPressed)
+		else if (demoState->selectedObject == teapotSelected)
 		{
 			demoState->teapotObject->position.z += 2;
 		}	
@@ -580,19 +565,19 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 	}
 	case 'j':
 	{
-		if (demoState->spherePressed)
+		if (demoState->selectedObject == sphereSelected)
 		{
 			demoState->sphereObject->position.y += 2;
 		}
-		else if (demoState->cylinderPressed)
+		else if (demoState->selectedObject == cylinderSelected)
 		{
 			demoState->cylinderObject->position.y += 2;
 		}
-		else if (demoState->torusPressed)
+		else if (demoState->selectedObject == torusSelected)
 		{
 			demoState->torusObject->position.y += 2;
 		}
-		else if (demoState->teapotPressed)
+		else if (demoState->selectedObject == teapotSelected)
 		{
 			demoState->teapotObject->position.y += 2;
 		}
@@ -600,19 +585,19 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 	}
 	case 'k':
 	{
-		if (demoState->spherePressed)
+		if (demoState->selectedObject == sphereSelected)
 		{
 			demoState->sphereObject->position.z -= 2;
 		}
-		else if (demoState->cylinderPressed)
+		else if (demoState->selectedObject == cylinderSelected)
 		{
 			demoState->cylinderObject->position.z -= 2;
 		}
-		else if (demoState->torusPressed)
+		else if (demoState->selectedObject == torusSelected)
 		{
 			demoState->torusObject->position.z -= 2;
 		}
-		else if (demoState->teapotPressed)
+		else if (demoState->selectedObject == teapotSelected)
 		{
 			demoState->teapotObject->position.z -= 2;
 		}
@@ -620,19 +605,19 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 	}
 	case 'l':
 	{
-		if (demoState->spherePressed)
+		if (demoState->selectedObject == sphereSelected)
 		{
 			demoState->sphereObject->position.y -= 2;
 		}
-		else if (demoState->cylinderPressed)
+		else if (demoState->selectedObject == cylinderSelected)
 		{
 			demoState->cylinderObject->position.y -= 2;
 		}
-		else if (demoState->torusPressed)
+		else if (demoState->selectedObject == torusSelected)
 		{
 			demoState->torusObject->position.y -= 2;
 		}
-		else if (demoState->teapotPressed)
+		else if (demoState->selectedObject == teapotSelected)
 		{
 			demoState->teapotObject->position.y -= 2;
 		}
@@ -640,19 +625,19 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 	}
 	case'u':
 	{
-		if (demoState->spherePressed)
+		if (demoState->selectedObject == sphereSelected)
 		{
 			demoState->sphereObject->position.x += 2;
 		}
-		else if (demoState->cylinderPressed)
+		else if (demoState->selectedObject == cylinderSelected)
 		{
 			demoState->cylinderObject->position.x += 2;
 		}
-		else if (demoState->torusPressed)
+		else if (demoState->selectedObject == torusSelected)
 		{
 			demoState->torusObject->position.x += 2;
 		}
-		else if (demoState->teapotPressed)
+		else if (demoState->selectedObject == teapotSelected)
 		{
 			demoState->teapotObject->position.x += 2;
 		}
@@ -660,19 +645,19 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 	}
 	case 'o':
 	{
-		if (demoState->spherePressed)
+		if (demoState->selectedObject == sphereSelected)
 		{
 			demoState->sphereObject->position.x -= 2;
 		}
-		else if (demoState->cylinderPressed)
+		else if (demoState->selectedObject == cylinderSelected)
 		{
 			demoState->cylinderObject->position.x -= 2;
 		}
-		else if (demoState->torusPressed)
+		else if (demoState->selectedObject == torusSelected)
 		{
 			demoState->torusObject->position.x -= 2;
 		}
-		else if (demoState->teapotPressed)
+		else if (demoState->selectedObject == teapotSelected)
 		{
 			demoState->teapotObject->position.x -= 2;
 		}

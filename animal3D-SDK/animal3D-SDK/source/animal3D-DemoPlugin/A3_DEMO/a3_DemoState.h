@@ -134,12 +134,16 @@ extern "C"
 		int numberOfLettersInMessage;
 		a3boolean enterPressed;
 
-		//bools for scene
-		a3boolean cylinderPressed;
-		a3boolean torusPressed;
-		a3boolean spherePressed;
-		a3boolean teapotPressed;
+		enum ObjectSelected
+		{
+			noneSelected,
+			cylinderSelected,
+			torusSelected,
+			sphereSelected,
+			teapotSelected
+		};
 
+		int selectedObject;
 
 
 		//---------------------------------------------------------------------
