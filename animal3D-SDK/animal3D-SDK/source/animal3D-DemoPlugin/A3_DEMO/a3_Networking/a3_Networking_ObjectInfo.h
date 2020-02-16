@@ -17,9 +17,9 @@ struct ObjectPosInfo
 {
 	unsigned char typeId;
 	int objType;
-	float xMoveVal;
-	float yMoveVal;
-	float zMoveVal;
+	float xPos;
+	float yPos;
+	float zPos;
 };
 #pragma pack(push)
 
