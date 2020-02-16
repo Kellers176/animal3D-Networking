@@ -30,6 +30,7 @@
 
 #include "a3_dylib_config_export.h"
 #include "a3_DemoState.h"
+#include "A3_DEMO/_utilities/a3_DemoSceneObject.h"
 
 
 #include <stdio.h>
@@ -267,7 +268,10 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hot
 		demoState->numberOfLettersInMessage = 0;
 
 		demoState->enterPressed = false;
-
+		demoState->cylinderPressed = false;
+		demoState->torusPressed = false;
+		demoState->spherePressed = false;
+		demoState->teapotPressed = false;
 
 		// enable asset streaming between loads
 	//	demoState->streaming = 1;
@@ -475,7 +479,8 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 	const a3ui32 demoSubModeCount = demoState->demoSubModeCount[demoState->demoMode];
 	const a3ui32 demoOutput = demoState->demoOutputMode[demoState->demoMode][demoSubMode];
 	const a3ui32 demoOutputCount = demoState->demoOutputCount[demoState->demoMode][demoSubMode];
-
+	//demoState->sceneObject[1].position += 5;
+//	a3_DemoSceneObject* sceneObject;
 	// persistent state update
 	a3keyboardSetStateASCII(demoState->keyboard, (a3byte)asciiKey);
 
@@ -515,7 +520,164 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 	case '2':
 		a3demo_startNetworking(demoState, 0);
 		break;
+	case'6':
+	{
+		//Select sphere
+		demoState->cylinderPressed = false;
+		demoState->torusPressed = false;
+		demoState->spherePressed = true;
+		demoState->teapotPressed = false;
+		//const a3_DemoSceneObject* currentSceneObject, * endSceneObject;
+		break;
+	}
+	case '7':
+	{
+		//Select torus
+		demoState->cylinderPressed = false;
+		demoState->torusPressed = true;
+		demoState->spherePressed = false;
+		demoState->teapotPressed = false;
+		break;
+	}
 
+	case '8':
+	{
+		//Select cylinder
+		demoState->cylinderPressed = true;
+		demoState->torusPressed = false;
+		demoState->spherePressed = false;
+		demoState->teapotPressed = false;
+		break;
+	}
+	case'9':
+	{
+		//Select teapot
+		demoState->cylinderPressed = false;
+		demoState->torusPressed = false;
+		demoState->spherePressed = false;
+		demoState->teapotPressed = true;
+		break;
+	}
+	case 'i':
+	{
+		if (demoState->spherePressed)
+		{
+			demoState->sphereObject->position.z += 2;
+		}
+		else if (demoState->cylinderPressed)
+		{
+			demoState->cylinderObject->position.z += 2;
+		}
+		else if (demoState->torusPressed)
+		{
+			demoState->torusObject->position.z += 2;
+		}
+		else if (demoState->teapotPressed)
+		{
+			demoState->teapotObject->position.z += 2;
+		}	
+		break;
+	}
+	case 'j':
+	{
+		if (demoState->spherePressed)
+		{
+			demoState->sphereObject->position.y += 2;
+		}
+		else if (demoState->cylinderPressed)
+		{
+			demoState->cylinderObject->position.y += 2;
+		}
+		else if (demoState->torusPressed)
+		{
+			demoState->torusObject->position.y += 2;
+		}
+		else if (demoState->teapotPressed)
+		{
+			demoState->teapotObject->position.y += 2;
+		}
+		break;
+	}
+	case 'k':
+	{
+		if (demoState->spherePressed)
+		{
+			demoState->sphereObject->position.z -= 2;
+		}
+		else if (demoState->cylinderPressed)
+		{
+			demoState->cylinderObject->position.z -= 2;
+		}
+		else if (demoState->torusPressed)
+		{
+			demoState->torusObject->position.z -= 2;
+		}
+		else if (demoState->teapotPressed)
+		{
+			demoState->teapotObject->position.z -= 2;
+		}
+		break;
+	}
+	case 'l':
+	{
+		if (demoState->spherePressed)
+		{
+			demoState->sphereObject->position.y -= 2;
+		}
+		else if (demoState->cylinderPressed)
+		{
+			demoState->cylinderObject->position.y -= 2;
+		}
+		else if (demoState->torusPressed)
+		{
+			demoState->torusObject->position.y -= 2;
+		}
+		else if (demoState->teapotPressed)
+		{
+			demoState->teapotObject->position.y -= 2;
+		}
+		break;
+	}
+	case'u':
+	{
+		if (demoState->spherePressed)
+		{
+			demoState->sphereObject->position.x += 2;
+		}
+		else if (demoState->cylinderPressed)
+		{
+			demoState->cylinderObject->position.x += 2;
+		}
+		else if (demoState->torusPressed)
+		{
+			demoState->torusObject->position.x += 2;
+		}
+		else if (demoState->teapotPressed)
+		{
+			demoState->teapotObject->position.x += 2;
+		}
+		break;
+	}
+	case 'o':
+	{
+		if (demoState->spherePressed)
+		{
+			demoState->sphereObject->position.x -= 2;
+		}
+		else if (demoState->cylinderPressed)
+		{
+			demoState->cylinderObject->position.x -= 2;
+		}
+		else if (demoState->torusPressed)
+		{
+			demoState->torusObject->position.x -= 2;
+		}
+		else if (demoState->teapotPressed)
+		{
+			demoState->teapotObject->position.x -= 2;
+		}
+		break;
+	}
 		// reload (T) or toggle (t) text
 	case 'T':
 		if (!a3textIsInitialized(demoState->text))
@@ -532,114 +694,114 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 //	case 't':
 //		demoState->textMode = (demoState->textMode + 1) % demoState->textModeCount;
 //		break;
-	case ' ':
-		demoState->messageText[demoState->numberOfLettersInMessage] = ' ';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'a':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'a';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'b':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'b';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'c':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'c';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'd':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'd';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'e':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'e';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'f':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'f';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'g':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'g';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'h':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'h';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'i':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'i';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'j':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'j';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'k':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'k';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'l':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'l';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'm':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'm';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'n':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'n';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'o':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'o';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'p':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'p';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'q':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'q';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'r':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'r';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 's':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 's';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 't':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 't';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'u':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'u';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'v':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'v';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'w':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'w';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'x':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'x';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'y':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'y';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'z':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'z';
-		demoState->numberOfLettersInMessage++;
-		break;
+//	case ' ':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = ' ';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'a':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'a';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'b':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'b';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'c':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'c';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'd':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'd';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'e':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'e';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'f':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'f';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'g':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'g';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'h':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'h';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'i':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'i';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'j':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'j';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'k':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'k';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'l':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'l';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'm':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'm';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'n':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'n';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'o':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'o';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'p':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'p';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'q':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'q';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'r':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'r';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 's':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 's';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 't':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 't';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'u':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'u';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'v':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'v';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'w':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'w';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'x':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'x';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'y':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'y';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'z':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'z';
+//		demoState->numberOfLettersInMessage++;
+//		break;
 	}
 
 
