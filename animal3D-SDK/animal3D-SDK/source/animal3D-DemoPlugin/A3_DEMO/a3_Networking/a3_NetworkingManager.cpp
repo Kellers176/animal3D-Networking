@@ -156,7 +156,7 @@ a3i32 a3netDisconnect(a3_NetworkingManager* net)
 
 
 // process inbound packets
-a3i32 a3netProcessInbound(a3_DemoState *demoState, a3_NetworkingManager* net)
+a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 {
 	if (net && net->peer)
 	{
@@ -262,7 +262,7 @@ a3i32 a3netProcessInbound(a3_DemoState *demoState, a3_NetworkingManager* net)
 					break;
 				case ID_ADD_INPUT_TO_GAME_OBJECT:
 					
-					// get the input
+					// server gets the input
 					tempInputData = (MoveInputData*)packet->data;
 
 					// send the input to the event system
@@ -286,29 +286,21 @@ a3i32 a3netProcessInbound(a3_DemoState *demoState, a3_NetworkingManager* net)
 
 					// set the object pos to pos + move input
 					
-					if (tempMoveObjInfo->objType == demoState->sphereSelected)
+					if (tempMoveObjInfo->objType == sphereSelected)
 					{
-						demoState->sphereObject->position.x += tempMoveObjInfo->xMoveVal;
-						demoState->sphereObject->position.y += tempMoveObjInfo->yMoveVal;
-						demoState->sphereObject->position.z += tempMoveObjInfo->zMoveVal;
+						
 					}
-					else if (tempMoveObjInfo->objType == demoState->cylinderSelected)
+					else if (tempMoveObjInfo->objType == cylinderSelected)
 					{
-						demoState->cylinderObject->position.x += tempMoveObjInfo->xMoveVal;
-						demoState->cylinderObject->position.y += tempMoveObjInfo->yMoveVal;
-						demoState->cylinderObject->position.z += tempMoveObjInfo->zMoveVal;
+
 					}
-					else if (tempMoveObjInfo->objType == demoState->torusSelected)
+					else if (tempMoveObjInfo->objType == torusSelected)
 					{
-						demoState->torusObject->position.x += tempMoveObjInfo->xMoveVal;
-						demoState->torusObject->position.y += tempMoveObjInfo->yMoveVal;
-						demoState->torusObject->position.z += tempMoveObjInfo->zMoveVal;
+
 					}
-					else if (tempMoveObjInfo->objType == demoState->teapotSelected)
+					else if (tempMoveObjInfo->objType == teapotSelected)
 					{
-						demoState->teapotObject->position.x += tempMoveObjInfo->xMoveVal;
-						demoState->teapotObject->position.y += tempMoveObjInfo->yMoveVal;
-						demoState->teapotObject->position.z += tempMoveObjInfo->zMoveVal;
+
 					}
 
 					break;

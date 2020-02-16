@@ -89,6 +89,14 @@ extern "C"
 		demoStateMode_main,
 	};
 
+	enum ObjectSelected
+	{
+		noneSelected,
+		cylinderSelected,
+		torusSelected,
+		sphereSelected,
+		teapotSelected
+	};
 	
 //-----------------------------------------------------------------------------
 
@@ -134,14 +142,7 @@ extern "C"
 		int numberOfLettersInMessage;
 		a3boolean enterPressed;
 
-		enum ObjectSelected
-		{
-			noneSelected,
-			cylinderSelected,
-			torusSelected,
-			sphereSelected,
-			teapotSelected
-		};
+
 
 		int selectedObject;
 
