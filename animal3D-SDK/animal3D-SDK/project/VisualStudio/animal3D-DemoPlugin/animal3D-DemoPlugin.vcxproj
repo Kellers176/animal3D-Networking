@@ -206,6 +206,7 @@
     <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\a3_Networking_gs_mancala.c" />
     <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\a3_Networking_gs_tictactoe.c" />
     <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\a3_Networking_Listener.cpp" />
+    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\MoveInputListener.cpp" />
     <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\Something.cpp" />
     <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\_utilities\a3_DemoRenderUtils.c" />
     <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\_utilities\a3_DemoSceneObject.c" />
@@ -220,6 +221,7 @@
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\a3_Networking_EventSystem.h" />
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\a3_Networking_Listener.h" />
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\a3_Networking_ObjectInfo.h" />
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\MoveInputListener.h" />
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\Something.h" />
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\_utilities\a3_DemoRenderUtils.h" />
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\_utilities\a3_DemoSceneObject.h" />

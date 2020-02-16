@@ -89,11 +89,15 @@ a3i32 a3netStartup(a3_NetworkingManager* net, a3ui16 port_inbound, a3ui16 port_o
 				net->maxConnect_outbound = maxConnect_outbound;
 				net->peer = peer;
 
-				a3_Networking_Listener* eventUpInput;
-				a3_Networking_Listener* eventDownInput;
-				a3_Networking_Listener* eventLeftInput;
-				a3_Networking_Listener* eventRightInput;
+				MoveInputListener* eventUpInput = new MoveInputListener(a3key_upArrow);
+				MoveInputListener* eventDownInput = new MoveInputListener(a3key_downArrow);
+				MoveInputListener* eventLeftInput = new MoveInputListener(a3key_leftArrow);
+				MoveInputListener* eventRightInput = new MoveInputListener(a3key_rightArrow);
 
+				eventUpInput->SetListenerKey(a3key_upArrow);
+				eventDownInput->SetListenerKey(a3key_downArrow);
+				eventLeftInput->SetListenerKey(a3key_leftArrow);
+				eventRightInput->SetListenerKey(a3key_rightArrow);
 
 				a3_Networking_EventSystem::Instance()->addEvent("MoveObjectUp", eventUpInput);
 				a3_Networking_EventSystem::Instance()->addEvent("MoveObjectDown", eventDownInput);
