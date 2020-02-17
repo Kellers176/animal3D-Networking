@@ -511,22 +511,30 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 		// start networking as server
 	case '1':
 		a3demo_startNetworking(demoState, 1);
+		demoState->net->isServer = 1;
 		break;
 
 		// start networking as client
 	case '2':
 		a3demo_startNetworking(demoState, 0);
+		demoState->net->isServer = 0;
 		break;
 	case'6':
 	{
 		//Select sphere
 		demoState->selectedObject = sphereSelected;
+
+		demoState->net->selectedSharedObject = sphereSelected;
+
 		break;
 	}
 	case '7':
 	{
 		//Select torus
 		demoState->selectedObject = torusSelected;
+
+		demoState->net->selectedSharedObject = torusSelected;
+
 		break;
 	}
 
@@ -534,6 +542,9 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 	{
 		//Select cylinder
 		demoState->selectedObject = cylinderSelected;
+
+		demoState->net->selectedSharedObject = cylinderSelected;
+
 		break;
 	}
 	case'9':
@@ -541,127 +552,44 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 		//Select teapot
 		demoState->selectedObject = teapotSelected;
 
+		demoState->net->selectedSharedObject = teapotSelected;
+
 		break;
 	}
 	case 'i':
 	{
-
-		if (demoState->selectedObject == sphereSelected)
-		{
-			demoState->sphereObject->position.z += 2;
-		}
-		else if (demoState->selectedObject == cylinderSelected)
-		{
-			demoState->cylinderObject->position.z += 2;
-		}
-		else if (demoState->selectedObject == torusSelected)
-		{
-			demoState->torusObject->position.z += 2;
-		}
-		else if (demoState->selectedObject == teapotSelected)
-		{
-			demoState->teapotObject->position.z += 2;
-		}	
+		demoState->net->moveZData += 2;
+		
 		break;
 	}
 	case 'j':
-	{
-		if (demoState->selectedObject == sphereSelected)
-		{
-			demoState->sphereObject->position.y += 2;
-		}
-		else if (demoState->selectedObject == cylinderSelected)
-		{
-			demoState->cylinderObject->position.y += 2;
-		}
-		else if (demoState->selectedObject == torusSelected)
-		{
-			demoState->torusObject->position.y += 2;
-		}
-		else if (demoState->selectedObject == teapotSelected)
-		{
-			demoState->teapotObject->position.y += 2;
-		}
+	{		
+		demoState->net->moveYData += 2;
+
 		break;
 	}
 	case 'k':
 	{
-		if (demoState->selectedObject == sphereSelected)
-		{
-			demoState->sphereObject->position.z -= 2;
-		}
-		else if (demoState->selectedObject == cylinderSelected)
-		{
-			demoState->cylinderObject->position.z -= 2;
-		}
-		else if (demoState->selectedObject == torusSelected)
-		{
-			demoState->torusObject->position.z -= 2;
-		}
-		else if (demoState->selectedObject == teapotSelected)
-		{
-			demoState->teapotObject->position.z -= 2;
-		}
+		demoState->net->moveZData -= 2;
+
 		break;
 	}
 	case 'l':
 	{
-		if (demoState->selectedObject == sphereSelected)
-		{
-			demoState->sphereObject->position.y -= 2;
-		}
-		else if (demoState->selectedObject == cylinderSelected)
-		{
-			demoState->cylinderObject->position.y -= 2;
-		}
-		else if (demoState->selectedObject == torusSelected)
-		{
-			demoState->torusObject->position.y -= 2;
-		}
-		else if (demoState->selectedObject == teapotSelected)
-		{
-			demoState->teapotObject->position.y -= 2;
-		}
+		demoState->net->moveYData -= 2;
+
 		break;
 	}
 	case'u':
 	{
-		if (demoState->selectedObject == sphereSelected)
-		{
-			demoState->sphereObject->position.x += 2;
-		}
-		else if (demoState->selectedObject == cylinderSelected)
-		{
-			demoState->cylinderObject->position.x += 2;
-		}
-		else if (demoState->selectedObject == torusSelected)
-		{
-			demoState->torusObject->position.x += 2;
-		}
-		else if (demoState->selectedObject == teapotSelected)
-		{
-			demoState->teapotObject->position.x += 2;
-		}
+		demoState->net->moveXData += 2;
+
 		break;
 	}
 	case 'o':
 	{
-		if (demoState->selectedObject == sphereSelected)
-		{
-			demoState->sphereObject->position.x -= 2;
-		}
-		else if (demoState->selectedObject == cylinderSelected)
-		{
-			demoState->cylinderObject->position.x -= 2;
-		}
-		else if (demoState->selectedObject == torusSelected)
-		{
-			demoState->torusObject->position.x -= 2;
-		}
-		else if (demoState->selectedObject == teapotSelected)
-		{
-			demoState->teapotObject->position.x -= 2;
-		}
+		demoState->net->moveXData -= 2;
+
 		break;
 	}
 		// reload (T) or toggle (t) text

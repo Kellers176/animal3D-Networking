@@ -59,6 +59,7 @@ struct a3_NetGameMessageData
 	unsigned char typeID;
 
 	// ****TO-DO: implement game message data struct
+	a3_KeyboardKey temp;
 
 };
 
@@ -321,32 +322,51 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net)
 {
 	if (net && net->peer)
 	{
-		RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
-
-		RakNet::BitStream bsOut[1];
-
-		/*
-			unsigned char typeId;
-			int objType;
-			float xPos;
-			float yPos;
-			float zPos;
-		*/
-
-		ObjectPosInfo posData;
-		posData.typeId = ID_UPDATE_OBJECT_FOR_USER;
-		posData.objType = net->selectedSharedObject;
-		posData.xPos = posData.xPos + net->moveXData;
-		posData.yPos = posData.yPos + net->moveYData;
-		posData.zPos = posData.zPos + net->moveZData;
-
-		bsOut->Write((ObjectPosInfo)posData);
-
-		for (int i = 0; i < peer->GetNumberOfAddresses(); i++)
+		if (net->isServer)
 		{
-			peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
-		}
+			RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
 
+			RakNet::BitStream bsOut[1];
+
+			/*
+				unsigned char typeId;
+				int objType;
+				float xPos;
+				float yPos;
+				float zPos;
+			*/
+
+			ObjectPosInfo posData = ObjectPosInfo();
+			posData.typeId = ID_UPDATE_OBJECT_FOR_USER;
+			posData.objType = net->selectedSharedObject;
+			posData.xPos = posData.xPos + net->moveXData;
+			posData.yPos = posData.yPos + net->moveYData;
+			posData.zPos = posData.zPos + net->moveZData;
+
+			bsOut->Write((ObjectPosInfo)posData);
+
+			for (unsigned int i = 0; i < peer->GetNumberOfAddresses(); i++)
+			{
+				peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
+			}
+
+			net->moveXData = 0;
+			net->moveYData = 0;
+			net->moveZData = 0;
+		}
+		else
+		{
+			RakNet::BitStream bsOut[1];
+			
+			MoveInputData moveInput = MoveInputData();
+			moveInput.typeId = ID_ADD_INPUT_TO_GAME_OBJECT;
+			moveInput.objType = net->selectedSharedObject;
+			moveInput.input = net->inputData;
+
+			bsOut->Write((MoveInputData)moveInput);
+
+			net->inputData = a3key_question;
+		}
 	}
 	return 0;
 }
