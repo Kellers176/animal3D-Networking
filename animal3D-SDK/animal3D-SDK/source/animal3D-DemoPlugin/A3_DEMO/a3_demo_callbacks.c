@@ -545,6 +545,7 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 	}
 	case 'i':
 	{
+
 		if (demoState->selectedObject == sphereSelected)
 		{
 			demoState->sphereObject->position.z += 2;

@@ -321,6 +321,31 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net)
 {
 	if (net && net->peer)
 	{
+		RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
+
+		RakNet::BitStream bsOut[1];
+
+		/*
+			unsigned char typeId;
+			int objType;
+			float xPos;
+			float yPos;
+			float zPos;
+		*/
+
+		ObjectPosInfo posData;
+		posData.typeId = ID_UPDATE_OBJECT_FOR_USER;
+		posData.objType = net->selectedSharedObject;
+		posData.xPos = posData.xPos + net->moveXData;
+		posData.yPos = posData.yPos + net->moveYData;
+		posData.zPos = posData.zPos + net->moveZData;
+
+		bsOut->Write((ObjectPosInfo)posData);
+
+		for (int i = 0; i < peer->GetNumberOfAddresses(); i++)
+		{
+			peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
+		}
 
 	}
 	return 0;
