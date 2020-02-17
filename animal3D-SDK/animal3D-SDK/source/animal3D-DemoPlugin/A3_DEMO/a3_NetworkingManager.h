@@ -30,6 +30,7 @@
 // animal3D framework includes
 
 #include "animal3D/animal3D.h"
+#include "a3_DemoState.h"
 
 
 //-----------------------------------------------------------------------------
@@ -58,6 +59,7 @@ extern "C"
 		float moveXData;
 		float moveYData;
 		float moveZData;
+		a3_DemoState* demoState;
 	};
 
 

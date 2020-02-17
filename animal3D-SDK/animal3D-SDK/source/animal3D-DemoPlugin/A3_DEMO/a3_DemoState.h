@@ -43,7 +43,7 @@
 #include "_utilities/a3_DemoSceneObject.h"
 #include "_utilities/a3_DemoShaderProgram.h"
 
-#include "a3_NetworkingManager.h"
+//#include "a3_NetworkingManager.h"
 
 
 //-----------------------------------------------------------------------------
@@ -171,7 +171,7 @@ extern "C"
 
 
 		// networking
-		a3_NetworkingManager net[1];
+		//a3_NetworkingManager net[1];
 
 
 		//---------------------------------------------------------------------

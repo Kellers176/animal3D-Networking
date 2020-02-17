@@ -31,7 +31,7 @@
 #include "a3_dylib_config_export.h"
 #include "a3_DemoState.h"
 #include "A3_DEMO/_utilities/a3_DemoSceneObject.h"
-
+#include "a3_NetworkingManager.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,12 +39,14 @@
 #include <GL/glew.h>
 
 
+a3_NetworkingManager net[1];
+
 //-----------------------------------------------------------------------------
 // networking stuff
 
 void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 {
-	a3netAddressStr const ipAddress = "184.171.146.89";
+	a3netAddressStr const ipAddress = "216.93.149.19";
 	a3ui16 const port_server = 60006;
 	a3ui16 const port_client = 60005;
 	a3ui16 const maxConnections_server = 16;
@@ -52,21 +54,21 @@ void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 
 	if (isServer)
 	{
-		if (a3netStartup(demoState->net, port_server, 0, maxConnections_server, 0) > 0)
+		if (a3netStartup(net, port_server, 0, maxConnections_server, 0) > 0)
 			printf("\n STARTED NETWORKING AS SERVER \n");
 	}
 	else
 	{
-		if (a3netStartup(demoState->net, 0, port_server, 0, maxConnections_client) > 0)
-			if (a3netConnect(demoState->net, ipAddress) > 0)
+		if (a3netStartup(net, 0, port_server, 0, maxConnections_client) > 0)
+			if (a3netConnect(net, ipAddress) > 0)
 				printf("\n STARTED NETWORKING AS CLIENT \n");
 	}
 }
 
 void a3demo_stopNetworking(a3_DemoState* demoState)
 {
-	if (a3netDisconnect(demoState->net) > 0)
-		if (a3netShutdown(demoState->net) > 0)
+	if (a3netDisconnect(net) > 0)
+		if (a3netShutdown(net) > 0)
 			printf("\n SHUT DOWN NETWORKING \n");
 }
 
@@ -358,10 +360,10 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 			// render timer ticked, update demo state and draw
 			//a3demoTestInput(demoState);
 			a3demo_input(demoState, demoState->renderTimer->secondsPerTick);
-			a3netProcessInbound(demoState->net);
+			a3netProcessInbound(net);
 			a3demoProcessInput(demoState);
 			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
-			a3netProcessOutbound(demoState->net);
+			a3netProcessOutbound(net);
 			a3demoTestRender(demoState);
 			a3demo_render(demoState);
 			// update input
@@ -511,20 +513,20 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 		// start networking as server
 	case '1':
 		a3demo_startNetworking(demoState, 1);
-		demoState->net->isServer = 1;
+		net->isServer = 1;
 		break;
 
 		// start networking as client
 	case '2':
 		a3demo_startNetworking(demoState, 0);
-		demoState->net->isServer = 0;
+		net->isServer = 0;
 		break;
 	case'6':
 	{
 		//Select sphere
 		demoState->selectedObject = sphereSelected;
 
-		demoState->net->selectedSharedObject = sphereSelected;
+		net->selectedSharedObject = sphereSelected;
 
 		break;
 	}
@@ -533,7 +535,7 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 		//Select torus
 		demoState->selectedObject = torusSelected;
 
-		demoState->net->selectedSharedObject = torusSelected;
+		net->selectedSharedObject = torusSelected;
 
 		break;
 	}
@@ -543,7 +545,7 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 		//Select cylinder
 		demoState->selectedObject = cylinderSelected;
 
-		demoState->net->selectedSharedObject = cylinderSelected;
+		net->selectedSharedObject = cylinderSelected;
 
 		break;
 	}
@@ -552,43 +554,43 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 		//Select teapot
 		demoState->selectedObject = teapotSelected;
 
-		demoState->net->selectedSharedObject = teapotSelected;
+		net->selectedSharedObject = teapotSelected;
 
 		break;
 	}
 	case 'i':
 	{
-		demoState->net->moveZData += 2;
+		net->moveZData += 2;
 		
 		break;
 	}
 	case 'j':
 	{		
-		demoState->net->moveYData += 2;
+		net->moveYData += 2;
 
 		break;
 	}
 	case 'k':
 	{
-		demoState->net->moveZData -= 2;
+		net->moveZData -= 2;
 
 		break;
 	}
 	case 'l':
 	{
-		demoState->net->moveYData -= 2;
+		net->moveYData -= 2;
 
 		break;
 	}
 	case'u':
 	{
-		demoState->net->moveXData += 2;
+		net->moveXData += 2;
 
 		break;
 	}
 	case 'o':
 	{
-		demoState->net->moveXData -= 2;
+		net->moveXData -= 2;
 
 		break;
 	}
