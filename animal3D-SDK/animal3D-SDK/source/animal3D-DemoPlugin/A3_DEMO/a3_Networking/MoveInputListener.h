@@ -1,6 +1,7 @@
 
 #include "a3_Networking_Listener.h"
 #include "animal3D/a3input/a3_KeyboardInput.h"
+#include "MoveObjectEvent.h"
 
 #ifndef MOVE_INPUT_LISTENER_H
 #define MOVE_INPUT_LISTENER_H
