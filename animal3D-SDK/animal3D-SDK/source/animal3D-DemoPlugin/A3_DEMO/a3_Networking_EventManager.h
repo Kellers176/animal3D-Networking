@@ -1,9 +1,9 @@
-#ifndef  a3_NETWORKING_EVENTMANAGER_H
+#ifndef  A3_NETWORKING_EVENTMANAGER_H
 #define A3_NETWORKING_EVENTMANAGER_H
 
 #include <vector>
 
-using namespace std;
+//using namespace std;
 
 #include "a3_Networking_Event.h"
 
@@ -21,7 +21,7 @@ private:
 	void deleteEvent(a3_Networking_Event* myEvent);
 	void processEvents();
 
-	vector<a3_Networking_Event*> curEvents;
+	std::vector<a3_Networking_Event*> curEvents;
 
 
 };

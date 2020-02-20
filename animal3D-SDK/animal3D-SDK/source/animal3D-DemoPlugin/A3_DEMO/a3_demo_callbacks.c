@@ -30,7 +30,7 @@
 
 #include "a3_dylib_config_export.h"
 #include "a3_DemoState.h"
-
+#include "A3_DEMO/a3_Networking_EventManager.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -479,7 +479,10 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey
 	// persistent state update
 	a3keyboardSetStateASCII(demoState->keyboard, (a3byte)asciiKey);
 
-
+	if (asciiKey == 9)
+	{
+		
+	}
 	if (asciiKey == 8)
 	{
 		demoState->numberOfLettersInMessage--;
