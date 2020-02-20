@@ -188,6 +188,18 @@
     <ClInclude Include="a3_Kinematic.h">
       <Filter>Header Files\A3_DEMO\a3_AI</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_AI\a3_Align_Behavior.h">
+      <Filter>Header Files\A3_DEMO\a3_AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_AI\a3_Arrive_Behavior.h">
+      <Filter>Header Files\A3_DEMO\a3_AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_AI\a3_Face_Behavior.h">
+      <Filter>Header Files\A3_DEMO\a3_AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_AI\a3_Wander_Behavior.h">
+      <Filter>Header Files\A3_DEMO\a3_AI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\resource\glsl\4x\fs\drawColorAttrib_fs4x.glsl">
