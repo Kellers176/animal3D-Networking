@@ -17,7 +17,7 @@
 /*
 	animal3D SDK: Minimal 3D Animation Framework
 	By Daniel S. Buckstein
-	
+
 	a3_demo_callbacks.c/.cpp
 	Main implementation of window callback hooks.
 
@@ -69,28 +69,29 @@ void a3demo_stopNetworking(a3_DemoState* demoState)
 			printf("\n SHUT DOWN NETWORKING \n");
 }
 
-void a3demoTestInput(a3_DemoState* demoState)
-{
-	//DO INPUT
-
-	//if (demoState->keyboard->key.key['b'])
-	//key is scurrent state, key0 is the previous state in a3_KeyboardInput
-	//if one is true and the other is false, its been changed
-
-	if (a3keyboardGetState(demoState->keyboard, a3key_B) > 0)
-	{
-		///this will give you the b key
-	}
-}
 void a3demoTestRender(a3_DemoState const* demoState)
 {
 	//clear color
 	glClear(GL_COLOR_BUFFER_BIT);
-
-
+	//-1,-1,-1 is bottom left corner
 	//draw text
-	a3textDraw(demoState->text, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-		"%+.3f", (float)demoState->renderTimer->totalTime);
+
+	a3textDraw(demoState->text, -0.99f, -0.95f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, demoState->messageText);
+
+}
+void a3demoProcessInput(a3_DemoState* demoState)
+{
+	if (demoState->enterPressed)
+	{
+		//a3textDraw(demoState->text, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, demoState->messageText);
+		for (int i = 0; i < sizeof(demoState->messageText); i++)
+		{
+			demoState->messageText[i] = 0;
+		}
+		demoState->enterPressed = false;
+		demoState->numberOfLettersInMessage = 0;
+	}
+
 }
 
 void a3demoTestUpdate(a3_DemoState* demoState)
@@ -116,7 +117,7 @@ inline a3ui32 a3demo_getPersistentStateSize()
 
 
 // consistent text initialization
-inline void a3demo_initializeText(a3_TextRenderer *text)
+inline void a3demo_initializeText(a3_TextRenderer* text)
 {
 	a3textInitialize(text, 18, 1, 0, 0, 0);
 }
@@ -125,53 +126,53 @@ inline void a3demo_initializeText(a3_TextRenderer *text)
 //-----------------------------------------------------------------------------
 // callback sub-routines
 
-inline void a3demoCB_keyCharPress_main(a3_DemoState *demoState, a3i32 asciiKey,
+inline void a3demoCB_keyCharPress_main(a3_DemoState* demoState, a3i32 asciiKey,
 	const a3ui32 demoSubMode, const a3ui32 demoOutput,
 	const a3ui32 demoSubModeCount, const a3ui32 demoOutputCount)
 {
-//	switch (asciiKey)
-//	{
-//		// sub-modes
-//	case '>':
-//		break;
-//	case '<':
-//		break;
-//
-		// toggle active camera
-//	case 'v':
-//		demoState->activeCamera = (demoState->activeCamera + 1) % demoStateMaxCount_cameraObject;
-//		break;
-//	case 'c':
-//		demoState->activeCamera = (demoState->activeCamera - 1 + demoStateMaxCount_cameraObject) % demoStateMaxCount_cameraObject;
-//		break;
+	//	switch (asciiKey)
+	//	{
+	//		// sub-modes
+	//	case '>':
+	//		break;
+	//	case '<':
+	//		break;
+	//
+			// toggle active camera
+	//	case 'v':
+	//		demoState->activeCamera = (demoState->activeCamera + 1) % demoStateMaxCount_cameraObject;
+	//		break;
+	//	case 'c':
+	//		demoState->activeCamera = (demoState->activeCamera - 1 + demoStateMaxCount_cameraObject) % demoStateMaxCount_cameraObject;
+	//		break;
 
-		// toggle skybox
-//	case 'b':
-//		demoState->displaySkybox = 1 - demoState->displaySkybox;
-//		break;
-//
-//		// toggle hidden volumes
-//	case 'h':
-//		demoState->displayHiddenVolumes = 1 - demoState->displayHiddenVolumes;
-//		break;
-//
-//		// toggle pipeline overlay
-//	case 'o':
-//		demoState->displayPipeline = 1 - demoState->displayPipeline;
-//		break;
-//	}
+			// toggle skybox
+	//	case 'b':
+	//		demoState->displaySkybox = 1 - demoState->displaySkybox;
+	//		break;
+	//
+	//		// toggle hidden volumes
+	//	case 'h':
+	//		demoState->displayHiddenVolumes = 1 - demoState->displayHiddenVolumes;
+	//		break;
+	//
+	//		// toggle pipeline overlay
+	//	case 'o':
+	//		demoState->displayPipeline = 1 - demoState->displayPipeline;
+	//		break;
+	//	}
 }
 
-inline void a3demoCB_keyCharHold_main(a3_DemoState *demoState, a3i32 asciiKey)
+inline void a3demoCB_keyCharHold_main(a3_DemoState* demoState, a3i32 asciiKey)
 {
-//	// handle special cases immediately
-//	switch (asciiKey)
-//	{
-//	case 'l':
-//		break;
-//	case 'L':
-//		break;
-//	}
+	//	// handle special cases immediately
+	//	switch (asciiKey)
+	//	{
+	//	case 'l':
+	//		break;
+	//	case 'L':
+	//		break;
+	//	}
 }
 
 
@@ -191,25 +192,25 @@ extern "C"
 {
 #endif	// __cplusplus
 
-	A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hotbuild);
-	A3DYLIBSYMBOL a3_DemoState *a3demoCB_unload(a3_DemoState *demoState, a3boolean hotbuild);
-	A3DYLIBSYMBOL a3i32 a3demoCB_display(a3_DemoState *demoState);
-	A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState);
-	A3DYLIBSYMBOL void a3demoCB_windowActivate(a3_DemoState *demoState);
-	A3DYLIBSYMBOL void a3demoCB_windowDeactivate(a3_DemoState *demoState);
-	A3DYLIBSYMBOL void a3demoCB_windowMove(a3_DemoState *demoState, a3i32 newWindowPosX, a3i32 newWindowPosY);
-	A3DYLIBSYMBOL void a3demoCB_windowResize(a3_DemoState *demoState, a3i32 newWindowWidth, a3i32 newWindowHeight);
-	A3DYLIBSYMBOL void a3demoCB_keyPress(a3_DemoState *demoState, a3i32 virtualKey);
-	A3DYLIBSYMBOL void a3demoCB_keyHold(a3_DemoState *demoState, a3i32 virtualKey);
-	A3DYLIBSYMBOL void a3demoCB_keyRelease(a3_DemoState *demoState, a3i32 virtualKey);
-	A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey);
-	A3DYLIBSYMBOL void a3demoCB_keyCharHold(a3_DemoState *demoState, a3i32 asciiKey);
-	A3DYLIBSYMBOL void a3demoCB_mouseClick(a3_DemoState *demoState, a3i32 button, a3i32 cursorX, a3i32 cursorY);
-	A3DYLIBSYMBOL void a3demoCB_mouseDoubleClick(a3_DemoState *demoState, a3i32 button, a3i32 cursorX, a3i32 cursorY);
-	A3DYLIBSYMBOL void a3demoCB_mouseRelease(a3_DemoState *demoState, a3i32 button, a3i32 cursorX, a3i32 cursorY);
-	A3DYLIBSYMBOL void a3demoCB_mouseWheel(a3_DemoState *demoState, a3i32 delta, a3i32 cursorX, a3i32 cursorY);
-	A3DYLIBSYMBOL void a3demoCB_mouseMove(a3_DemoState *demoState, a3i32 cursorX, a3i32 cursorY);
-	A3DYLIBSYMBOL void a3demoCB_mouseLeave(a3_DemoState *demoState);
+	A3DYLIBSYMBOL a3_DemoState* a3demoCB_load(a3_DemoState* demoState, a3boolean hotbuild);
+	A3DYLIBSYMBOL a3_DemoState* a3demoCB_unload(a3_DemoState* demoState, a3boolean hotbuild);
+	A3DYLIBSYMBOL a3i32 a3demoCB_display(a3_DemoState* demoState);
+	A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState);
+	A3DYLIBSYMBOL void a3demoCB_windowActivate(a3_DemoState* demoState);
+	A3DYLIBSYMBOL void a3demoCB_windowDeactivate(a3_DemoState* demoState);
+	A3DYLIBSYMBOL void a3demoCB_windowMove(a3_DemoState* demoState, a3i32 newWindowPosX, a3i32 newWindowPosY);
+	A3DYLIBSYMBOL void a3demoCB_windowResize(a3_DemoState* demoState, a3i32 newWindowWidth, a3i32 newWindowHeight);
+	A3DYLIBSYMBOL void a3demoCB_keyPress(a3_DemoState* demoState, a3i32 virtualKey);
+	A3DYLIBSYMBOL void a3demoCB_keyHold(a3_DemoState* demoState, a3i32 virtualKey);
+	A3DYLIBSYMBOL void a3demoCB_keyRelease(a3_DemoState* demoState, a3i32 virtualKey);
+	A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey);
+	A3DYLIBSYMBOL void a3demoCB_keyCharHold(a3_DemoState* demoState, a3i32 asciiKey);
+	A3DYLIBSYMBOL void a3demoCB_mouseClick(a3_DemoState* demoState, a3i32 button, a3i32 cursorX, a3i32 cursorY);
+	A3DYLIBSYMBOL void a3demoCB_mouseDoubleClick(a3_DemoState* demoState, a3i32 button, a3i32 cursorX, a3i32 cursorY);
+	A3DYLIBSYMBOL void a3demoCB_mouseRelease(a3_DemoState* demoState, a3i32 button, a3i32 cursorX, a3i32 cursorY);
+	A3DYLIBSYMBOL void a3demoCB_mouseWheel(a3_DemoState* demoState, a3i32 delta, a3i32 cursorX, a3i32 cursorY);
+	A3DYLIBSYMBOL void a3demoCB_mouseMove(a3_DemoState* demoState, a3i32 cursorX, a3i32 cursorY);
+	A3DYLIBSYMBOL void a3demoCB_mouseLeave(a3_DemoState* demoState);
 
 #ifdef __cplusplus
 }
@@ -220,24 +221,24 @@ extern "C"
 // callback implementations
 
 // demo is loaded
-A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hotbuild)
+A3DYLIBSYMBOL a3_DemoState* a3demoCB_load(a3_DemoState* demoState, a3boolean hotbuild)
 {
 	const a3ui32 stateSize = a3demo_getPersistentStateSize();
 	const a3ui32 trigSamplesPerDegree = 4;
-	
+
 	// do any re-allocation tasks
 	if (demoState && hotbuild)
 	{
-	//	const a3ui32 stateSize = a3demo_getPersistentStateSize();
-	//	a3_DemoState copy = *demoState;
+		//	const a3ui32 stateSize = a3demo_getPersistentStateSize();
+		//	a3_DemoState copy = *demoState;
 
-		// example 1: copy memory directly
-	//	free(demoState);
-	//	demoState = (a3_DemoState *)malloc(stateSize);
-	//	memset(demoState, 0, stateSize);
-	//	*demoState = copy;
+			// example 1: copy memory directly
+		//	free(demoState);
+		//	demoState = (a3_DemoState *)malloc(stateSize);
+		//	memset(demoState, 0, stateSize);
+		//	*demoState = copy;
 
-		// call refresh to re-link pointers in case demo state address changed
+			// call refresh to re-link pointers in case demo state address changed
 		a3demo_refresh(demoState);
 		a3demo_initSceneRefresh(demoState);
 		a3trigInitSetTables(trigSamplesPerDegree, demoState->trigTable);
@@ -250,7 +251,6 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hot
 		// stack object will be deleted at the end of the function
 		// good idea to set the whole block of memory to zero
 		memset(demoState, 0, stateSize);
-
 		// set up trig table (A3DM)
 		a3trigInit(trigSamplesPerDegree, demoState->trigTable);
 
@@ -264,6 +264,9 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hot
 		demoState->textInit = 1;
 		demoState->textMode = 1;
 		demoState->textModeCount = 3;	// 0=off, 1=controls, 2=data
+		demoState->numberOfLettersInMessage = 0;
+
+		demoState->enterPressed = false;
 
 
 		// enable asset streaming between loads
@@ -296,7 +299,7 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hot
 }
 
 // demo is unloaded; option to unload to prep for hotbuild
-A3DYLIBSYMBOL a3_DemoState *a3demoCB_unload(a3_DemoState *demoState, a3boolean hotbuild)
+A3DYLIBSYMBOL a3_DemoState* a3demoCB_unload(a3_DemoState* demoState, a3boolean hotbuild)
 {
 	// release things that need releasing always, whether hotbuilding or not
 	// e.g. kill thread
@@ -336,7 +339,7 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_unload(a3_DemoState *demoState, a3boolean h
 
 // window updates display
 // **NOTE: DO NOT USE FOR RENDERING**
-A3DYLIBSYMBOL a3i32 a3demoCB_display(a3_DemoState *demoState)
+A3DYLIBSYMBOL a3i32 a3demoCB_display(a3_DemoState* demoState)
 {
 	// do nothing, should just return 1 to indicate that the 
 	//	window's display area is controlled by the demo
@@ -344,7 +347,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_display(a3_DemoState *demoState)
 }
 
 // window idles
-A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
+A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 {
 	// perform any idle tasks, such as rendering
 	if (!demoState->exitFlag)
@@ -352,14 +355,15 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 		if (a3timerUpdate(demoState->renderTimer) > 0)
 		{
 			// render timer ticked, update demo state and draw
-			a3demoTestInput(demoState);
+			//a3demoTestInput(demoState);
 			a3demo_input(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessInbound(demoState->net);
-//			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
+			a3demoProcessInput(demoState);
+			//			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessOutbound(demoState->net);
 			a3demoTestRender(demoState);
-//			a3demo_render(demoState);
-			// update input
+			//			a3demo_render(demoState);
+						// update input
 			a3mouseUpdate(demoState->mouse);
 			a3keyboardUpdate(demoState->keyboard);
 			a3XboxControlUpdate(demoState->xcontrol);
@@ -377,14 +381,14 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 }
 
 // window gains focus
-A3DYLIBSYMBOL void a3demoCB_windowActivate(a3_DemoState *demoState)
+A3DYLIBSYMBOL void a3demoCB_windowActivate(a3_DemoState* demoState)
 {
 	// nothing really needs to be done here...
 	//	but it's here just in case
 }
 
 // window loses focus
-A3DYLIBSYMBOL void a3demoCB_windowDeactivate(a3_DemoState *demoState)
+A3DYLIBSYMBOL void a3demoCB_windowDeactivate(a3_DemoState* demoState)
 {
 	// reset input; it won't track events if the window is inactive, 
 	//	active controls will freeze and you'll get strange behaviors
@@ -395,13 +399,13 @@ A3DYLIBSYMBOL void a3demoCB_windowDeactivate(a3_DemoState *demoState)
 }
 
 // window moves
-A3DYLIBSYMBOL void a3demoCB_windowMove(a3_DemoState *demoState, a3i32 newWindowPosX, a3i32 newWindowPosY)
+A3DYLIBSYMBOL void a3demoCB_windowMove(a3_DemoState* demoState, a3i32 newWindowPosX, a3i32 newWindowPosY)
 {
 	// nothing needed here
 }
 
 // window resizes
-A3DYLIBSYMBOL void a3demoCB_windowResize(a3_DemoState *demoState, a3i32 newWindowWidth, a3i32 newWindowHeight)
+A3DYLIBSYMBOL void a3demoCB_windowResize(a3_DemoState* demoState, a3i32 newWindowWidth, a3i32 newWindowHeight)
 {
 	//a3ui32 i;
 	//a3_DemoCamera *camera;
@@ -443,21 +447,21 @@ A3DYLIBSYMBOL void a3demoCB_windowResize(a3_DemoState *demoState, a3i32 newWindo
 }
 
 // any key is pressed
-A3DYLIBSYMBOL void a3demoCB_keyPress(a3_DemoState *demoState, a3i32 virtualKey)
+A3DYLIBSYMBOL void a3demoCB_keyPress(a3_DemoState* demoState, a3i32 virtualKey)
 {
 	// persistent state update
 	a3keyboardSetState(demoState->keyboard, (a3_KeyboardKey)virtualKey, a3input_down);
 }
 
 // any key is held
-A3DYLIBSYMBOL void a3demoCB_keyHold(a3_DemoState *demoState, a3i32 virtualKey)
+A3DYLIBSYMBOL void a3demoCB_keyHold(a3_DemoState* demoState, a3i32 virtualKey)
 {
 	// persistent state update
 	a3keyboardSetState(demoState->keyboard, (a3_KeyboardKey)virtualKey, a3input_down);
 }
 
 // any key is released
-A3DYLIBSYMBOL void a3demoCB_keyRelease(a3_DemoState *demoState, a3i32 virtualKey)
+A3DYLIBSYMBOL void a3demoCB_keyRelease(a3_DemoState* demoState, a3i32 virtualKey)
 {
 	// persistent state update
 	a3keyboardSetState(demoState->keyboard, (a3_KeyboardKey)virtualKey, a3input_up);
@@ -465,7 +469,7 @@ A3DYLIBSYMBOL void a3demoCB_keyRelease(a3_DemoState *demoState, a3i32 virtualKey
 
 // ASCII key is pressed (immediately preceded by "any key" pressed call above)
 // NOTE: there is no release counterpart
-A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey)
+A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey)
 {
 	a3ui32 demoSubMode = demoState->demoSubMode[demoState->demoMode];
 	const a3ui32 demoSubModeCount = demoState->demoSubModeCount[demoState->demoMode];
@@ -474,6 +478,18 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 
 	// persistent state update
 	a3keyboardSetStateASCII(demoState->keyboard, (a3byte)asciiKey);
+
+
+	if (asciiKey == 8)
+	{
+		demoState->numberOfLettersInMessage--;
+		demoState->messageText[demoState->numberOfLettersInMessage] = 0;
+
+	}
+	if (asciiKey == 13)
+	{
+		demoState->enterPressed = true;
+	}
 
 	// handle special cases immediately
 	switch (asciiKey)
@@ -500,80 +516,129 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 		a3demo_startNetworking(demoState, 0);
 		break;
 
-
 		// reload (T) or toggle (t) text
-	case 'T':
-		if (!a3textIsInitialized(demoState->text))
-		{
-			a3demo_initializeText(demoState->text);
-			demoState->textInit = 1;
-		}
-		else
-		{
-			a3textRelease(demoState->text);
-			demoState->textInit = 0;
-		}
+//	case 'T':
+//		if (!a3textIsInitialized(demoState->text))
+//		{
+//			a3demo_initializeText(demoState->text);
+//			demoState->textInit = 1;
+//		}
+//		else
+//		{
+//			a3textRelease(demoState->text);
+//			demoState->textInit = 0;
+//		}
+//		break;
+//	case 't':
+//		demoState->textMode = (demoState->textMode + 1) % demoState->textModeCount;
+//		break;
+	case ' ':
+		demoState->messageText[demoState->numberOfLettersInMessage] = ' ';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'a':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'a';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'b':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'b';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'c':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'c';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'd':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'd';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'e':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'e';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'f':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'f';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'g':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'g';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'h':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'h';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'i':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'i';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'j':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'j';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'k':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'k';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'l':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'l';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'm':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'm';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'n':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'n';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'o':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'o';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'p':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'p';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'q':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'q';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 'r':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'r';
+		demoState->numberOfLettersInMessage++;
+		break;
+	case 's':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 's';
+		demoState->numberOfLettersInMessage++;
 		break;
 	case 't':
-		demoState->textMode = (demoState->textMode + 1) % demoState->textModeCount;
+		demoState->messageText[demoState->numberOfLettersInMessage] = 't';
+		demoState->numberOfLettersInMessage++;
 		break;
-
-		// reload all shaders in real-time
-	case 'P':
-		a3demo_unloadShaders(demoState);
-		a3demo_loadShaders(demoState);
+	case 'u':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'u';
+		demoState->numberOfLettersInMessage++;
 		break;
-
-
-		// change pipeline mode
-	case '.':
-		demoState->demoMode = (demoState->demoMode + 1) % demoState->demoModeCount;
+	case 'v':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'v';
+		demoState->numberOfLettersInMessage++;
 		break;
-	case ',':
-		demoState->demoMode = (demoState->demoMode + demoState->demoModeCount - 1) % demoState->demoModeCount;
+	case 'w':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'w';
+		demoState->numberOfLettersInMessage++;
 		break;
-
-		// change pipeline stage
-	case '>':
-		demoSubMode = demoState->demoSubMode[demoState->demoMode] = (demoSubMode + 1) % demoSubModeCount;
-		break;
-	case '<':
-		demoSubMode = demoState->demoSubMode[demoState->demoMode] = (demoSubMode + demoSubModeCount - 1) % demoSubModeCount;
-		break;
-
-		// change stage output
-	case '}':
-		demoState->demoOutputMode[demoState->demoMode][demoSubMode] = (demoOutput + 1) % demoOutputCount;
-		break;
-	case '{':
-		demoState->demoOutputMode[demoState->demoMode][demoSubMode] = (demoOutput + demoOutputCount - 1) % demoOutputCount;
-		break;
-
-
-		// toggle grid
-	case 'g':
-		demoState->displayGrid = 1 - demoState->displayGrid;
-		break;
-
-		// toggle world axes
 	case 'x':
-		demoState->displayWorldAxes = 1 - demoState->displayWorldAxes;
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'x';
+		demoState->numberOfLettersInMessage++;
 		break;
-
-		// toggle object axes
+	case 'y':
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'y';
+		demoState->numberOfLettersInMessage++;
+		break;
 	case 'z':
-		demoState->displayObjectAxes = 1 - demoState->displayObjectAxes;
-		break;
-
-		// toggle tangent bases on vertices or other
-	case 'B':
-		demoState->displayTangentBases = 1 - demoState->displayTangentBases;
-		break;
-
-
-		// update animation
-	case 'm':
-		demoState->updateAnimation = 1 - demoState->updateAnimation;
+		demoState->messageText[demoState->numberOfLettersInMessage] = 'z';
+		demoState->numberOfLettersInMessage++;
 		break;
 	}
 
@@ -590,7 +655,7 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 }
 
 // ASCII key is held
-A3DYLIBSYMBOL void a3demoCB_keyCharHold(a3_DemoState *demoState, a3i32 asciiKey)
+A3DYLIBSYMBOL void a3demoCB_keyCharHold(a3_DemoState* demoState, a3i32 asciiKey)
 {
 	// persistent state update
 	a3keyboardSetStateASCII(demoState->keyboard, (a3byte)asciiKey);
@@ -607,7 +672,7 @@ A3DYLIBSYMBOL void a3demoCB_keyCharHold(a3_DemoState *demoState, a3i32 asciiKey)
 }
 
 // mouse button is clicked
-A3DYLIBSYMBOL void a3demoCB_mouseClick(a3_DemoState *demoState, a3i32 button, a3i32 cursorX, a3i32 cursorY)
+A3DYLIBSYMBOL void a3demoCB_mouseClick(a3_DemoState* demoState, a3i32 button, a3i32 cursorX, a3i32 cursorY)
 {
 	// persistent state update
 	a3mouseSetState(demoState->mouse, (a3_MouseButton)button, a3input_down);
@@ -615,7 +680,7 @@ A3DYLIBSYMBOL void a3demoCB_mouseClick(a3_DemoState *demoState, a3i32 button, a3
 }
 
 // mouse button is double-clicked
-A3DYLIBSYMBOL void a3demoCB_mouseDoubleClick(a3_DemoState *demoState, a3i32 button, a3i32 cursorX, a3i32 cursorY)
+A3DYLIBSYMBOL void a3demoCB_mouseDoubleClick(a3_DemoState* demoState, a3i32 button, a3i32 cursorX, a3i32 cursorY)
 {
 	// persistent state update
 	a3mouseSetState(demoState->mouse, (a3_MouseButton)button, a3input_down);
@@ -623,7 +688,7 @@ A3DYLIBSYMBOL void a3demoCB_mouseDoubleClick(a3_DemoState *demoState, a3i32 butt
 }
 
 // mouse button is released
-A3DYLIBSYMBOL void a3demoCB_mouseRelease(a3_DemoState *demoState, a3i32 button, a3i32 cursorX, a3i32 cursorY)
+A3DYLIBSYMBOL void a3demoCB_mouseRelease(a3_DemoState* demoState, a3i32 button, a3i32 cursorX, a3i32 cursorY)
 {
 	// persistent state update
 	a3mouseSetState(demoState->mouse, (a3_MouseButton)button, a3input_up);
@@ -631,7 +696,7 @@ A3DYLIBSYMBOL void a3demoCB_mouseRelease(a3_DemoState *demoState, a3i32 button, 
 }
 
 // mouse wheel is turned
-A3DYLIBSYMBOL void a3demoCB_mouseWheel(a3_DemoState *demoState, a3i32 delta, a3i32 cursorX, a3i32 cursorY)
+A3DYLIBSYMBOL void a3demoCB_mouseWheel(a3_DemoState* demoState, a3i32 delta, a3i32 cursorX, a3i32 cursorY)
 {
 	// controlled camera when zooming
 	//a3_DemoCamera *camera;
@@ -655,14 +720,14 @@ A3DYLIBSYMBOL void a3demoCB_mouseWheel(a3_DemoState *demoState, a3i32 delta, a3i
 }
 
 // mouse moves
-A3DYLIBSYMBOL void a3demoCB_mouseMove(a3_DemoState *demoState, a3i32 cursorX, a3i32 cursorY)
+A3DYLIBSYMBOL void a3demoCB_mouseMove(a3_DemoState* demoState, a3i32 cursorX, a3i32 cursorY)
 {
 	// persistent state update
 	a3mouseSetPosition(demoState->mouse, cursorX, cursorY);
 }
 
 // mouse leaves window
-A3DYLIBSYMBOL void a3demoCB_mouseLeave(a3_DemoState *demoState)
+A3DYLIBSYMBOL void a3demoCB_mouseLeave(a3_DemoState* demoState)
 {
 	// reset mouse state or any buttons pressed will freeze
 	a3mouseReset(demoState->mouse);
