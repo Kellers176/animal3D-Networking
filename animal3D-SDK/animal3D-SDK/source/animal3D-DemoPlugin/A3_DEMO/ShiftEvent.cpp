@@ -15,4 +15,5 @@ void ShiftEvent::execute()
 
 void ShiftEvent::dispatch()
 {
+
 }

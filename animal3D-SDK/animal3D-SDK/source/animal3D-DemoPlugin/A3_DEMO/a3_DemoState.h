@@ -156,7 +156,7 @@ struct a3_DemoState
 	a3ui32 activeCamera;
 
 
-	// networking
+	// networking -- this may need to change to cpp
 	a3_NetworkingManager net[1];
 
 

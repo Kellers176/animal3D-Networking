@@ -1,9 +1,9 @@
 #ifndef SHIFTEVENT_H
 #define SHIFTEVENT_H
 
-#include "A3_DEMO/a3_Networking_Event.h"
+#include "a3_Event.h"
 
-class ShiftEvent : a3_Networking_Event
+class ShiftEvent : a3_Event
 {
 
 public:
