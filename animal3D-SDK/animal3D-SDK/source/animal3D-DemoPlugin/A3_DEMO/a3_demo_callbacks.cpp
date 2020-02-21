@@ -482,10 +482,10 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey
 	// persistent state update
 	a3keyboardSetStateASCII(demoState->keyboard, (a3byte)asciiKey);
 
-	if (asciiKey == 9)
+	if (asciiKey == a3key_tab)
 	{
 		//Fix this------------------------------------------
-		a3_Event* tab_Event = new ShiftEvent();
+		ShiftEvent* tab_Event = new ShiftEvent();
 		a3_EventManager::Instance()->addEvent(tab_Event);
 		//a3_EventManager::Instance()
 	}

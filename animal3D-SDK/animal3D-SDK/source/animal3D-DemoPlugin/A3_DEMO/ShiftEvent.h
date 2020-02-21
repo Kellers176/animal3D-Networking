@@ -3,7 +3,7 @@
 
 #include "a3_Event.h"
 
-class ShiftEvent : a3_Event
+class ShiftEvent : public a3_Event
 {
 
 public:
