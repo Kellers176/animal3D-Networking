@@ -4,12 +4,15 @@ ShiftEvent::ShiftEvent()
 {
 }
 
+
 ShiftEvent::~ShiftEvent()
 {
+
 }
 
 void ShiftEvent::execute()
 {
+	//thisStruct->number++;
 	numToIncrment++;
 }
 

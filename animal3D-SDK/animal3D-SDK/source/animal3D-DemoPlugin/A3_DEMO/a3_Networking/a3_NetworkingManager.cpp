@@ -25,11 +25,6 @@
 
 #include "../a3_NetworkingManager.h"
 
-#include "RakNet/RakPeerInterface.h"
-#include "RakNet/MessageIdentifiers.h"
-#include "RakNet/RakNetTypes.h"
-#include "RakNet/BitStream.h"
-#include "RakNet/GetTime.h"
 
 
 //-----------------------------------------------------------------------------
@@ -41,7 +36,9 @@ enum a3_NetGameMessages
 
 	ID_GAME_MESSAGE_1,
 	ID_ADD_INPUT,
-	ID_UPDATE_FOR_USER
+	ID_UPDATE_FOR_USER,
+	ID_RECEIVE_SHIFT_EVENT,
+	ID_RECEIVE_COOKIE_TOTAL
 };
 
 
@@ -197,7 +194,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 						printf("\n SEND TIME: %u \n", (unsigned int)sendTime);
 
 
-
+						net->serverAddress = packet->systemAddress;
 					}
 					break;
 				case ID_NEW_INCOMING_CONNECTION:
@@ -232,6 +229,21 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					}
 					break;
 
+				case ID_RECEIVE_SHIFT_EVENT:
+				{
+					ShiftEvent* temp = (ShiftEvent*)packet->data;
+					a3_EventManager::Instance()->addEvent(temp);
+					break;
+				}
+
+				case ID_RECEIVE_COOKIE_TOTAL:
+				{
+					
+					// get the total cookies from the server and make text the number
+
+					break;
+				}
+
 				default:
 					printf("Message with identifier %i has arrived.\n", msg);
 					break;
@@ -254,5 +266,9 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net)
 	return 0;
 }
 
+void SendMessage()
+{
+
+}
 
 //-----------------------------------------------------------------------------

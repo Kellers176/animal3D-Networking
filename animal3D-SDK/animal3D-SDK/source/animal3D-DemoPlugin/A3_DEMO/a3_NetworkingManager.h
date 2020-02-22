@@ -32,6 +32,15 @@
 #include "animal3D/animal3D.h"
 
 
+#include "RakNet/RakPeerInterface.h"
+#include "RakNet/MessageIdentifiers.h"
+#include "RakNet/RakNetTypes.h"
+#include "RakNet/BitStream.h"
+#include "RakNet/GetTime.h"
+
+#include "A3_DEMO/a3_EventManager.h"
+#include "A3_DEMO/ShiftEvent.h"
+
 //-----------------------------------------------------------------------------
 
 #ifdef __cplusplus
@@ -41,7 +50,6 @@ extern "C"
 	typedef struct a3_NetworkingManager				a3_NetworkingManager;
 #endif	// __cplusplus
 
-
 //-----------------------------------------------------------------------------
 
 	typedef a3byte a3netAddressStr[16];
@@ -49,9 +57,27 @@ extern "C"
 	// networking manager
 	struct a3_NetworkingManager
 	{
+		RakNet::SystemAddress serverAddress;
 		a3ui16 port_inbound, port_outbound;
 		a3ui16 maxConnect_inbound, maxConnect_outbound;
-		void* peer;
+		RakNet::RakPeerInterface* peer;
+
+		RakNet::BitStream* bsOut;
+
+		void SendMessageToEveryone()
+		{
+			RakNet::RakPeerInterface* peer = RakNet::RakPeerInterface::GetInstance();
+			for (int i = 0; i < peer->GetNumberOfAddresses(); i++)
+			{
+				peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
+			}
+		}
+
+		void SendMessageToServer()
+		{
+			RakNet::RakPeerInterface* peer = RakNet::RakPeerInterface::GetInstance();
+			peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, serverAddress, false);
+		}
 	};
 
 

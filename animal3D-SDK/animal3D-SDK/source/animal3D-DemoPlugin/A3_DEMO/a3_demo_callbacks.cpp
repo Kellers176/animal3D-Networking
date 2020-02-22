@@ -362,6 +362,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 			a3demo_input(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessInbound(demoState->net);
 			a3demoProcessInput(demoState);
+			a3_EventManager::Instance()->processEvents();
 			//			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessOutbound(demoState->net);
 			a3demoTestRender(demoState);
@@ -486,8 +487,12 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey
 	{
 		//Fix this------------------------------------------
 		ShiftEvent* tab_Event = new ShiftEvent();
-		a3_EventManager::Instance()->addEvent(tab_Event);
+		//a3_EventManager::Instance()->addEvent(tab_Event);
 		//a3_EventManager::Instance()
+		//cookie clicker
+		demoState->net->bsOut->Write(138);
+		demoState->net->bsOut->Write(tab_Event);
+
 	}
 	if (asciiKey == 8)
 	{
