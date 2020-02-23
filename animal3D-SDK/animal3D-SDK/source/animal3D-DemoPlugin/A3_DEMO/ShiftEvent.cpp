@@ -2,6 +2,13 @@
 
 ShiftEvent::ShiftEvent()
 {
+	numToIncriment = 0;
+}
+
+ShiftEvent::ShiftEvent(CookieClicker* cookie)
+{
+	myCookie = cookie;
+	numToIncriment = 0;
 }
 
 ShiftEvent::~ShiftEvent()
@@ -10,7 +17,8 @@ ShiftEvent::~ShiftEvent()
 
 void ShiftEvent::execute()
 {
-	numToIncrment++;
+	numToIncriment++;
+	myCookie->number++;
 }
 
 void ShiftEvent::dispatch()

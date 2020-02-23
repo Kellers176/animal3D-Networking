@@ -41,7 +41,8 @@ enum a3_NetGameMessages
 
 	ID_GAME_MESSAGE_1,
 	ID_ADD_INPUT,
-	ID_UPDATE_FOR_USER
+	ID_UPDATE_FOR_USER,
+	ID_SEND_STRUCT
 };
 
 
@@ -232,6 +233,10 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					}
 					break;
 
+				case ID_SEND_STRUCT:
+				{
+					break;
+				}
 				default:
 					printf("Message with identifier %i has arrived.\n", msg);
 					break;

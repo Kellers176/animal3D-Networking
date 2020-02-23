@@ -19,6 +19,7 @@ public:
 
 	void addEvent(a3_Event* myEvent);
 	void deleteEvent(a3_Event* myEvent);
+	void deleteAllEvents();
 	void processEvents();
 
 	

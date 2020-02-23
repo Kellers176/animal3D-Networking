@@ -30,10 +30,20 @@ void a3_EventManager::deleteEvent(a3_Event* myEvent)
 	}
 }
 
+void a3_EventManager::deleteAllEvents()
+{
+	for (int i = 0; i < curEvents.size(); i++)
+	{
+		curEvents.erase(curEvents.begin() + i);
+	}
+}
+
 void a3_EventManager::processEvents()
 {
 	for (int i = 0; i < curEvents.size(); i++)
 	{
 		curEvents.at(i)->execute();
 	}
+	deleteAllEvents();
+
 }

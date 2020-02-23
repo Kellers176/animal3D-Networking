@@ -33,7 +33,7 @@
 
 #include "a3_EventManager.h"
 #include "ShiftEvent.h"
-
+#include "A3_DEMO/CookieClicker.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,7 +43,7 @@
 
 //-----------------------------------------------------------------------------
 // networking stuff
-
+CookieClicker myCookie;
 void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 {
 	a3netAddressStr const ipAddress = "184.171.146.89";
@@ -94,6 +94,8 @@ void a3demoProcessInput(a3_DemoState* demoState)
 		demoState->enterPressed = false;
 		demoState->numberOfLettersInMessage = 0;
 	}
+
+	
 
 }
 
@@ -362,6 +364,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 			a3demo_input(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessInbound(demoState->net);
 			a3demoProcessInput(demoState);
+			a3_EventManager::Instance()->processEvents();
 			//			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessOutbound(demoState->net);
 			a3demoTestRender(demoState);
@@ -482,12 +485,18 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey
 	// persistent state update
 	a3keyboardSetStateASCII(demoState->keyboard, (a3byte)asciiKey);
 
-	if (asciiKey == a3key_tab)
+	//we are using tab cause for some reason that works ebtter
+
+	if (asciiKey == 9)
 	{
+		printf("Pressing tab");
 		//Fix this------------------------------------------
-		ShiftEvent* tab_Event = new ShiftEvent();
-		a3_EventManager::Instance()->addEvent(tab_Event);
-		//a3_EventManager::Instance()
+		ShiftEvent* shift_Event = new ShiftEvent(&myCookie);
+		a3_EventManager::Instance()->addEvent(shift_Event);
+		printf("Cookie Num: ");
+		printf("%d", myCookie.number);
+		//a3_EventManager::Instance
+		//demoState->messageText[demoState->numberOfLettersInMessage] = myCookie.number;
 	}
 	if (asciiKey == 8)
 	{
