@@ -24,6 +24,7 @@
 
 
 #include "../a3_NetworkingManager.h"
+#include "A3_DEMO/a3_EventManager.h"
 
 #include "RakNet/RakPeerInterface.h"
 #include "RakNet/MessageIdentifiers.h"
@@ -42,6 +43,7 @@ enum a3_NetGameMessages
 	ID_GAME_MESSAGE_1,
 	ID_ADD_INPUT,
 	ID_UPDATE_FOR_USER,
+	ID_PROCESS_EVENT,
 	ID_SEND_STRUCT
 };
 
@@ -103,6 +105,11 @@ a3i32 a3netShutdown(a3_NetworkingManager* net)
 		net->peer = 0;
 		return 1;
 	}
+	return 0;
+}
+
+a3i32 a3netNetworkingLoop(a3_NetworkingManager* net)
+{
 	return 0;
 }
 
@@ -232,11 +239,22 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 						printf("%s\n", rs.C_String());
 					}
 					break;
-
+				case ID_PROCESS_EVENT:
+					{
+						//tell the client to process the envents
+						//send a bool over to tell them to process events?
+						//How would I send over the process events to the clients
+						a3_EventManager::Instance()->processEvents();
+						break;
+					}
 				case ID_SEND_STRUCT:
-				{
-					break;
-				}
+					{
+						//tell the player to update their Cookie clicker on the clients end
+						//will need a cookie clicker reference
+						//send client reference of the struct
+						
+						break;
+					}
 				default:
 					printf("Message with identifier %i has arrived.\n", msg);
 					break;

@@ -52,6 +52,7 @@ extern "C"
 		a3ui16 port_inbound, port_outbound;
 		a3ui16 maxConnect_inbound, maxConnect_outbound;
 		void* peer;
+
 	};
 
 
@@ -63,6 +64,8 @@ extern "C"
 	// shutdown networking
 	a3i32 a3netShutdown(a3_NetworkingManager* net);
 
+	//networking loop
+	a3i32 a3netNetworkingLoop(a3_NetworkingManager* net);
 
 	// connect
 	a3i32 a3netConnect(a3_NetworkingManager* net, a3netAddressStr const ip);
