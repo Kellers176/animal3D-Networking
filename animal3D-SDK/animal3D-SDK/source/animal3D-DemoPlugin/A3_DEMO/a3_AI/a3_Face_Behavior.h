@@ -4,38 +4,41 @@
 #define FACE_H
 
 #include "a3_Align_Behavior.h"
+#include "a3_Kinematic.h"
 
-class FaceBehavior : AlignBehavior
+class FaceBehavior
 {
 public:
+	FaceBehavior();
+	~FaceBehavior();
+
 	// overrides the align.target member
-	// target
+	Kinematic faceTarget;
 
 	// ... other data is derived from the superclass
 
 	// implemented as it was in pursue
-	// def getSteering()
-	// {
-	//		// calculate the target to delegat to align
-	//		
-	//		// work ou the direction to target
-	//		direction = target.position - character.position
-	//	
-	//		// check for a zero direction, and make no change if so
-	//		if direction.length() == 0;
-	//		{
-	//			return target;
-	//		}
-	//
-	//		// put the target together
-	//		align.targte = explicitTarget;
-	//		align.target.orientation = atan2(-direction.x, direction.z)
-	//
-	//		// delegate to align
-	//		return Align.getSteering();
-	// }
+	SteeringOutput* GetSteering(AlignBehavior* align)
+	{
+		// calculate the target to delegate to align
+		// work out the direction to target
+		a3vec2 direction = faceTarget.position - align->character.position;
 
-private:
+		// check for a zero direction and make no change if so
+		float directionMagnitude = a3sqrt(direction.x * direction.x + direction.y * direction.y);
+
+		if (directionMagnitude == 0)
+		{
+			//return target;
+		}
+
+		// put the target togather
+		align->target = faceTarget;
+		align->target.orientation = a3atan2d(-direction.x, direction.y);
+
+		// delegate to align
+		return align->getSteering();
+	}
 
 };
 

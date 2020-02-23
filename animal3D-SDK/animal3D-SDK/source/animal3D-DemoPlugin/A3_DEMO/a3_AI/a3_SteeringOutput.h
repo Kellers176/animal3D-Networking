@@ -1,12 +1,13 @@
 
+#include "animal3D-A3DM/a3math/a3vector.h"
 
 #ifndef STEERING_OUTPUT_H
 #define STEERING_OUTPUT_H
 
 struct SteeringOutput
 {
-	// linear // a vec2 or vec3
-	// angular // a single floating point value
+	a3vec2 linear;
+	float angular;
 };
 
 #endif

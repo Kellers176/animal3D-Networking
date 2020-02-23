@@ -179,15 +179,6 @@
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\Something.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="a3_Seek_Behavior.h">
-      <Filter>Header Files\A3_DEMO\a3_AI</Filter>
-    </ClInclude>
-    <ClInclude Include="a3_SteeringOutput.h">
-      <Filter>Header Files\A3_DEMO\a3_AI</Filter>
-    </ClInclude>
-    <ClInclude Include="a3_Kinematic.h">
-      <Filter>Header Files\A3_DEMO\a3_AI</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_AI\a3_Align_Behavior.h">
       <Filter>Header Files\A3_DEMO\a3_AI</Filter>
     </ClInclude>
@@ -198,6 +189,18 @@
       <Filter>Header Files\A3_DEMO\a3_AI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_AI\a3_Wander_Behavior.h">
+      <Filter>Header Files\A3_DEMO\a3_AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_AI\a3_Kinematic.h">
+      <Filter>Header Files\A3_DEMO\a3_AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_AI\a3_Seek_Behavior.h">
+      <Filter>Header Files\A3_DEMO\a3_AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_AI\a3_SteeringOutput.h">
+      <Filter>Header Files\A3_DEMO\a3_AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_AI\a3_Separation_Behavior.h">
       <Filter>Header Files\A3_DEMO\a3_AI</Filter>
     </ClInclude>
   </ItemGroup>
