@@ -1,4 +1,4 @@
-#ifndef COOKIECLICKER_H
+#ifndef COOKIECLICKER-H
 #define COOKIECLICKER_H
 
 struct CookieClicker

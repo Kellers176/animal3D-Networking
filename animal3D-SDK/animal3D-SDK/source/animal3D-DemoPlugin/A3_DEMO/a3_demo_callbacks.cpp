@@ -364,7 +364,6 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 			a3demo_input(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessInbound(demoState->net);
 			a3demoProcessInput(demoState);
-			a3_EventManager::Instance()->processEvents();
 			//			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessOutbound(demoState->net);
 			a3demoTestRender(demoState);
