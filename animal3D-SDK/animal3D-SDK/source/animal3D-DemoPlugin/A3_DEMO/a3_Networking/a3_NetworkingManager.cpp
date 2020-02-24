@@ -111,6 +111,7 @@ a3i32 a3netShutdown(a3_NetworkingManager* net)
 
 a3i32 a3netNetworkingLoop(a3_NetworkingManager* net)
 {
+	//make own send function to send the stuff
 	return 0;
 }
 
