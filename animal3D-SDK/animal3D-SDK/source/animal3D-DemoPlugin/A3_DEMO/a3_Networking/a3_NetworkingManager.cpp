@@ -43,7 +43,7 @@ enum a3_NetGameMessages
 	ID_GAME_MESSAGE_1,
 	ID_ADD_INPUT,
 	ID_UPDATE_FOR_USER,
-	ID_PROCESS_EVENT,
+	ID_ADD_EVENT,
 	ID_SEND_STRUCT
 };
 
@@ -239,12 +239,15 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 						printf("%s\n", rs.C_String());
 					}
 					break;
-				case ID_PROCESS_EVENT:
+				case ID_ADD_EVENT:
 					{
 						//tell the client to process the envents
 						//send a bool over to tell them to process events?
 						//How would I send over the process events to the clients
-						a3_EventManager::Instance()->processEvents();
+						//a3_EventManager::Instance()->processEvents();
+						
+						//send the event to the other clients
+
 						break;
 					}
 				case ID_SEND_STRUCT:
