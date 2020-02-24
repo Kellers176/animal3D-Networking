@@ -10,4 +10,19 @@ struct SteeringOutput
 	float angular;
 };
 
+SteeringOutput operator + (SteeringOutput thisOne, SteeringOutput other) {
+	Steeringoutput temp = thisOne;
+	temp.linear = thisOne.linear + other.linear;
+	temp.angular = thisOne.linear + other.linear;
+	return temp;
+}
+
+SteeringOutput* operator + (SteeringOutput* thisOne, SteeringOutput* other) {
+	Steeringoutput* temp = new SteeringOutput();
+	temp->linear = thisOne->linear + other->linear;
+	temp->angular = thisOne->linear + other->linear;
+	return temp;
+}
+
+
 #endif
