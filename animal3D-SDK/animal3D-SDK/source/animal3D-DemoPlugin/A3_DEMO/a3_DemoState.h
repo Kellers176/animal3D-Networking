@@ -44,7 +44,7 @@
 #include "_utilities/a3_DemoShaderProgram.h"
 
 #include "a3_NetworkingManager.h"
-
+#include "A3_DEMO/CookieClicker.h"
 
 //-----------------------------------------------------------------------------
 
@@ -114,7 +114,7 @@ struct a3_DemoState
 	a3real frameWidthInv, frameHeightInv, frameAspect;
 	a3i32 frameBorder;
 
-
+	CookieClicker* thisCookie;
 	//---------------------------------------------------------------------
 	// objects that have known or fixed instance count in the whole demo
 

@@ -43,6 +43,8 @@
 
 //-----------------------------------------------------------------------------
 // networking stuff
+
+//this will change to demoState I thinkkkkkk.I need to get the cookie to be able to send the number, so reference demostate object, then pass number to network manager
 CookieClicker myCookie;
 void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 {
@@ -495,6 +497,7 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey
 		a3_EventManager::Instance()->addEvent(shift_Event);
 		printf("Cookie Num: ");
 		printf("%d", myCookie.number);
+		demoState->net->numberToSend = myCookie.number;
 		//a3_EventManager::Instance
 		//demoState->messageText[demoState->numberOfLettersInMessage] = myCookie.number;
 	}

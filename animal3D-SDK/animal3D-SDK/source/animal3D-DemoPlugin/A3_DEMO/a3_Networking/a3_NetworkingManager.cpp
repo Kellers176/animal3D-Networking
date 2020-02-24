@@ -44,7 +44,8 @@ enum a3_NetGameMessages
 	ID_ADD_INPUT,
 	ID_UPDATE_FOR_USER,
 	ID_ADD_EVENT,
-	ID_SEND_STRUCT
+	ID_SEND_STRUCT,
+	ID_RECEIVE_STRUCT
 };
 
 
@@ -240,24 +241,38 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					}
 					break;
 				case ID_ADD_EVENT:
-					{
-						//tell the client to process the envents
-						//send a bool over to tell them to process events?
-						//How would I send over the process events to the clients
-						//a3_EventManager::Instance()->processEvents();
-						
-						//send the event to the other clients
-
-						break;
-					}
+				{
+					//tell the client to process the envents
+					//send a bool over to tell them to process events?
+					//How would I send over the process events to the clients
+					//a3_EventManager::Instance()->processEvents();
+					//ShiftEvent* shift_Event = new ShiftEvent(&myCookie);
+					//ShiftEvent* shift_Event = new ShiftEvent();
+					//a3_EventManager::Instance()->addEvent(shift_Event);
+					break;
+				}
 				case ID_SEND_STRUCT:
-					{
-						//tell the player to update their Cookie clicker on the clients end
-						//will need a cookie clicker reference
-						//send client reference of the struct
-						
-						break;
-					}
+				{
+					//tell the player to update their Cookie clicker on the clients end
+					//will need a cookie clicker reference
+					//send client reference of the struct
+					//struct?
+					RakNet::BitStream bsOut[1];
+					bsOut->Write(net->numberToSend);
+					bsOut->Write((RakNet::MessageID)ID_RECEIVE_STRUCT);
+					peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
+
+					break;
+				}
+				case ID_RECEIVE_STRUCT:
+				{
+					a3i32 rs;
+					bs_in.Read(rs);
+					net->numberToSend = rs;
+
+					break;
+				}
+
 				default:
 					printf("Message with identifier %i has arrived.\n", msg);
 					break;
