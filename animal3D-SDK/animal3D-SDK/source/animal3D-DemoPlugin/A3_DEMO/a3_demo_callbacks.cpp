@@ -54,7 +54,7 @@ Managers gameManager;
 //CookieClicker myCookie;
 void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 {
-	a3netAddressStr const ipAddress = "184.171.146.89";
+	a3netAddressStr const ipAddress = "216.93.149.176";
 	a3ui16 const port_server = 60006;
 	a3ui16 const port_client = 60005;
 	a3ui16 const maxConnections_server = 16;
@@ -503,12 +503,11 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey
 	a3keyboardSetStateASCII(demoState->keyboard, (a3byte)asciiKey);
 
 	//we are using tab cause for some reason that works ebtter
-
 	if (asciiKey == 9)
 	{
 		printf("Pressing tab");
 		//Fix this------------------------------------------
-		ShiftEvent* shift_Event = new ShiftEvent(gameManager.net, gameManager.myCookie);
+		ShiftEvent* shift_Event = new ShiftEvent(gameManager.net);
 		a3_EventManager::Instance()->addEvent(shift_Event);
 
 		// the net cookie number will be updated through the networking manager

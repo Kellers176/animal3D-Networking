@@ -32,7 +32,6 @@
 #include "RakNet/BitStream.h"
 #include "RakNet/GetTime.h"
 
-#include "A3_DEMO/ShiftEvent.h"
 #include "A3_DEMO/CookieClicker.h"
 
 
@@ -185,13 +184,17 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					break;
 				case ID_REMOTE_CONNECTION_LOST:
 					printf("Another client has lost the connection.\n");
+					net->numberOfParticipants = net->numberOfParticipants - 1;
 					break;
 				case ID_REMOTE_NEW_INCOMING_CONNECTION:
 					printf("Another client has connected.\n");
+					net->numberOfParticipants = net->numberOfParticipants + 1;
 					break;
 				case ID_CONNECTION_REQUEST_ACCEPTED:
 					printf("Our connection request has been accepted.\n");
 					{
+						net->serverAddress = packet->systemAddress;
+
 						// Use a BitStream to write a custom user message
 						// Bitstreams are easier to use than sending casted structures, 
 						//	and handle endian swapping automatically
@@ -258,7 +261,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 				case ID_SEND_STRUCT:
 				{
 					// get the message (this is automatically done)
-
+					printf("we have received a message about le cookie uh huh huh huh");
 					// increase the number
 					net->CookieNumber = net->CookieNumber + 1;
 
@@ -269,7 +272,11 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 
 					// send the temporary container out to everyone
 					RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
-					peer->Send(reinterpret_cast<char*>(&myCookie), sizeof(myCookie), HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetMyBoundAddress(), true);
+
+					for (int i = 0; i < net->numberOfParticipants; i++)
+					{
+						peer->Send(reinterpret_cast<char*>(&myCookie), sizeof(myCookie), HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
+					}
 
 					break;
 				}
