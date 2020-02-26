@@ -39,13 +39,22 @@
 #include <stdlib.h>
 #include <string.h>
 #include <GL/glew.h>
+#include "A3_DEMO/CookieClicker.h"
+#include "A3_DEMO/a3_EventManager.h"
 
+struct Manager
+{
+	a3_EventManager eventManager[1];
+	CookieClicker myCookie[1];
+	a3_NetworkingManager net[1];
+};
 
+Manager gameManager;
 //-----------------------------------------------------------------------------
 // networking stuff
 
 //this will change to demoState I thinkkkkkk.I need to get the cookie to be able to send the number, so reference demostate object, then pass number to network manager
-CookieClicker myCookie;
+//CookieClicker myCookie;
 void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 {
 	a3netAddressStr const ipAddress = "184.171.146.89";
@@ -53,24 +62,26 @@ void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 	a3ui16 const port_client = 60005;
 	a3ui16 const maxConnections_server = 16;
 	a3ui16 const maxConnections_client = 4;
+	gameManager.net->isServer = false;
 
 	if (isServer)
 	{
-		if (a3netStartup(demoState->net, port_server, 0, maxConnections_server, 0) > 0)
+		if (a3netStartup(gameManager.net, port_server, 0, maxConnections_server, 0) > 0)
 			printf("\n STARTED NETWORKING AS SERVER \n");
+		gameManager.net->isServer = true;
 	}
 	else
 	{
-		if (a3netStartup(demoState->net, 0, port_server, 0, maxConnections_client) > 0)
-			if (a3netConnect(demoState->net, ipAddress) > 0)
+		if (a3netStartup(gameManager.net, 0, port_server, 0, maxConnections_client) > 0)
+			if (a3netConnect(gameManager.net, ipAddress) > 0)
 				printf("\n STARTED NETWORKING AS CLIENT \n");
 	}
 }
 
 void a3demo_stopNetworking(a3_DemoState* demoState)
 {
-	if (a3netDisconnect(demoState->net) > 0)
-		if (a3netShutdown(demoState->net) > 0)
+	if (a3netDisconnect(gameManager.net) > 0)
+		if (a3netShutdown(gameManager.net) > 0)
 			printf("\n SHUT DOWN NETWORKING \n");
 }
 
@@ -364,11 +375,11 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 			// render timer ticked, update demo state and draw
 			//a3demoTestInput(demoState);
 			a3demo_input(demoState, demoState->renderTimer->secondsPerTick);
-			a3netProcessInbound(demoState->net);
+			a3netProcessInbound(gameManager.net);
 			a3demoProcessInput(demoState);
 			a3_EventManager::Instance()->processEvents();
 			//			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
-			a3netProcessOutbound(demoState->net);
+			a3netProcessOutbound(gameManager.net);
 			a3demoTestRender(demoState);
 			//			a3demo_render(demoState);
 						// update input
@@ -493,11 +504,11 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey
 	{
 		printf("Pressing tab");
 		//Fix this------------------------------------------
-		ShiftEvent* shift_Event = new ShiftEvent(&myCookie);
+		ShiftEvent* shift_Event = new ShiftEvent(gameManager.net, gameManager.myCookie);
 		a3_EventManager::Instance()->addEvent(shift_Event);
 		printf("Cookie Num: ");
-		printf("%d", myCookie.number);
-		demoState->net->numberToSend = myCookie.number;
+		printf("%d", gameManager.myCookie->number);
+		gameManager.net->numberToSend = gameManager.myCookie->number;
 		//a3_EventManager::Instance
 		//demoState->messageText[demoState->numberOfLettersInMessage] = myCookie.number;
 	}

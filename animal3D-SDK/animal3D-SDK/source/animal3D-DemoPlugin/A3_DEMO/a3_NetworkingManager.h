@@ -53,6 +53,7 @@ extern "C"
 		a3ui16 maxConnect_inbound, maxConnect_outbound;
 		void* peer;
 		a3i32 numberToSend;
+		a3boolean isServer;
 	};
 
 

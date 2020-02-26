@@ -32,6 +32,9 @@
 #include "RakNet/BitStream.h"
 #include "RakNet/GetTime.h"
 
+#include "A3_DEMO/ShiftEvent.h"
+#include "A3_DEMO/CookieClicker.h"
+
 
 //-----------------------------------------------------------------------------
 // networking stuff
@@ -258,10 +261,28 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					//will need a cookie clicker reference
 					//send client reference of the struct
 					//struct?
-					RakNet::BitStream bsOut[1];
-					bsOut->Write(net->numberToSend);
-					bsOut->Write((RakNet::MessageID)ID_RECEIVE_STRUCT);
-					peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
+					CookieClicker* myOther = (CookieClicker*)packet->data;
+					printf("Got yo message boiiiii");
+					
+					if (net->isServer)
+					{
+						ShiftEvent* myEvent = new ShiftEvent(net, myOther);
+						a3_EventManager::Instance()->addEvent(myEvent);
+
+						CookieClicker myCookie;
+						myCookie.ID = ID_SEND_STRUCT;
+						myCookie.number = myOther->number;
+
+						RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
+						peer->Send(reinterpret_cast<char*>(&myCookie), sizeof(myCookie), HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetMyBoundAddress(), true);
+
+					}
+					else
+					{
+						ShiftEvent* myEvent = new ShiftEvent(net, myOther);
+						a3_EventManager::Instance()->addEvent(myEvent);
+					}
+
 
 					break;
 				}

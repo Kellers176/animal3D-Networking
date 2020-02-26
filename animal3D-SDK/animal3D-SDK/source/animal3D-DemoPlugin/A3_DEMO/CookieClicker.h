@@ -12,6 +12,7 @@ typedef struct CookieClicker				CookieClicker;
 
 struct CookieClicker
 {
+	int ID;
 	int number;
 };
 
