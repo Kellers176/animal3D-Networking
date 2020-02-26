@@ -9,11 +9,11 @@
 class a3_EventManager
 {
 private:
-	a3_EventManager();
-	~a3_EventManager();
 	std::vector<a3_Event*> curEvents;
 
 public:
+	a3_EventManager();
+	~a3_EventManager();
 
 	static a3_EventManager* Instance();
 
