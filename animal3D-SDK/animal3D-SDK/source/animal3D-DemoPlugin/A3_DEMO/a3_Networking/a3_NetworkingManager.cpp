@@ -257,40 +257,29 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 				}
 				case ID_SEND_STRUCT:
 				{
-					//tell the player to update their Cookie clicker on the clients end
-					//will need a cookie clicker reference
-					//send client reference of the struct
-					//struct?
-					CookieClicker* myOther = (CookieClicker*)packet->data;
-					printf("Got yo message boiiiii");
-					
-					if (net->isServer)
-					{
-						ShiftEvent* myEvent = new ShiftEvent(net, myOther);
-						a3_EventManager::Instance()->addEvent(myEvent);
+					// get the message (this is automatically done)
 
-						CookieClicker myCookie;
-						myCookie.ID = ID_SEND_STRUCT;
-						myCookie.number = myOther->number;
+					// increase the number
+					net->CookieNumber = net->CookieNumber + 1;
 
-						RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
-						peer->Send(reinterpret_cast<char*>(&myCookie), sizeof(myCookie), HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetMyBoundAddress(), true);
+					// transfer the data to a temporary container
+					CookieClicker* myCookie = new CookieClicker();
+					myCookie->ID = ID_RECEIVE_STRUCT;
+					myCookie->number = net->CookieNumber;
 
-					}
-					else
-					{
-						ShiftEvent* myEvent = new ShiftEvent(net, myOther);
-						a3_EventManager::Instance()->addEvent(myEvent);
-					}
-
+					// send the temporary container out to everyone
+					RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
+					peer->Send(reinterpret_cast<char*>(&myCookie), sizeof(myCookie), HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetMyBoundAddress(), true);
 
 					break;
 				}
 				case ID_RECEIVE_STRUCT:
 				{
-					a3i32 rs;
-					bs_in.Read(rs);
-					net->numberToSend = rs;
+					// receive the new cookie container from the server
+					CookieClicker* newCookieAmount = (CookieClicker*)packet->data;
+
+					// set the number of cookies to the number from the container from the server
+					net->CookieNumber = newCookieAmount->number;
 
 					break;
 				}

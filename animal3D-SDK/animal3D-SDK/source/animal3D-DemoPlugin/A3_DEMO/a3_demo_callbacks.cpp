@@ -510,10 +510,17 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey
 		//Fix this------------------------------------------
 		ShiftEvent* shift_Event = new ShiftEvent(gameManager.net, gameManager.myCookie);
 		a3_EventManager::Instance()->addEvent(shift_Event);
+
+		// the net cookie number will be updated through the networking manager
+		// so we just need to set the number for the display by taking form the networking
+		// manager's data
+		gameManager.myCookie->number = gameManager.net->CookieNumber;
+
 		printf("Cookie Num: ");
 		printf("%d", gameManager.myCookie->number);
-		gameManager.net->numberToSend = gameManager.myCookie->number;
-		//a3_EventManager::Instance
+
+
+
 		//demoState->messageText[demoState->numberOfLettersInMessage] = myCookie.number;
 	}
 	if (asciiKey == 8)

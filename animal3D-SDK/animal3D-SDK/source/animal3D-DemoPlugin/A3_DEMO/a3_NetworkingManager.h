@@ -52,7 +52,7 @@ extern "C"
 		a3ui16 port_inbound, port_outbound;
 		a3ui16 maxConnect_inbound, maxConnect_outbound;
 		void* peer;
-		a3i32 numberToSend;
+		a3i32 CookieNumber;
 		a3boolean isServer;
 	};
 

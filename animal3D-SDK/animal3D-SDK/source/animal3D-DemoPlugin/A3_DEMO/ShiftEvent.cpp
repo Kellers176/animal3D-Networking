@@ -25,16 +25,22 @@ ShiftEvent::~ShiftEvent()
 
 void ShiftEvent::execute()
 {
-	myCookie->number++;
+	//myCookie->number++;
+
+	// for this event we can literally just send something over with the ID:
+	// ID_SEND_STRUCT (139)
+	// and it will take care of everything for us
+
 
 	ShiftEvent myEvent;
-	myEvent.iD = 139; //SentStruct
-	myEvent.numToIncriment = myCookie->number;
+	myEvent.iD = 139; //SentStruct // check it out in NetworkManager.cpp
+	myEvent.numToIncriment = 1;// myCookie->number;
 
 	RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
 	RakNet::SystemAddress* serverAddress = (RakNet::SystemAddress*)net->port_inbound;
 	peer->Send(reinterpret_cast<char*>(&myEvent), sizeof(&myEvent), HIGH_PRIORITY, RELIABLE_ORDERED, 1, *serverAddress, true);
 	//call network manager
+
 }
 
 void ShiftEvent::dispatch()
