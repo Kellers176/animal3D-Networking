@@ -41,6 +41,8 @@
 #include <GL/glew.h>
 #include "A3_DEMO/CookieClicker.h"
 #include "A3_DEMO/a3_EventManager.h"
+#include "A3_DEMO/a3_NetworkingManager.h"
+
 
 struct Manager
 {
@@ -67,8 +69,11 @@ void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 	if (isServer)
 	{
 		if (a3netStartup(gameManager.net, port_server, 0, maxConnections_server, 0) > 0)
+		{
 			printf("\n STARTED NETWORKING AS SERVER \n");
-		gameManager.net->isServer = true;
+			gameManager.net->isServer = true;
+
+		}
 	}
 	else
 	{
@@ -310,6 +315,10 @@ A3DYLIBSYMBOL a3_DemoState* a3demoCB_load(a3_DemoState* demoState, a3boolean hot
 
 		// scene objects
 	//	a3demo_initScene(demoState);
+
+
+
+
 	}
 
 	// return persistent state pointer
