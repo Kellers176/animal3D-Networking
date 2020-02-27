@@ -58,21 +58,10 @@ extern "C"
 		a3ui16 port_inbound, port_outbound;
 		RakNet::SystemAddress serverAddress;
 		a3ui16 maxConnect_inbound, maxConnect_outbound;
-<<<<<<< HEAD
-		void* peer;
-		a3boolean isServer;
-		a3_KeyboardKey inputData;
-		int selectedSharedObject;
-		float moveXData;
-		float moveYData;
-		float moveZData;
-		a3_DemoState* demoState;
-=======
 		RakNet::RakPeerInterface* peer;
 		a3i32 CookieNumber;
 		a3boolean isServer;
 		a3i32 numberOfParticipants;
->>>>>>> Kelly's-Reset-Branch
 	};
 
 

@@ -32,16 +32,9 @@
 #include "RakNet/BitStream.h"
 #include "RakNet/GetTime.h"
 
-<<<<<<< HEAD
-#include "a3_Networking_EventSystem.h"
 #include "a3_Networking_ObjectInfo.h"
-#include "MoveInputListener.h"
 
-#include "../a3_DemoState.h"
-
-=======
 #include "A3_DEMO/CookieClicker.h"
->>>>>>> Kelly's-Reset-Branch
 
 
 //-----------------------------------------------------------------------------
@@ -52,16 +45,14 @@ enum a3_NetGameMessages
 	ID_CUSTOM_MESSAGE_START = ID_USER_PACKET_ENUM,
 
 	ID_GAME_MESSAGE_1,
-<<<<<<< HEAD
-	ID_ADD_INPUT_TO_GAME_OBJECT,
-	ID_UPDATE_OBJECT_FOR_USER
-=======
+
 	ID_ADD_INPUT,
 	ID_UPDATE_FOR_USER,
 	ID_ADD_EVENT,
 	ID_SEND_STRUCT,
-	ID_RECEIVE_STRUCT
->>>>>>> Kelly's-Reset-Branch
+	ID_RECEIVE_STRUCT,
+	ID_ADD_INPUT_TO_GAME_OBJECT,
+	ID_UPDATE_OBJECT_FOR_USER
 };
 
 
@@ -105,21 +96,6 @@ a3i32 a3netStartup(a3_NetworkingManager* net, a3ui16 port_inbound, a3ui16 port_o
 				net->maxConnect_inbound = maxConnect_inbound;
 				net->maxConnect_outbound = maxConnect_outbound;
 				net->peer = peer;
-
-				MoveInputListener* eventUpInput = new MoveInputListener(a3key_upArrow);
-				MoveInputListener* eventDownInput = new MoveInputListener(a3key_downArrow);
-				MoveInputListener* eventLeftInput = new MoveInputListener(a3key_leftArrow);
-				MoveInputListener* eventRightInput = new MoveInputListener(a3key_rightArrow);
-
-				eventUpInput->SetListenerKey(a3key_upArrow);
-				eventDownInput->SetListenerKey(a3key_downArrow);
-				eventLeftInput->SetListenerKey(a3key_leftArrow);
-				eventRightInput->SetListenerKey(a3key_rightArrow);
-
-				a3_Networking_EventSystem::Instance()->addEvent("MoveObjectUp", eventUpInput);
-				a3_Networking_EventSystem::Instance()->addEvent("MoveObjectDown", eventDownInput);
-				a3_Networking_EventSystem::Instance()->addEvent("MoveObjectLeft", eventLeftInput);
-				a3_Networking_EventSystem::Instance()->addEvent("MoveObjectRight", eventRightInput);
 
 				return 1;
 			}
@@ -285,25 +261,15 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 
 					}
 					break;
-<<<<<<< HEAD
 				case ID_ADD_INPUT_TO_GAME_OBJECT:
-					
+
 					// server gets the input
 					tempInputData = (MoveInputData*)packet->data;
 
-					// send the input to the event system
-					if (tempInputData->input == a3key_upArrow)
-						a3_Networking_EventSystem::Instance()->sendEvent("MoveObjectUp");
-					if (tempInputData->input == a3key_downArrow)
-						a3_Networking_EventSystem::Instance()->sendEvent("MoveObjectDown");
-					if (tempInputData->input == a3key_leftArrow)
-						a3_Networking_EventSystem::Instance()->sendEvent("MoveObjectLeft");
-					if (tempInputData->input == a3key_rightArrow)
-						a3_Networking_EventSystem::Instance()->sendEvent("MoveObjectRight");
 
 					// event system will process it and return the new pos info
 
-					
+
 					break;
 				case ID_UPDATE_OBJECT_FOR_USER:
 
@@ -311,18 +277,8 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					tempMoveObjInfo = (ObjectPosInfo*)packet->data;
 
 					// set the object pos to pos + move input
-					
-					if (tempMoveObjInfo->objType == sphereSelected)
-					{
-						
-					}
-					else if (tempMoveObjInfo->objType == cylinderSelected)
-					{
 
-					}
-					else if (tempMoveObjInfo->objType == torusSelected)
-					{
-=======
+
 				case ID_ADD_EVENT:
 				{
 					//tell the client to process the envents
@@ -375,19 +331,11 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					// set the number of cookies to the number from the container from the server
 					net->CookieNumber = actual;
 
-					
+
 
 					break;
 				}
->>>>>>> Kelly's-Reset-Branch
 
-					}
-					else if (tempMoveObjInfo->objType == teapotSelected)
-					{
-
-					}
-
-					break;
 				default:
 					printf("Message with identifier %i has arrived.\n", msg);
 					break;
@@ -421,10 +369,6 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net)
 
 			ObjectPosInfo posData = ObjectPosInfo();
 			posData.typeId = ID_UPDATE_OBJECT_FOR_USER;
-			posData.objType = net->selectedSharedObject;
-			posData.xPos = posData.xPos + net->moveXData;
-			posData.yPos = posData.yPos + net->moveYData;
-			posData.zPos = posData.zPos + net->moveZData;
 
 			bsOut->Write((ObjectPosInfo)posData);
 
@@ -432,10 +376,6 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net)
 			{
 				peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
 			}
-
-			net->moveXData = 0;
-			net->moveYData = 0;
-			net->moveZData = 0;
 		}
 		else
 		{
@@ -443,12 +383,8 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net)
 			
 			MoveInputData moveInput = MoveInputData();
 			moveInput.typeId = ID_ADD_INPUT_TO_GAME_OBJECT;
-			moveInput.objType = net->selectedSharedObject;
-			moveInput.input = net->inputData;
 
 			bsOut->Write((MoveInputData)moveInput);
-
-			net->inputData = a3key_question;
 		}
 	}
 	return 0;
