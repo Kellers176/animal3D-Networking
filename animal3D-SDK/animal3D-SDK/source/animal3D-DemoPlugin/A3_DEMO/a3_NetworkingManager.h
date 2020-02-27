@@ -32,6 +32,11 @@
 #include "animal3D/animal3D.h"
 #include "a3_DemoState.h"
 
+#include "RakNet/RakPeerInterface.h"
+#include "RakNet/MessageIdentifiers.h"
+#include "RakNet/RakNetTypes.h"
+#include "RakNet/BitStream.h"
+#include "RakNet/GetTime.h"
 
 //-----------------------------------------------------------------------------
 
@@ -51,7 +56,9 @@ extern "C"
 	struct a3_NetworkingManager
 	{
 		a3ui16 port_inbound, port_outbound;
+		RakNet::SystemAddress serverAddress;
 		a3ui16 maxConnect_inbound, maxConnect_outbound;
+<<<<<<< HEAD
 		void* peer;
 		a3boolean isServer;
 		a3_KeyboardKey inputData;
@@ -60,6 +67,12 @@ extern "C"
 		float moveYData;
 		float moveZData;
 		a3_DemoState* demoState;
+=======
+		RakNet::RakPeerInterface* peer;
+		a3i32 CookieNumber;
+		a3boolean isServer;
+		a3i32 numberOfParticipants;
+>>>>>>> Kelly's-Reset-Branch
 	};
 
 
@@ -71,6 +84,8 @@ extern "C"
 	// shutdown networking
 	a3i32 a3netShutdown(a3_NetworkingManager* net);
 
+	//networking loop
+	a3i32 a3netNetworkingLoop(a3_NetworkingManager* net);
 
 	// connect
 	a3i32 a3netConnect(a3_NetworkingManager* net, a3netAddressStr const ip);

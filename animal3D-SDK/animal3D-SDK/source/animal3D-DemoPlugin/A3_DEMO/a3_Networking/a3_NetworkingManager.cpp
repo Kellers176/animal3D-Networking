@@ -24,6 +24,7 @@
 
 
 #include "../a3_NetworkingManager.h"
+#include "A3_DEMO/a3_EventManager.h"
 
 #include "RakNet/RakPeerInterface.h"
 #include "RakNet/MessageIdentifiers.h"
@@ -31,12 +32,16 @@
 #include "RakNet/BitStream.h"
 #include "RakNet/GetTime.h"
 
+<<<<<<< HEAD
 #include "a3_Networking_EventSystem.h"
 #include "a3_Networking_ObjectInfo.h"
 #include "MoveInputListener.h"
 
 #include "../a3_DemoState.h"
 
+=======
+#include "A3_DEMO/CookieClicker.h"
+>>>>>>> Kelly's-Reset-Branch
 
 
 //-----------------------------------------------------------------------------
@@ -47,8 +52,16 @@ enum a3_NetGameMessages
 	ID_CUSTOM_MESSAGE_START = ID_USER_PACKET_ENUM,
 
 	ID_GAME_MESSAGE_1,
+<<<<<<< HEAD
 	ID_ADD_INPUT_TO_GAME_OBJECT,
 	ID_UPDATE_OBJECT_FOR_USER
+=======
+	ID_ADD_INPUT,
+	ID_UPDATE_FOR_USER,
+	ID_ADD_EVENT,
+	ID_SEND_STRUCT,
+	ID_RECEIVE_STRUCT
+>>>>>>> Kelly's-Reset-Branch
 };
 
 
@@ -128,6 +141,12 @@ a3i32 a3netShutdown(a3_NetworkingManager* net)
 	return 0;
 }
 
+a3i32 a3netNetworkingLoop(a3_NetworkingManager* net)
+{
+	//make own send function to send the stuff
+	return 0;
+}
+
 
 // connect
 a3i32 a3netConnect(a3_NetworkingManager* net, a3netAddressStr const ip)
@@ -198,13 +217,17 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					break;
 				case ID_REMOTE_CONNECTION_LOST:
 					printf("Another client has lost the connection.\n");
+					net->numberOfParticipants = net->numberOfParticipants - 1;
 					break;
 				case ID_REMOTE_NEW_INCOMING_CONNECTION:
 					printf("Another client has connected.\n");
+					net->numberOfParticipants = net->numberOfParticipants + 1;
 					break;
 				case ID_CONNECTION_REQUEST_ACCEPTED:
 					printf("Our connection request has been accepted.\n");
 					{
+						net->serverAddress = packet->systemAddress;
+
 						// Use a BitStream to write a custom user message
 						// Bitstreams are easier to use than sending casted structures, 
 						//	and handle endian swapping automatically
@@ -228,6 +251,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					break;
 				case ID_NEW_INCOMING_CONNECTION:
 					printf("A connection is incoming.\n");
+					net->numberOfParticipants = net->numberOfParticipants + 1;
 					break;
 				case ID_NO_FREE_INCOMING_CONNECTIONS:
 					printf("The server is full.\n");
@@ -261,6 +285,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 
 					}
 					break;
+<<<<<<< HEAD
 				case ID_ADD_INPUT_TO_GAME_OBJECT:
 					
 					// server gets the input
@@ -297,6 +322,64 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					}
 					else if (tempMoveObjInfo->objType == torusSelected)
 					{
+=======
+				case ID_ADD_EVENT:
+				{
+					//tell the client to process the envents
+					//send a bool over to tell them to process events?
+					//How would I send over the process events to the clients
+					//a3_EventManager::Instance()->processEvents();
+					//ShiftEvent* shift_Event = new ShiftEvent(&myCookie);
+					//ShiftEvent* shift_Event = new ShiftEvent();
+					//a3_EventManager::Instance()->addEvent(shift_Event);
+					break;
+				}
+				case ID_SEND_STRUCT:
+				{
+					// get the message (this is automatically done)
+					printf("we have received a message about le cookie uh huh huh huh\n");
+					// increase the number
+					net->CookieNumber = net->CookieNumber + 1;
+
+					// transfer the data to a temporary container
+					CookieClicker* myCookie = new CookieClicker();
+					myCookie->typeID = ID_RECEIVE_STRUCT;
+					myCookie->number = net->CookieNumber;
+
+					int actualCookieNumber = myCookie->number;
+
+					// send the temporary container out to everyone
+					RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
+
+					RakNet::BitStream bsOut[1];
+					//rest of message
+					bsOut->Write((RakNet::MessageID)ID_RECEIVE_STRUCT);
+					bsOut->Write(actualCookieNumber);
+
+					for (int i = 0; i < net->numberOfParticipants; i++)
+					{
+						peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
+					}
+
+					break;
+				}
+				case ID_RECEIVE_STRUCT:
+				{
+					printf("\n mmmmmm cookie received\n");
+
+					int actual = 0;
+
+					// receive the new cookie amount from the server
+					bs_in.Read(actual);
+
+					// set the number of cookies to the number from the container from the server
+					net->CookieNumber = actual;
+
+					
+
+					break;
+				}
+>>>>>>> Kelly's-Reset-Branch
 
 					}
 					else if (tempMoveObjInfo->objType == teapotSelected)
