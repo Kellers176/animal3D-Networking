@@ -271,13 +271,15 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					myCookie->typeID = ID_RECEIVE_STRUCT;
 					myCookie->number = net->CookieNumber;
 
+					int actualCookieNumber = myCookie->number;
+
 					// send the temporary container out to everyone
 					RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
 
 					RakNet::BitStream bsOut[1];
 					//rest of message
 					bsOut->Write((RakNet::MessageID)ID_RECEIVE_STRUCT);
-					bsOut->Write(net->CookieNumber);
+					bsOut->Write(actualCookieNumber);
 
 					for (int i = 0; i < net->numberOfParticipants; i++)
 					{
@@ -289,11 +291,15 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 				case ID_RECEIVE_STRUCT:
 				{
 					printf("\n mmmmmm cookie received\n");
-					// receive the new cookie container from the server
-					CookieClicker* newCookieAmount = (CookieClicker*)packet->data;
+
+					int actual = 0;
+
+					// receive the new cookie amount from the server
+					bs_in.Read(actual);
 
 					// set the number of cookies to the number from the container from the server
-					net->CookieNumber = newCookieAmount->number;
+					net->CookieNumber = actual;
+
 					
 
 					break;
