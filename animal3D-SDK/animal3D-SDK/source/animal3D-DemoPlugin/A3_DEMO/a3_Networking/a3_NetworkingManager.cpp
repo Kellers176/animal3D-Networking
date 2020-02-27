@@ -218,6 +218,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					break;
 				case ID_NEW_INCOMING_CONNECTION:
 					printf("A connection is incoming.\n");
+					net->numberOfParticipants = net->numberOfParticipants + 1;
 					break;
 				case ID_NO_FREE_INCOMING_CONNECTIONS:
 					printf("The server is full.\n");
@@ -261,32 +262,39 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 				case ID_SEND_STRUCT:
 				{
 					// get the message (this is automatically done)
-					printf("we have received a message about le cookie uh huh huh huh");
+					printf("we have received a message about le cookie uh huh huh huh\n");
 					// increase the number
 					net->CookieNumber = net->CookieNumber + 1;
 
 					// transfer the data to a temporary container
 					CookieClicker* myCookie = new CookieClicker();
-					myCookie->ID = ID_RECEIVE_STRUCT;
+					myCookie->typeID = ID_RECEIVE_STRUCT;
 					myCookie->number = net->CookieNumber;
 
 					// send the temporary container out to everyone
 					RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
 
+					RakNet::BitStream bsOut[1];
+					//rest of message
+					bsOut->Write((RakNet::MessageID)ID_RECEIVE_STRUCT);
+					bsOut->Write(net->CookieNumber);
+
 					for (int i = 0; i < net->numberOfParticipants; i++)
 					{
-						peer->Send(reinterpret_cast<char*>(&myCookie), sizeof(myCookie), HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
+						peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
 					}
 
 					break;
 				}
 				case ID_RECEIVE_STRUCT:
 				{
+					printf("\n mmmmmm cookie received\n");
 					// receive the new cookie container from the server
 					CookieClicker* newCookieAmount = (CookieClicker*)packet->data;
 
 					// set the number of cookies to the number from the container from the server
 					net->CookieNumber = newCookieAmount->number;
+					
 
 					break;
 				}

@@ -7,6 +7,18 @@
 
 #include "A3_DEMO/CookieClicker.h"
 
+enum a3_NetGameMessages
+{
+	ID_CUSTOM_MESSAGE_START = ID_USER_PACKET_ENUM,
+
+	ID_GAME_MESSAGE_1,
+	ID_ADD_INPUT,
+	ID_UPDATE_FOR_USER,
+	ID_ADD_EVENT,
+	ID_SEND_STRUCT,
+	ID_RECEIVE_STRUCT
+};
+
 ShiftEvent::ShiftEvent()
 {
 	numToIncriment = 0;
@@ -31,16 +43,26 @@ void ShiftEvent::execute()
 	// ID_SEND_STRUCT (139)
 	// and it will take care of everything for us
 
-
-
-
 	CookieClicker* iDontNeedThis = new CookieClicker();
-	iDontNeedThis->ID = 139;
+	iDontNeedThis->typeID = ID_SEND_STRUCT;
 	iDontNeedThis->number = 0;
+
+
+
 
 	RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
 	RakNet::SystemAddress* serverAddress = (RakNet::SystemAddress*)net->port_inbound;
-	peer->Send(reinterpret_cast<char*>(&iDontNeedThis), sizeof(&iDontNeedThis), HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, false);
+
+	RakNet::BitStream bsOut[1];
+	//rest of message
+	bsOut->Write((RakNet::MessageID)ID_SEND_STRUCT);
+	bsOut->Write(iDontNeedThis->number);
+	peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, false);
+
+
+
+
+	// peer->Send((const char*)(&iDontNeedThis), sizeof(&iDontNeedThis), HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, false);
 	//call network manager
 
 }

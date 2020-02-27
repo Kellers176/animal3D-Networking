@@ -13,7 +13,7 @@ typedef struct CookieClicker				CookieClicker;
 #pragma pack(push,1)
 struct CookieClicker
 {
-	int ID;
+	unsigned char typeID;
 	int number;
 };
 #pragma pack(push)

@@ -54,12 +54,13 @@ Managers gameManager;
 //CookieClicker myCookie;
 void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 {
-	a3netAddressStr const ipAddress = "216.93.149.176";
+	a3netAddressStr const ipAddress = "216.93.149.206";
 	a3ui16 const port_server = 60006;
 	a3ui16 const port_client = 60005;
 	a3ui16 const maxConnections_server = 16;
 	a3ui16 const maxConnections_client = 4;
 	gameManager.net->isServer = false;
+	gameManager.net->CookieNumber = 0;
 
 	if (isServer)
 	{
