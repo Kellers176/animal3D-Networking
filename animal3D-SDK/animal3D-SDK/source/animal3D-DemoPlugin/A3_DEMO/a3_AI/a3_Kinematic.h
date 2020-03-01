@@ -5,54 +5,6 @@
 #ifndef KINEMATIC_H
 #define KINEMATIC_H
 
-a3vec2 operator * (a3vec2 vector, float multiplier) {
-	a3vec2 temp = vector;
-	temp.x *= multiplier;
-	temp.y *= multiplier;
-	return temp;
-}
-
-a3vec2 operator += (a3vec2 vector, a3vec2 other) {
-	a3vec2 temp = vector;
-	temp.x = temp.x + other.x;
-	temp.y = temp.y + other.y;
-	return temp;
-}
-
-a3vec2 operator / (a3vec2 vector, float divider) {
-	a3vec2 temp = vector;
-	temp.x = temp.x / divider;
-	temp.y = temp.y /divider;
-	return temp;
-}
-
-a3vec2 operator *= (a3vec2 vector, float multiplier) {
-	a3vec2 temp = vector;
-	temp.x = temp.x * multiplier;
-	temp.y = temp.y * multiplier;
-	return temp;
-}
-
-a3vec2 operator - (a3vec2 vector, a3vec2 other) {
-	a3vec2 temp = vector;
-	temp.x = temp.x - other.x;
-	temp.y = temp.y - other.y;
-	return temp;
-}
-
-a3vec2 operator -= (a3vec2 vector, a3vec2 other) {
-	a3vec2 temp = vector;
-	temp.x = temp.x - other.x;
-	temp.y = temp.y - other.y;
-	return temp;
-}
-
-a3vec2 operator + (a3vec2 vector, a3vec2 other) {
-	a3vec2 temp = vector;
-	temp.x = temp.x + other.x;
-	temp.y = temp.y + other.y;
-	return temp;
-}
 
 struct Kinematic
 {

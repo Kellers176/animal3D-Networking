@@ -21,8 +21,8 @@ public:
 
 	void RenderObject();
 
-	void SetUnitID(int newID) { unitID = newID; }
-	void SetPosition(int newX, int newY) { objectKinematic.position.x = newX; objectKinematic.position.y = newY; }
+	void SetUnitID(int newID);
+	void SetPosition(float newX, float newY);
 
 private:
 	int unitID;

@@ -10,17 +10,59 @@ struct SteeringOutput
 	float angular;
 };
 
-SteeringOutput operator + (SteeringOutput thisOne, SteeringOutput other) {
-	Steeringoutput temp = thisOne;
-	temp.linear = thisOne.linear + other.linear;
-	temp.angular = thisOne.linear + other.linear;
+a3vec2 operator * (a3vec2 vector, float multiplier) {
+	a3vec2 temp = vector;
+	temp.x *= multiplier;
+	temp.y *= multiplier;
 	return temp;
 }
 
-SteeringOutput* operator + (SteeringOutput* thisOne, SteeringOutput* other) {
-	Steeringoutput* temp = new SteeringOutput();
-	temp->linear = thisOne->linear + other->linear;
-	temp->angular = thisOne->linear + other->linear;
+a3vec2 operator += (a3vec2 vector, a3vec2 other) {
+	a3vec2 temp = vector;
+	temp.x = temp.x + other.x;
+	temp.y = temp.y + other.y;
+	return temp;
+}
+
+a3vec2 operator / (a3vec2 vector, float divider) {
+	a3vec2 temp = vector;
+	temp.x = temp.x / divider;
+	temp.y = temp.y / divider;
+	return temp;
+}
+
+a3vec2 operator *= (a3vec2 vector, float multiplier) {
+	a3vec2 temp = vector;
+	temp.x = temp.x * multiplier;
+	temp.y = temp.y * multiplier;
+	return temp;
+}
+
+a3vec2 operator - (a3vec2 vector, a3vec2 other) {
+	a3vec2 temp = vector;
+	temp.x = vector.x - other.x;
+	temp.y = vector.y - other.y;
+	return temp;
+}
+
+a3vec2 operator -= (a3vec2 vector, a3vec2 other) {
+	a3vec2 temp = vector;
+	temp.x = temp.x - other.x;
+	temp.y = temp.y - other.y;
+	return temp;
+}
+
+a3vec2 operator + (a3vec2 vector, a3vec2 other) {
+	a3vec2 temp = vector;
+	temp.x = temp.x + other.x;
+	temp.y = temp.y + other.y;
+	return temp;
+}
+
+SteeringOutput operator + (SteeringOutput thisOne, SteeringOutput other) {
+	SteeringOutput temp = thisOne;
+	temp.linear = thisOne.linear + other.linear;
+	temp.angular = thisOne.angular + other.angular;
 	return temp;
 }
 

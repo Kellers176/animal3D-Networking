@@ -9,8 +9,15 @@
 class Separation_Behavior
 {
 public:
-	Separation_Behavior();
-	~Separation_Behavior();
+	Separation_Behavior()
+	{
+
+	}
+
+	~Separation_Behavior()
+	{
+
+	}
 
 	// holds the kinematic data for the character
 	Kinematic character;

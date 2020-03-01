@@ -26,12 +26,36 @@ float AbsoluteValue(float value)
 class AlignBehavior 
 {
 public:
-	AlignBehavior();
-	~AlignBehavior();
+	AlignBehavior()
+	{
+		character = Kinematic();
+		maxAngularAcc = 2;
+		maxRotation = 2;
+		targetRadius = 5;
+		slowRadius = 10;
+
+		target = Kinematic();
+	}
+
+	AlignBehavior(Kinematic newChar, float newMaxAcc, float newMaxRot, float newTargetRad, float newSlowRad)
+	{
+		character = newChar;
+		maxAngularAcc = newMaxAcc;
+		maxRotation = newMaxRot;
+		targetRadius = newTargetRad;
+		slowRadius = newSlowRad;
+
+		target = Kinematic();
+	}
+
+	~AlignBehavior()
+	{
+
+	}
 
 	// holds kinematic  data for teh character and target
 	Kinematic character;
-	a3vec2 target;
+	Kinematic target;
 
 	// holds the max angular acceleration and rotation of the character
 	float maxAngularAcc;
@@ -78,7 +102,7 @@ public:
 		float rotation = target.orientation - character.orientation;
 
 		// map result to the (-pi, pi) interval
-		float rotation = MapToRange(rotation);
+		rotation = MapToRange(rotation);
 		float rotationSize = a3absolute(rotation);
 
 		float targetRotation = target.rotation;

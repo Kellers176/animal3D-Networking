@@ -7,8 +7,15 @@
 class ArriveBehavior
 {
 public:
-	ArriveBehavior();
-	~ArriveBehavior();
+	ArriveBehavior()
+	{
+
+	}
+
+	~ArriveBehavior()
+	{
+
+	}
 
 	// holds the kinematic data for the character and target
 	Kinematic character;

@@ -19,8 +19,37 @@ a3vec2 DirectionToVector(float direction)
 class WanderBehavior : public FaceBehavior
 {
 public:
-	WanderBehavior();
-	~WanderBehavior();
+	WanderBehavior()
+	{
+		wanderOffset = 3;
+		wanderRadius = 3;
+		wanderRate = 0.5f;
+		maxAcceleration = 2;
+		character = Kinematic();
+
+		target = Kinematic();
+
+		wanderOrientation = 0;
+	}
+
+	WanderBehavior(float newOffset, float newRadius, float newRate, float newMaxAcc, Kinematic newCharKin)
+	{
+		wanderOffset = newOffset;
+		wanderRadius = newRadius;
+		wanderRate = newRate;
+		maxAcceleration = newMaxAcc;
+		character = newCharKin;
+
+		target = Kinematic();
+
+		wanderOrientation = 0;
+
+	}
+
+	~WanderBehavior()
+	{
+
+	}
 
 	// holds the radius and forward offset of the wander circle
 	float wanderOffset;
@@ -53,13 +82,13 @@ public:
 
 		// calculate the center of the wander cycle
 
-		a3vec2 target = character.position + DirectionToVector(character.orientation) * wanderOffset;
+		a3vec2 targetLocation = character.position + DirectionToVector(character.orientation) * wanderOffset;
 
 		// calculate the target location
-		target += DirectionToVector(targetOrientation) * wanderRadius;
+		targetLocation += DirectionToVector(targetOrientation) * wanderRadius;
 
 		// AlignBehavior* alignSteering = new AlignBehavior();
-
+		target.position = targetLocation;
 		face->faceTarget = target;
 
 		// delegate to face

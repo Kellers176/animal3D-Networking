@@ -7,16 +7,44 @@ FlockObject::FlockObject()
 
 	objectSeparateBehavior = new Separation_Behavior();
 	objectArriveBehavior = new ArriveBehavior();
-
+	
 	objectAlignBehavior = new AlignBehavior();
-	FaceBehavior* objectFaceBehavior;
-	WanderBehavior* objectWanderBehavior;
+	objectFaceBehavior = new FaceBehavior();
+	objectWanderBehavior = new WanderBehavior();
+
+	messageText[0] = 'Y';
+
+	objectKinematic = Kinematic();
+
+	unitID = 0;
+
 }
 
-FlockObject::~FlockObject();
+FlockObject::~FlockObject()
+{
+	delete objectSeparateBehavior;
+	delete objectArriveBehavior;
+	
+	delete objectAlignBehavior;
+	delete objectFaceBehavior;
+	delete objectWanderBehavior;
+	
+	delete object;
+}
 
 void FlockObject::RenderObject()
 {
 	//			textRen  PosX						PosY						PosZ   Red	Green Blue  alpha  messageText
 	a3textDraw(object, objectKinematic.position.x, objectKinematic.position.y, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, messageText);
+}
+
+void FlockObject::SetPosition(float newX, float newY)
+{
+	objectKinematic.position.x = newX;
+	objectKinematic.position.y = newY; 
+}
+
+void FlockObject::SetUnitID(int newID)
+{
+	unitID = newID; 
 }
