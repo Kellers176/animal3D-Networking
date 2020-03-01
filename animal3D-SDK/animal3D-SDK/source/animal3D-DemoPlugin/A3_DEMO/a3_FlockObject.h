@@ -27,7 +27,7 @@ public:
 private:
 	int unitID;
 
-	char messageText[1] = 'Y';
+	char messageText[1];
 
 	a3_TextRenderer* object;
 

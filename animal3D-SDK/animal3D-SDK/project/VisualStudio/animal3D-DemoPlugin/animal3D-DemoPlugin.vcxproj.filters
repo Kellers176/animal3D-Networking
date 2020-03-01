@@ -64,6 +64,9 @@
     <Filter Include="Header Files\A3_DEMO\a3_Networking">
       <UniqueIdentifier>{79efcec7-253f-492b-a0c4-f342128cf5f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\A3_DEMO\AI">
+      <UniqueIdentifier>{cb50bf0d-ee80-4925-a77a-53f3f3255382}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_src_win\main_dll.c">
@@ -120,6 +123,9 @@
     <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_demo_callbacks.cpp">
       <Filter>Source Files\common\A3_DEMO</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_FlockObjeect.cpp">
+      <Filter>Source Files\common\A3_DEMO</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\a3_dylib_config_export.h">
@@ -154,6 +160,33 @@
     </ClInclude>
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\Manager.h">
       <Filter>Source Files\common\A3_DEMO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_AI\a3_Align_Behavior.h">
+      <Filter>Header Files\A3_DEMO\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_AI\a3_Arrive_Behavior.h">
+      <Filter>Header Files\A3_DEMO\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_AI\a3_Face_Behavior.h">
+      <Filter>Header Files\A3_DEMO\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_AI\a3_Kinematic.h">
+      <Filter>Header Files\A3_DEMO\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_AI\a3_Seek_Behavior.h">
+      <Filter>Header Files\A3_DEMO\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_AI\a3_Separation_Behavior.h">
+      <Filter>Header Files\A3_DEMO\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_AI\a3_SteeringOutput.h">
+      <Filter>Header Files\A3_DEMO\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_AI\a3_Wander_Behavior.h">
+      <Filter>Header Files\A3_DEMO\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_FlockObject.h">
+      <Filter>Header Files\A3_DEMO</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
