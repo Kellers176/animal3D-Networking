@@ -41,7 +41,7 @@ public:
 	Kinematic target;
 	Kinematic character;
 
-	SteeringOutput* getSteering()
+	SteeringOutput* getSteering(AlignBehavior* align, FaceBehavior* face)
 	{
 		// Calculate the target delegate to face
 		
@@ -58,9 +58,12 @@ public:
 		// calculate the target location
 		target += DirectionToVector(targetOrientation) * wanderRadius;
 
-		AlignBehavior* alignSteering = new AlignBehavior();
+		// AlignBehavior* alignSteering = new AlignBehavior();
+
+		face->faceTarget = target;
+
 		// delegate to face
-		SteeringOutput* steering = FaceBehavior::GetSteering(alignSteering);
+		SteeringOutput* steering = face->GetSteering(align);
 
 		// now set the linear acceleration to be at full acceleration to be at full 
 		// acceleration in the direction of the orientation

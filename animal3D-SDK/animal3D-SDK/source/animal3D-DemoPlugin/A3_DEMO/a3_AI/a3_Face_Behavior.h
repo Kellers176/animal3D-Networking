@@ -13,7 +13,7 @@ public:
 	~FaceBehavior();
 
 	// overrides the align.target member
-	Kinematic faceTarget;
+	a3vec2 faceTarget;
 
 	// ... other data is derived from the superclass
 
@@ -22,7 +22,7 @@ public:
 	{
 		// calculate the target to delegate to align
 		// work out the direction to target
-		a3vec2 direction = faceTarget.position - align->character.position;
+		a3vec2 direction = faceTarget - align->character.position;
 
 		// check for a zero direction and make no change if so
 		float directionMagnitude = a3sqrt(direction.x * direction.x + direction.y * direction.y);

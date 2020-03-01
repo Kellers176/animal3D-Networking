@@ -31,7 +31,7 @@ public:
 
 	// holds kinematic  data for teh character and target
 	Kinematic character;
-	Kinematic target;
+	a3vec2 target;
 
 	// holds the max angular acceleration and rotation of the character
 	float maxAngularAcc;
