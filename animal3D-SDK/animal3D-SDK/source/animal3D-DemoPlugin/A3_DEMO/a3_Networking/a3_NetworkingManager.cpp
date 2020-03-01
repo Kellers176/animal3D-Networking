@@ -52,7 +52,8 @@ enum a3_NetGameMessages
 	ID_SEND_STRUCT,
 	ID_RECEIVE_STRUCT,
 	ID_ADD_INPUT_TO_GAME_OBJECT,
-	ID_UPDATE_OBJECT_FOR_USER
+	ID_UPDATE_OBJECT_FOR_USER,
+	ID_RECEIVE_DATA_SHARING_TYPE
 };
 
 
@@ -170,6 +171,9 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 		{
 			RakNet::BitStream bs_in(packet->data, packet->length, false);
 			bs_in.Read(msg);
+
+			RakNet::BitStream bs_Data_Out[1];
+
 			switch (msg)
 			{
 				// check for timestamp and process
@@ -216,18 +220,24 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 						bsOut->Write(RakNet::GetTime());
 						//rest of message
 						bsOut->Write((RakNet::MessageID)ID_GAME_MESSAGE_1);
-						bsOut->Write("Hello world");
+
 						peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 						// ****TO-DO: write timestamped message
 						printf("\n SEND TIME: %u \n", (unsigned int)sendTime);
 
-
+						
 
 					}
 					break;
 				case ID_NEW_INCOMING_CONNECTION:
 					printf("A connection is incoming.\n");
 					net->numberOfParticipants = net->numberOfParticipants + 1;
+
+					bs_Data_Out->Write((RakNet::MessageID)ID_RECEIVE_DATA_SHARING_TYPE);
+					bs_Data_Out->Write((TypeOfDataSharing)net->dataShareType);
+					
+					peer->Send(bs_Data_Out, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
+
 					break;
 				case ID_NO_FREE_INCOMING_CONNECTIONS:
 					printf("The server is full.\n");
@@ -335,6 +345,12 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 
 					break;
 				}
+
+				case ID_RECEIVE_DATA_SHARING_TYPE:
+
+					bs_in.Read(net->dataShareType);
+
+					break;
 
 				default:
 					printf("Message with identifier %i has arrived.\n", msg);

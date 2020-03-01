@@ -95,6 +95,16 @@ void a3demoTestRender(a3_DemoState const* demoState)
 
 	a3textDraw(demoState->text, -0.99f, -0.95f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, demoState->messageText);
 
+	/*
+	for (int i = 0; i < gameManager.net->numberOfParticipants; i++)
+	{
+		// i use 10 cause its the max number of boids we are going to be giving someone
+		for (int j = 0; j < 10; j++)
+		{
+			//demoState->flockObjectArray[i][j].RenderObject();
+		}
+	}
+	*/
 }
 void a3demoProcessInput(a3_DemoState* demoState)
 {
@@ -149,6 +159,7 @@ inline void a3demoCB_keyCharPress_main(a3_DemoState* demoState, a3i32 asciiKey,
 	const a3ui32 demoSubMode, const a3ui32 demoOutput,
 	const a3ui32 demoSubModeCount, const a3ui32 demoOutputCount)
 {
+
 	//	switch (asciiKey)
 	//	{
 	//		// sub-modes
@@ -534,6 +545,27 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey
 		demoState->enterPressed = true;
 	}
 
+	if (asciiKey == a3key_7)
+	{
+		if (gameManager.net->isServer)
+		{
+			gameManager.net->dataShareType = ID_DATA_PUSH;
+		}
+	}
+	if (asciiKey == a3key_8)
+	{
+		if (gameManager.net->isServer)
+		{
+			gameManager.net->dataShareType = ID_DATA_SHARE;
+		}
+	}
+	if (asciiKey == a3key_9)
+	{
+		if (gameManager.net->isServer)
+		{
+			gameManager.net->dataShareType = ID_DATA_COUPLING;
+		}
+	}
 	// handle special cases immediately
 	switch (asciiKey)
 	{

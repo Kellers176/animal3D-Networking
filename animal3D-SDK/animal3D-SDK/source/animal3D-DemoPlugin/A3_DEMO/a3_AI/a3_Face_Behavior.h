@@ -4,7 +4,7 @@
 #define FACE_H
 
 #include "a3_Align_Behavior.h"
-#include "a3_Kinematic.h"
+#include "animal3D-A3DM/a3math/a3trig.h"
 
 class FaceBehavior
 {
@@ -12,6 +12,11 @@ public:
 	FaceBehavior()
 	{
 		faceTarget = Kinematic();
+	}
+
+	FaceBehavior(Kinematic newTarget)
+	{
+		faceTarget = newTarget;
 	}
 
 	~FaceBehavior()
@@ -29,7 +34,9 @@ public:
 	{
 		// calculate the target to delegate to align
 		// work out the direction to target
-		a3vec2 direction = faceTarget.position - align->character.position;
+		a3vec2 direction;
+		direction.x = faceTarget.positionX - align->character.positionX;
+		direction.y = faceTarget.positionY - align->character.positionY;
 
 		// check for a zero direction and make no change if so
 		float directionMagnitude = a3sqrt(direction.x * direction.x + direction.y * direction.y);

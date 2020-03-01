@@ -52,6 +52,13 @@ extern "C"
 
 	typedef a3byte a3netAddressStr[16];
 
+	enum TypeOfDataSharing
+	{
+		ID_DATA_PUSH = 0,
+		ID_DATA_SHARE,
+		ID_DATA_COUPLING
+	};
+
 	// networking manager
 	struct a3_NetworkingManager
 	{
@@ -62,6 +69,7 @@ extern "C"
 		a3i32 CookieNumber;
 		a3boolean isServer;
 		a3i32 numberOfParticipants;
+		TypeOfDataSharing dataShareType;
 	};
 
 

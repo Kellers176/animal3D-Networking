@@ -1,27 +1,8 @@
 
-#include "a3_Kinematic.h"
-#include "a3_SteeringOutput.h"
-#include "animal3D-A3DM/a3math/a3trig.h"
-#include "animal3D-A3DM/animal3D-A3DM.h"
+
 
 #ifndef ALIGN_H
 #define ALIGN_H
-
-float AbsoluteValue(float value)
-{
-	float temp;
-
-	if (value < 0)
-	{
-		temp = value * -1;
-	}
-	else
-	{
-		temp = value;
-	}
-
-	return temp;
-}
 
 class AlignBehavior 
 {
@@ -52,6 +33,23 @@ public:
 	{
 
 	}
+
+	float AbsoluteValue(float value)
+	{
+		float temp;
+
+		if (value < 0)
+		{
+			temp = value * -1;
+		}
+		else
+		{
+			temp = value;
+		}
+
+		return temp;
+	}
+
 
 	// holds kinematic  data for teh character and target
 	Kinematic character;

@@ -1,6 +1,5 @@
 
-#include "a3_SteeringOutput.h"
-#include "a3_Kinematic.h"
+
 #ifndef SEEK_H
 #define SEEK_H
 

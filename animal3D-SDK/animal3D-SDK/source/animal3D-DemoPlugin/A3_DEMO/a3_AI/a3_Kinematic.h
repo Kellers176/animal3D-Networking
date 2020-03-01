@@ -8,25 +8,38 @@
 
 struct Kinematic
 {
-	a3vec2 position;
+	float positionX;
+	float positionY;
+
 	float orientation;
-	a3vec2 velocity;
+
+	float velocityX;
+	float velocityY;
+
 	float rotation;
 
-	void Update(SteeringOutput steering, float maxSpeed, float deltaTime)
+	void Update(SteeringOutput* steering, float maxSpeed, float deltaTime)
 	{
-		// update the position and orientation
-		position += velocity * deltaTime;
-		orientation += steering.angular * deltaTime;
-		
+		velocityX = steering->linear.x;
+		velocityY = steering->linear.y;
+
 		// check for speeding and clip
-		float velocityMagnitude = a3sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
-		
+		float velocityMagnitude = a3sqrt(velocityX * velocityX + velocityY * velocityY);
+
 		if (velocityMagnitude > maxSpeed)
 		{
-			velocity = velocity / velocityMagnitude;
-			velocity *= maxSpeed;
+			velocityX /= velocityX;
+			velocityX *= maxSpeed;
+
+			velocityY /= velocityY;
+			velocityY *= maxSpeed;
 		}
+
+		// update the position and orientation
+		positionX += velocityX * deltaTime;
+		positionY += velocityY * deltaTime;
+		orientation += steering->angular * deltaTime;
+
 	}
 
 };

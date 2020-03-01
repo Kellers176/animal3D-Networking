@@ -1,5 +1,4 @@
 
-#include "a3_Kinematic.h"
 
 #ifndef ARRIVE_H
 #define ARRIVE_H
@@ -9,7 +8,28 @@ class ArriveBehavior
 public:
 	ArriveBehavior()
 	{
+		character = Kinematic();
+		target = Kinematic();
 
+		maxAcceleration = 1;
+		maxSpeed = 3;
+
+		slowRadius = 5;
+
+		targetRadius = 2;
+	}
+
+	ArriveBehavior(Kinematic newCharKin, float newMaxAcc, float newMaxSpeed, float newSlowRadius, float newTargetRadius)
+	{
+		character = newCharKin;
+		target = Kinematic();
+
+		maxAcceleration = newMaxAcc;
+		maxSpeed = newMaxSpeed;
+
+		slowRadius = newSlowRadius;
+
+		targetRadius = newTargetRadius;
 	}
 
 	~ArriveBehavior()
@@ -42,7 +62,9 @@ public:
 		float targetSpeed = 0;
 
 		// get the direction to the target
-		a3vec2 direction = target.position - character.position;
+		a3vec2 direction;
+		direction.x = target.positionX - character.positionX;
+		direction.y = target.positionY - character.positionY;
 		float distance = a3sqrt(direction.x * direction.x + direction.y * direction.y);
 
 		// check if we are there, return no steering
@@ -66,22 +88,29 @@ public:
 
 		// normalize the velocity
 		float velMag = a3sqrt(targetVelocity.x * targetVelocity.x + targetVelocity.y * targetVelocity.y);
-		targetVelocity = targetVelocity / velMag;
+		targetVelocity.x = targetVelocity.x / velMag;
+		targetVelocity.y = targetVelocity.y / velMag;
 
 		// make the velocity the target speed
-		targetVelocity *= targetSpeed;
+		targetVelocity.x *= targetSpeed;
+		targetVelocity.y *= targetSpeed;
 
 		// acceleration tries to get to the target velocity
-		steering->linear = targetVelocity - character.velocity;
-		steering->linear = steering->linear / timeToTarget;
+		steering->linear.x = targetVelocity.x - character.velocityX;
+		steering->linear.y = targetVelocity.y - character.velocityY;
+
+		steering->linear.x = steering->linear.x / timeToTarget;
+		steering->linear.y = steering->linear.y / timeToTarget;
 
 		// check if the acceleration is too fast
 		float linearMag = a3sqrt(steering->linear.x * steering->linear.x + steering->linear.y * steering->linear.y);
 		if (linearMag > maxAcceleration)
 		{ 
 			// normalize the linear
-			steering->linear = steering->linear / linearMag;
-			steering->linear *= maxAcceleration;
+			steering->linear.x = steering->linear.x / linearMag;
+			steering->linear.y = steering->linear.y / linearMag;
+			steering->linear.x *= maxAcceleration;
+			steering->linear.y *= maxAcceleration;
 		}
 
 		// output the steering 

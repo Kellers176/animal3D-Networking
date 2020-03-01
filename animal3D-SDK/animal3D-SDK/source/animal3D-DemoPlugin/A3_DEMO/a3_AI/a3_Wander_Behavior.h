@@ -3,18 +3,7 @@
 #ifndef WANDER_H
 #define WANDER_H
 
-#include "a3_Face_Behavior.h"
 #include "animal3D-A3DM/a3math/a3random.h"
-
-a3vec2 DirectionToVector(float direction)
-{
-	a3vec2 temp;
-
-	temp.x = a3cosd(direction);
-	temp.y = a3sind(direction);
-
-	return temp;
-}
 
 class WanderBehavior : public FaceBehavior
 {
@@ -51,6 +40,16 @@ public:
 
 	}
 
+	a3vec2 DirectionToVector(float direction)
+	{
+		a3vec2 temp;
+
+		temp.x = a3cosd(direction);
+		temp.y = a3sind(direction);
+
+		return temp;
+	}
+
 	// holds the radius and forward offset of the wander circle
 	float wanderOffset;
 	float wanderRadius;
@@ -82,13 +81,17 @@ public:
 
 		// calculate the center of the wander cycle
 
-		a3vec2 targetLocation = character.position + DirectionToVector(character.orientation) * wanderOffset;
+		a3vec2 targetLocation;
+		targetLocation.x = character.positionX + DirectionToVector(character.orientation).x * wanderOffset;
+		targetLocation.y = character.positionY + DirectionToVector(character.orientation).y * wanderOffset;
 
 		// calculate the target location
-		targetLocation += DirectionToVector(targetOrientation) * wanderRadius;
+		targetLocation.x += DirectionToVector(targetOrientation).x * wanderRadius;
+		targetLocation.y += DirectionToVector(targetOrientation).y * wanderRadius;
 
 		// AlignBehavior* alignSteering = new AlignBehavior();
-		target.position = targetLocation;
+		target.positionX = targetLocation.x;
+		target.positionY = targetLocation.y;
 		face->faceTarget = target;
 
 		// delegate to face
@@ -96,7 +99,8 @@ public:
 
 		// now set the linear acceleration to be at full acceleration to be at full 
 		// acceleration in the direction of the orientation
-		steering->linear = DirectionToVector(character.orientation) * maxAcceleration;
+		steering->linear.x = DirectionToVector(character.orientation).x * maxAcceleration;
+		steering->linear.y = DirectionToVector(character.orientation).y * maxAcceleration;
 
 		// return it
 		return steering;

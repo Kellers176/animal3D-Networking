@@ -43,6 +43,9 @@
 #include "_utilities/a3_DemoSceneObject.h"
 #include "_utilities/a3_DemoShaderProgram.h"
 
+// object includes
+// #include "A3_DEMO/a3_FlockObject.h"
+
 
 //-----------------------------------------------------------------------------
 
@@ -154,7 +157,7 @@ struct a3_DemoState
 	a3ui32 activeCamera;
 
 
-	
+	//FlockObject flockObjectArray[10][10];
 
 
 	//---------------------------------------------------------------------

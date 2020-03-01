@@ -1,7 +1,5 @@
 
-#include "a3_SteeringOutput.h"
-#include "a3_Kinematic.h"
-#include <iostream>
+
 
 #ifndef SEPARATION_H
 #define SEPARATION_H
@@ -11,7 +9,34 @@ class Separation_Behavior
 public:
 	Separation_Behavior()
 	{
+		character = Kinematic();
 
+		for (int i = 0; i < 10; i++)
+		{
+			targetsArray[i] = Kinematic();
+		}
+
+		float threshold = 5;
+
+		float coefficient = 0.3f;
+
+		float maxAcceleration = 2;
+	}
+
+	Separation_Behavior(Kinematic newCharKin, Kinematic newListOfOtherKin[10], float newThreshold, float newDecayCoeff, float newMaxAcc)
+	{
+		character = newCharKin;
+
+		for (int i = 0; i < 10; i++)
+		{
+			targetsArray[i] = newListOfOtherKin[i];
+		}
+
+		threshold = newThreshold;
+
+		decayCoefficient = newDecayCoeff;
+
+		maxAcceleration = newMaxAcc;
 	}
 
 	~Separation_Behavior()
@@ -45,7 +70,9 @@ public:
 		for(Kinematic target : targetsArray)
 		{
 			// check if the target is close
-			a3vec2 direction = target.position - character.position;
+			a3vec2 direction;
+			direction.x = target.positionX - character.positionX;
+			direction.y = target.positionY - character.positionY;
 			float distance = a3sqrt(direction.x * direction.x + direction.y * direction.y);
 
 			if(distance < threshold)
@@ -55,8 +82,10 @@ public:
 
 				// add the acceleration
 				// normalize teh direction
-				direction = direction / distance;
-				steering->linear +=  direction * strength;
+				direction.x = direction.x / distance;
+				direction.y = direction.y / distance;
+				steering->linear.x +=  direction.x * strength;
+				steering->linear.y +=  direction.y * strength;
 			}
 		}
 
