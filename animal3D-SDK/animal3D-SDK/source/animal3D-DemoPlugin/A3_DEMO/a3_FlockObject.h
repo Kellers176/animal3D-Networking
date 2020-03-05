@@ -17,6 +17,8 @@ public:
 	FlockObject();
 	~FlockObject();
 
+	void UpdateFlockObject(float deltaTime);
+
 	void RenderObject();
 
 	void SetUnitID(int newID);
@@ -31,14 +33,9 @@ private:
 
 	// need this for steering operations
 	Kinematic objectKinematic;
+	Kinematic targetKinematic;
 	//
-	// // steering operations
-	// Separation_Behavior* objectSeparateBehavior;
-	// ArriveBehavior* objectArriveBehavior;
-	//
-	// AlignBehavior* objectAlignBehavior;
-	// FaceBehavior* objectFaceBehavior;
-	// WanderBehavior* objectWanderBehavior;
+
 };
 
 #endif

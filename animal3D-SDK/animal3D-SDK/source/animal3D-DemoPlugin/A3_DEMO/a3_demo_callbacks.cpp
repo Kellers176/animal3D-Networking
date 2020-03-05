@@ -403,6 +403,8 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 			a3keyboardUpdate(demoState->keyboard);
 			a3XboxControlUpdate(demoState->xcontrol);
 
+			
+
 			// render occurred this idle: return +1
 			return +1;
 		}
@@ -502,6 +504,7 @@ A3DYLIBSYMBOL void a3demoCB_keyRelease(a3_DemoState* demoState, a3i32 virtualKey
 	a3keyboardSetState(demoState->keyboard, (a3_KeyboardKey)virtualKey, a3input_up);
 }
 
+// *******************************************************************************************************************************
 // ASCII key is pressed (immediately preceded by "any key" pressed call above)
 // NOTE: there is no release counterpart
 A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey)

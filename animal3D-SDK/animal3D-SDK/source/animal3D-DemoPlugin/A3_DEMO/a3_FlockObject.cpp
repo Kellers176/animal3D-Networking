@@ -5,16 +5,10 @@ FlockObject::FlockObject()
 {
 	object = new a3_TextRenderer();
 
-	// objectSeparateBehavior = new Separation_Behavior();
-	// objectArriveBehavior = new ArriveBehavior();
-	// 
-	// objectAlignBehavior = new AlignBehavior();
-	// objectFaceBehavior = new FaceBehavior();
-	// objectWanderBehavior = new WanderBehavior();
-
 	messageText[0] = 'Y';
 
-	// objectKinematic = Kinematic();
+	objectKinematic = Kinematic();
+	targetKinematic = objectKinematic;
 
 	unitID = 0;
 
@@ -22,15 +16,15 @@ FlockObject::FlockObject()
 
 FlockObject::~FlockObject()
 {
-	// delete objectSeparateBehavior;
-	// delete objectArriveBehavior;
-	// 
-	// delete objectAlignBehavior;
-	// delete objectFaceBehavior;
-	// delete objectWanderBehavior;
 	// 
 	delete object;
 }
+
+void FlockObject::UpdateFlockObject(float deltaTime)
+{
+	objectKinematic.Update(5, deltaTime);
+}
+
 
 void FlockObject::RenderObject()
 {
