@@ -9,6 +9,7 @@ struct Managers
 {
 	a3_EventManager eventManager[1];
 	a3_NetworkingManager net[1];
+	
 };
 
 

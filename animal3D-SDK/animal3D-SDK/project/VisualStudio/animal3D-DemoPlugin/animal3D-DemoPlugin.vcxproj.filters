@@ -67,6 +67,18 @@
     <Filter Include="Header Files\A3_DEMO\ObjectInfo">
       <UniqueIdentifier>{b60f5428-5d2a-4eed-b9e7-e487d3db3bb9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\common\A3_DEMO\a3_EventSystem">
+      <UniqueIdentifier>{bb45cd57-cf96-4674-8616-25611593fd25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\A3_DEMO\a3_EventSystem">
+      <UniqueIdentifier>{0fe7d9c9-4787-447f-8969-0d4c05dbcb8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common\A3_DEMO\ObjectInfo">
+      <UniqueIdentifier>{e01842c3-f002-4b22-8163-b9f9ce729ea7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\A3_DEMO\a3_Vector">
+      <UniqueIdentifier>{3388d185-bfeb-4f91-8f18-30f0c5348e8f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_src_win\main_dll.c">
@@ -111,14 +123,14 @@
     <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Networking\a3_NetworkingManager.cpp">
       <Filter>Source Files\common\A3_DEMO\a3_Networking</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_EventManager.cpp">
-      <Filter>Source Files\common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Event.cpp">
-      <Filter>Source Files\common</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_demo_callbacks.cpp">
       <Filter>Source Files\common\A3_DEMO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Event.cpp">
+      <Filter>Source Files\common\A3_DEMO\a3_EventSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_EventManager.cpp">
+      <Filter>Source Files\common\A3_DEMO\a3_EventSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -140,14 +152,23 @@
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_NetworkingManager.h">
       <Filter>Header Files\A3_DEMO\a3_Networking</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Event.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_EventManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\Manager.h">
       <Filter>Source Files\common\A3_DEMO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Event.h">
+      <Filter>Header Files\A3_DEMO\a3_EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_EventManager.h">
+      <Filter>Header Files\A3_DEMO\a3_EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_ObjectManager.h">
+      <Filter>Header Files\A3_DEMO\ObjectInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Object.h">
+      <Filter>Header Files\A3_DEMO\ObjectInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\Vector.h">
+      <Filter>Header Files\A3_DEMO\a3_Vector</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
