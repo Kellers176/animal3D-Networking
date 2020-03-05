@@ -38,8 +38,6 @@
 #include "RakNet/BitStream.h"
 #include "RakNet/GetTime.h"
 
-#include "FlockObjectManager.h"
-
 //-----------------------------------------------------------------------------
 
 #ifdef __cplusplus
@@ -54,12 +52,6 @@ extern "C"
 
 	typedef a3byte a3netAddressStr[16];
 
-	enum TypeOfDataSharing
-	{
-		ID_DATA_PUSH = 0,
-		ID_DATA_SHARE,
-		ID_DATA_COUPLING
-	};
 
 	// networking manager
 	struct a3_NetworkingManager
@@ -73,8 +65,8 @@ extern "C"
 		a3boolean isServer;
 		a3i32 numberOfParticipants;
 		a3i32 userID;
-		TypeOfDataSharing dataShareType;
-		a3_FlockObjectManager flockManager[1];
+
+
 	};
 
 

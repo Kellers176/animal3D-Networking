@@ -32,11 +32,6 @@
 #include "RakNet/BitStream.h"
 #include "RakNet/GetTime.h"
 
-#include "a3_Networking_ObjectInfo.h"
-
-#include "A3_DEMO/CookieClicker.h"
-
-
 //-----------------------------------------------------------------------------
 // networking stuff
 
@@ -49,16 +44,7 @@ enum a3_NetGameMessages
 	ID_ADD_INPUT,
 	ID_UPDATE_FOR_USER,
 	ID_ADD_EVENT,
-	ID_SEND_STRUCT,
-	ID_RECEIVE_STRUCT,
 
-	ID_RECEIVE_DATA_SHARING_TYPE,
-
-	ID_SEND_DATA_SHARE_TO_SERVER,
-	ID_SEND_DATA_COUPLING_TO_SERVER,
-	ID_RECEIVE_DATA_SHARING_DATA,
-	ID_RECEIVE_DATA_PUSH_DATA,
-	ID_RECEIVE_COUPLING_DATA,
 	ID_UPDATE_OBJECT_POS
 };
 
@@ -168,9 +154,6 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 		RakNet::MessageID msg;
 		a3i32 count = 0;
 
-		MoveInputData* tempInputData;
-		ObjectPosInfo* tempMoveObjInfo;
-
 		for (packet = peer->Receive();
 			packet;
 			peer->DeallocatePacket(packet), packet = peer->Receive(), ++count)
@@ -247,21 +230,6 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					printf("A connection is incoming.\n");
 					net->numberOfParticipants = net->numberOfParticipants + 1;
 
-					// send the user the data shring type...
-					bs_Data_Out->Write((RakNet::MessageID)ID_RECEIVE_DATA_SHARING_TYPE);
-					bs_Data_Out->Write((TypeOfDataSharing)net->dataShareType);
-
-					// send the user their id
-					bs_Data_Out->Write(net->numberOfParticipants);
-
-					//send the start id of their units
-					bs_Data_Out->Write((net->numberOfParticipants - 1) * 5);
-
-					//send the amount of users currently available
-					bs_Data_Out->Write(net->numberOfParticipants);
-					
-					peer->Send(bs_Data_Out, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
-
 					break;
 				case ID_NO_FREE_INCOMING_CONNECTIONS:
 					printf("The server is full.\n");
@@ -306,111 +274,6 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					//a3_EventManager::Instance()->addEvent(shift_Event);
 					break;
 				}
-				case ID_SEND_STRUCT:
-				{
-					// get the message (this is automatically done)
-					printf("we have received a message about le cookie uh huh huh huh\n");
-					// increase the number
-					net->CookieNumber = net->CookieNumber + 1;
-
-					// transfer the data to a temporary container
-					CookieClicker* myCookie = new CookieClicker();
-					myCookie->typeID = ID_RECEIVE_STRUCT;
-					myCookie->number = net->CookieNumber;
-
-					int actualCookieNumber = myCookie->number;
-
-					// send the temporary container out to everyone
-					RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
-
-					RakNet::BitStream bsOut[1];
-					//rest of message
-					bsOut->Write((RakNet::MessageID)ID_RECEIVE_STRUCT);
-					bsOut->Write(actualCookieNumber);
-
-					for (int i = 0; i < net->numberOfParticipants; i++)
-					{
-						peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
-					}
-
-					break;
-				}
-				case ID_RECEIVE_STRUCT:
-				{
-					printf("\n mmmmmm cookie received\n");
-
-					int actual = 0;
-
-					// receive the new cookie amount from the server
-					bs_in.Read(actual);
-
-					// set the number of cookies to the number from the container from the server
-					net->CookieNumber = actual;
-
-
-
-					break;
-				}
-
-				case ID_RECEIVE_DATA_SHARING_TYPE:
-
-					bs_in.Read(net->dataShareType);
-
-					int startingUnitID = 0;
-
-					bs_in.Read(net->userID);
-					bs_in.Read(startingUnitID);
-					bs_in.Read(net->numberOfParticipants);
-
-					// give the person their boids
-					for (int i = 0; i < 5; i++)
-					{
-						// if it is data push we dont have to do flocking for them
-						// we just have to update the position
-						if (net->dataShareType == ID_DATA_PUSH)
-						{
-							net->flockManager->AddNewFlockObject(0, 0, startingUnitID + i, false);
-						}
-						else if(net->dataShareType == ID_DATA_SHARE)
-						{
-							net->flockManager->AddNewFlockObject(0, 0, startingUnitID + i, true);
-						}
-						else if (net->dataShareType == ID_DATA_COUPLING)
-						{
-							net->flockManager->AddNewFlockObject(0, 0, startingUnitID + i, true);
-						}
-					}
-
-					// give the person the boids of others
-					for (int i = 0; i < net->numberOfParticipants; i++)
-					{
-						if (i != net->userID)
-						{
-							for (int j = 0; j < 5; j++)
-							{
-								net->flockManager->AddNewFlockObject(0, 0, i * 5 + j, false);
-							}
-						}
-					}
-					break;
-
-				case ID_SEND_DATA_SHARE_TO_SERVER:
-
-					break;
-				case ID_SEND_DATA_COUPLING_TO_SERVER:
-
-					break;
-
-				case ID_RECEIVE_DATA_PUSH_DATA:
-
-					break;
-				case ID_RECEIVE_DATA_SHARING_DATA:
-
-					break;
-
-				case ID_RECEIVE_COUPLING_DATA:
-
-					break;
 
 				case ID_UPDATE_OBJECT_POS:
 					int unitID;
@@ -419,7 +282,6 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					bs_in.Read(newPosX);
 					bs_in.Read(newPosY);
 
-					net->flockManager->UpdatePositionOfFlockObject(newPosX, newPosY, unitID);
 					break;
 				default:
 					printf("Message with identifier %i has arrived.\n", msg);
@@ -442,104 +304,28 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net)
 
 	if (net && net->peer)
 	{
-		if (net->isServer)
-		{
-			switch (net->dataShareType)
-			{
-			case ID_DATA_PUSH:
-				// tell the receiver they will have to update the following objects pos
-				bsOut->Write(ID_UPDATE_OBJECT_POS);
+		RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
 
-				// the server will loop through all objects and get their pos
-				for (int i = 0; i < net->flockManager->GetTotalNumberOfFlockObjectsInList(); i++)
-				{
-					ObjectPosInfo posData = ObjectPosInfo();
-					posData.xPos = net->flockManager->GetObjetList()[i].GetPosX;
-					posData.yPos = net->flockManager->GetObjetList()[i].GetPosY;
-
-
-					bsOut->Write(net->flockManager->GetObjetList()[i].GetUnitID());
-					bsOut->Write(posData.xPos);
-					bsOut->Write(posData.yPos);
-				}
-
-				// send out all info to every user
-				for (unsigned int i = 0; i < net->numberOfParticipants; i++)
-				{
-					peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
-				}
-
-				break;
-			case ID_DATA_SHARE:
-
-				// we dont want to do anything here cause we will just send out info to other peeps through
-				// the inbound arena
-
-				// AKA:
-				// receive msg from client
-				// read data
-				// send data to everyone else
-
-				break;
-			case ID_DATA_COUPLING:
-
-				// 
-
-				break;
-			default:
-				break;
-			}
-		}
-		else
-		{
-			switch (net->dataShareType)
-			{
-			case ID_DATA_SHARE:
-
-				break;
-			case ID_DATA_COUPLING:
-
-				break;
-			default:
-				break;
-			}
-		}
-		/*
+		RakNet::BitStream bsOut[1];
+		
 		if (net->isServer)
 		{
 			
-			RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
-
-			RakNet::BitStream bsOut[1];
-
-			
-			// unsigned char typeId;
-			// int objType;
-			// float xPos;
-			// float yPos;
-			// float zPos;
-			
-
-			ObjectPosInfo posData = ObjectPosInfo();
-			posData.typeId = ID_UPDATE_OBJECT_FOR_USER;
-
-			bsOut->Write((ObjectPosInfo)posData);
-
+			// sending to everyone:
+			/*
 			for (unsigned int i = 0; i < peer->GetNumberOfAddresses(); i++)
 			{
 				peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
 			}
+			*/
 		}
 		else
 		{
-			RakNet::BitStream bsOut[1];
-			
-			MoveInputData moveInput = MoveInputData();
-			moveInput.typeId = ID_ADD_INPUT_TO_GAME_OBJECT;
+			//sending to server
+			// peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, false);
 
-			bsOut->Write((MoveInputData)moveInput);
 		}
-		*/
+
 	}
 	return 0;
 }

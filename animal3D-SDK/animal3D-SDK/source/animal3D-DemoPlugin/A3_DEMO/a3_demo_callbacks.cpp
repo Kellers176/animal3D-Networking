@@ -32,14 +32,11 @@
 #include "a3_DemoState.h"
 
 #include "a3_EventManager.h"
-#include "ShiftEvent.h"
-#include "A3_DEMO/CookieClicker.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <GL/glew.h>
-#include "A3_DEMO/CookieClicker.h"
 #include "A3_DEMO/a3_EventManager.h"
 #include "A3_DEMO/a3_NetworkingManager.h"
 #include "A3_DEMO/Manager.h"
@@ -517,26 +514,7 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey
 	// persistent state update
 	a3keyboardSetStateASCII(demoState->keyboard, (a3byte)asciiKey);
 
-	//we are using tab cause for some reason that works ebtter
-	if (asciiKey == 9)
-	{
-		printf("Pressing tab");
-		//Fix this------------------------------------------
-		ShiftEvent* shift_Event = new ShiftEvent(gameManager.net);
-		a3_EventManager::Instance()->addEvent(shift_Event);
 
-		// the net cookie number will be updated through the networking manager
-		// so we just need to set the number for the display by taking form the networking
-		// manager's data
-		gameManager.myCookie->number = gameManager.net->CookieNumber;
-
-		printf("Cookie Num: ");
-		printf("%d", gameManager.myCookie->number);
-
-
-
-		//demoState->messageText[demoState->numberOfLettersInMessage] = myCookie.number;
-	}
 	if (asciiKey == 8)
 	{
 		demoState->numberOfLettersInMessage--;
@@ -548,27 +526,6 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey
 		demoState->enterPressed = true;
 	}
 
-	if (asciiKey == a3key_7)
-	{
-		if (gameManager.net->isServer)
-		{
-			gameManager.net->dataShareType = ID_DATA_PUSH;
-		}
-	}
-	if (asciiKey == a3key_8)
-	{
-		if (gameManager.net->isServer)
-		{
-			gameManager.net->dataShareType = ID_DATA_SHARE;
-		}
-	}
-	if (asciiKey == a3key_9)
-	{
-		if (gameManager.net->isServer)
-		{
-			gameManager.net->dataShareType = ID_DATA_COUPLING;
-		}
-	}
 	// handle special cases immediately
 	switch (asciiKey)
 	{
