@@ -14,6 +14,19 @@ void a3_FlockObjectManager::AddNewFlockObject(float positionX, float positionY, 
 	}
 }
 
+void a3_FlockObjectManager::UpdatePositionOfFlockObject(float newPosX, float newPosY, int unitID)
+{
+	for (int i = 0; i < listOfFlockObjects.size(); i++)
+	{
+		if (listOfFlockObjects[i].GetUnitID() == unitID)
+		{
+			listOfFlockObjects[i].SetPosition(newPosX, newPosY);
+			break;
+		}
+	}
+}
+
+
 void a3_FlockObjectManager::UpdateAllFlockObjects(float deltaTime)
 {
 	for (int i = 0; i < listOfFlockObjects.size(); i++)

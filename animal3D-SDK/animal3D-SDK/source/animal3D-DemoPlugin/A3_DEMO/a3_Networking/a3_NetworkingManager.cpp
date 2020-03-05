@@ -51,9 +51,15 @@ enum a3_NetGameMessages
 	ID_ADD_EVENT,
 	ID_SEND_STRUCT,
 	ID_RECEIVE_STRUCT,
-	ID_ADD_INPUT_TO_GAME_OBJECT,
-	ID_UPDATE_OBJECT_FOR_USER,
-	ID_RECEIVE_DATA_SHARING_TYPE
+
+	ID_RECEIVE_DATA_SHARING_TYPE,
+
+	ID_SEND_DATA_SHARE_TO_SERVER,
+	ID_SEND_DATA_COUPLING_TO_SERVER,
+	ID_RECEIVE_DATA_SHARING_DATA,
+	ID_RECEIVE_DATA_PUSH_DATA,
+	ID_RECEIVE_COUPLING_DATA,
+	ID_UPDATE_OBJECT_POS
 };
 
 
@@ -178,6 +184,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 			{
 				// check for timestamp and process
 			case ID_TIMESTAMP:
+			{
 				bs_in.Read(msg);
 				// ****TO-DO: handle timestamp
 				RakNet::Time sendTime, recieveTime, dt;
@@ -187,22 +194,28 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 				printf("\n SEND TIME: %u \n", (unsigned int)sendTime);
 				printf("\n RECIEVE TIME: %u \n", (unsigned int)recieveTime);
 				printf("\n DIFF TIME: %u \n", (unsigned int)dt);
-
+			}
 				// do not break; proceed to default case to process actual message contents
 			default:
 				switch (msg)
 				{
 				case ID_REMOTE_DISCONNECTION_NOTIFICATION:
+				{
 					printf("Another client has disconnected.\n");
 					break;
+				}
 				case ID_REMOTE_CONNECTION_LOST:
+				{
 					printf("Another client has lost the connection.\n");
 					net->numberOfParticipants = net->numberOfParticipants - 1;
 					break;
+				}
 				case ID_REMOTE_NEW_INCOMING_CONNECTION:
+				{
 					printf("Another client has connected.\n");
 					net->numberOfParticipants = net->numberOfParticipants + 1;
 					break;
+				}
 				case ID_CONNECTION_REQUEST_ACCEPTED:
 					printf("Our connection request has been accepted.\n");
 					{
@@ -230,11 +243,22 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 					}
 					break;
 				case ID_NEW_INCOMING_CONNECTION:
+					// we add number of participants...
 					printf("A connection is incoming.\n");
 					net->numberOfParticipants = net->numberOfParticipants + 1;
 
+					// send the user the data shring type...
 					bs_Data_Out->Write((RakNet::MessageID)ID_RECEIVE_DATA_SHARING_TYPE);
 					bs_Data_Out->Write((TypeOfDataSharing)net->dataShareType);
+
+					// send the user their id
+					bs_Data_Out->Write(net->numberOfParticipants);
+
+					//send the start id of their units
+					bs_Data_Out->Write((net->numberOfParticipants - 1) * 5);
+
+					//send the amount of users currently available
+					bs_Data_Out->Write(net->numberOfParticipants);
 					
 					peer->Send(bs_Data_Out, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 
@@ -271,24 +295,6 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 
 					}
 					break;
-				case ID_ADD_INPUT_TO_GAME_OBJECT:
-
-					// server gets the input
-					tempInputData = (MoveInputData*)packet->data;
-
-
-					// event system will process it and return the new pos info
-
-
-					break;
-				case ID_UPDATE_OBJECT_FOR_USER:
-
-					// get the infor from the server for the new move info
-					tempMoveObjInfo = (ObjectPosInfo*)packet->data;
-
-					// set the object pos to pos + move input
-
-
 				case ID_ADD_EVENT:
 				{
 					//tell the client to process the envents
@@ -350,8 +356,71 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 
 					bs_in.Read(net->dataShareType);
 
+					int startingUnitID = 0;
+
+					bs_in.Read(net->userID);
+					bs_in.Read(startingUnitID);
+					bs_in.Read(net->numberOfParticipants);
+
+					// give the person their boids
+					for (int i = 0; i < 5; i++)
+					{
+						// if it is data push we dont have to do flocking for them
+						// we just have to update the position
+						if (net->dataShareType == ID_DATA_PUSH)
+						{
+							net->flockManager->AddNewFlockObject(0, 0, startingUnitID + i, false);
+						}
+						else if(net->dataShareType == ID_DATA_SHARE)
+						{
+							net->flockManager->AddNewFlockObject(0, 0, startingUnitID + i, true);
+						}
+						else if (net->dataShareType == ID_DATA_COUPLING)
+						{
+							net->flockManager->AddNewFlockObject(0, 0, startingUnitID + i, true);
+						}
+					}
+
+					// give the person the boids of others
+					for (int i = 0; i < net->numberOfParticipants; i++)
+					{
+						if (i != net->userID)
+						{
+							for (int j = 0; j < 5; j++)
+							{
+								net->flockManager->AddNewFlockObject(0, 0, i * 5 + j, false);
+							}
+						}
+					}
 					break;
 
+				case ID_SEND_DATA_SHARE_TO_SERVER:
+
+					break;
+				case ID_SEND_DATA_COUPLING_TO_SERVER:
+
+					break;
+
+				case ID_RECEIVE_DATA_PUSH_DATA:
+
+					break;
+				case ID_RECEIVE_DATA_SHARING_DATA:
+
+					break;
+
+				case ID_RECEIVE_COUPLING_DATA:
+
+					break;
+
+				case ID_UPDATE_OBJECT_POS:
+					int unitID;
+					float newPosX, newPosY;
+					bs_in.Read(unitID);
+					bs_in.Read(newPosX);
+					bs_in.Read(newPosY);
+
+					net->flockManager->UpdatePositionOfFlockObject(newPosX, newPosY, unitID);
+					break;
 				default:
 					printf("Message with identifier %i has arrived.\n", msg);
 					break;
@@ -367,21 +436,89 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net)
 // process outbound packets
 a3i32 a3netProcessOutbound(a3_NetworkingManager* net)
 {
+	RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
+
+	RakNet::BitStream bsOut[1];
+
 	if (net && net->peer)
 	{
 		if (net->isServer)
 		{
+			switch (net->dataShareType)
+			{
+			case ID_DATA_PUSH:
+				// tell the receiver they will have to update the following objects pos
+				bsOut->Write(ID_UPDATE_OBJECT_POS);
+
+				// the server will loop through all objects and get their pos
+				for (int i = 0; i < net->flockManager->GetTotalNumberOfFlockObjectsInList(); i++)
+				{
+					ObjectPosInfo posData = ObjectPosInfo();
+					posData.xPos = net->flockManager->GetObjetList()[i].GetPosX;
+					posData.yPos = net->flockManager->GetObjetList()[i].GetPosY;
+
+
+					bsOut->Write(net->flockManager->GetObjetList()[i].GetUnitID());
+					bsOut->Write(posData.xPos);
+					bsOut->Write(posData.yPos);
+				}
+
+				// send out all info to every user
+				for (unsigned int i = 0; i < net->numberOfParticipants; i++)
+				{
+					peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
+				}
+
+				break;
+			case ID_DATA_SHARE:
+
+				// we dont want to do anything here cause we will just send out info to other peeps through
+				// the inbound arena
+
+				// AKA:
+				// receive msg from client
+				// read data
+				// send data to everyone else
+
+				break;
+			case ID_DATA_COUPLING:
+
+				// 
+
+				break;
+			default:
+				break;
+			}
+		}
+		else
+		{
+			switch (net->dataShareType)
+			{
+			case ID_DATA_SHARE:
+
+				break;
+			case ID_DATA_COUPLING:
+
+				break;
+			default:
+				break;
+			}
+		}
+		/*
+		if (net->isServer)
+		{
+			
 			RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
 
 			RakNet::BitStream bsOut[1];
 
-			/*
-				unsigned char typeId;
-				int objType;
-				float xPos;
-				float yPos;
-				float zPos;
-			*/
+			
+			// unsigned char typeId;
+			// int objType;
+			// float xPos;
+			// float yPos;
+			// float zPos;
+			
 
 			ObjectPosInfo posData = ObjectPosInfo();
 			posData.typeId = ID_UPDATE_OBJECT_FOR_USER;
@@ -402,6 +539,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net)
 
 			bsOut->Write((MoveInputData)moveInput);
 		}
+		*/
 	}
 	return 0;
 }

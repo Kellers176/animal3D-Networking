@@ -21,6 +21,11 @@ public:
 
 	void RenderObject();
 
+	int GetUnitID() { return unitID; }
+
+	float GetPosX() { return objectKinematic.positionX; }
+	float GetPosY() { return objectKinematic.positionY; }
+
 	void SetUnitID(int newID);
 	void SetPosition(float newX, float newY);
 

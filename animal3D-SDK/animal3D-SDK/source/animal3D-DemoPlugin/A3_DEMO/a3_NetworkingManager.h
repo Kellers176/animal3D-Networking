@@ -38,6 +38,8 @@
 #include "RakNet/BitStream.h"
 #include "RakNet/GetTime.h"
 
+#include "FlockObjectManager.h"
+
 //-----------------------------------------------------------------------------
 
 #ifdef __cplusplus
@@ -67,9 +69,12 @@ extern "C"
 		a3ui16 maxConnect_inbound, maxConnect_outbound;
 		RakNet::RakPeerInterface* peer;
 		a3i32 CookieNumber;
+
 		a3boolean isServer;
 		a3i32 numberOfParticipants;
+		a3i32 userID;
 		TypeOfDataSharing dataShareType;
+		a3_FlockObjectManager flockManager[1];
 	};
 
 

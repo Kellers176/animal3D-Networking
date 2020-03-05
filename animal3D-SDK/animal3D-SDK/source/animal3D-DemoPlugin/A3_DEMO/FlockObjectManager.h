@@ -15,6 +15,8 @@ public:
 
 	void AddNewFlockObject(float positionX, float positionY, int unitID, bool controlledByUser);
 
+	void UpdatePositionOfFlockObject(float newPosX, float newPosY, int unitID);
+
 	void UpdateAllFlockObjects(float deltaTime);
 
 	void UpdateOnlyUsersFlockObjects(float deltaTime);
@@ -22,6 +24,12 @@ public:
 	void RenderAllFlockObjects();
 
 	FlockObject GetFlockObject(int unitID) { return listOfFlockObjects[unitID]; }
+
+	int GetNumberOfControlledFlockObjects() { return listOfControlledUnitIds.size(); }
+
+	int GetTotalNumberOfFlockObjectsInList() { return listOfFlockObjects.size(); }
+
+	std::vector<FlockObject> GetObjetList() { return listOfFlockObjects; }
 
 private:
 	std::vector<FlockObject> listOfFlockObjects;
