@@ -135,6 +135,9 @@
     <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_ObjectManager.cpp">
+      <Filter>Source Files\common\A3_DEMO\ObjectInfo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\a3_dylib_config_export.h">

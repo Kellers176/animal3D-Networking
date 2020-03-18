@@ -24,7 +24,7 @@ struct BK_Vector2
 		yVal = newYVal;
 	}
 
-	float magnitude() { return sqrt(xVal * xVal + yVal * yVal); }
+	float magnitude() { return (float)sqrt( (double)xVal * (double)xVal + (double) yVal * (double)yVal); }
 
 	float Dot(BK_Vector2 other)
 	{

@@ -10,9 +10,12 @@ class a3_ObjectManager
 {
 public:
 	a3_ObjectManager();
-
 	~a3_ObjectManager();
 
+	void a3_UpdateAllObjects();
+	void a3_RenderAllObjects();
+
+	void a3_CreateNewObject();
 
 private:
 	std::vector<a3_Object> listOfObjects;

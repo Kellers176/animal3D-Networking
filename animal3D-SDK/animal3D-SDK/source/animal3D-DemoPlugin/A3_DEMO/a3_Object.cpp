@@ -6,8 +6,8 @@
 a3_Object::a3_Object()
 {
 	//set default position
-	kinData.posX = -0.99f;
-	kinData.posY = -0.95f;
+	objectKinematic.position.xVal = -0.99f;
+	objectKinematic.position.yVal = -0.95f;
 	
 	//create shape
 	objectShape[0] = "T";
