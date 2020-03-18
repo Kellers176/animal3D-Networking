@@ -29,5 +29,14 @@ void a3_Object::a3_RenderObject()
 	glClear(GL_COLOR_BUFFER_BIT);
 	//-1,-1,-1 is bottom left corner
 	//draw text
-	a3textDraw(objectRenderer, kinData.posX, kinData.posY, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, objectShape[0]);
+	a3textDraw(objectRenderer, objectKinematic.position.xVal, objectKinematic.position.yVal, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, objectShape[0]);
+}
+
+
+void a3_Object::a3_UpdateKinematics()
+{
+	// update teh position;
+	objectKinematic.position = objectKinematic.position + objectKinematic.velocity;
+
+	objectKinematic.rotation = objectKinematic.rotation + objectKinematic.angularVelocity;
 }

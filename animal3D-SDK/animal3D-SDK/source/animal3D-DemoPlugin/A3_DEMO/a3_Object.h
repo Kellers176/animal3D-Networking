@@ -4,12 +4,7 @@
 #define A3_OBJECT_H
 
 #include "animal3D-A3DG/a3graphics/a3_TextRenderer.h"
-
-struct ObjKinData
-{
-	float posX, posY;
-
-};
+#include "a3_ObjectKinematic.h"
 
 class a3_Object
 {
@@ -19,10 +14,13 @@ public:
 
 	void a3_RenderObject();
 
+	void a3_UpdateKinematics();
+
 private:
 	a3_TextRenderer objectRenderer[1];
 	const a3byte* objectShape[1];
-	ObjKinData kinData;
+
+	a3_Object_Kinematic objectKinematic;
 };
 
 
