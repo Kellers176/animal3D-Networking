@@ -17,10 +17,11 @@ public:
 	a3_Object();
 	~a3_Object();
 
-private:
-	a3_TextRenderer objectRenderer;
-	char objectShape[1];
+	void a3_RenderObject();
 
+private:
+	a3_TextRenderer objectRenderer[1];
+	const a3byte* objectShape[1];
 	ObjKinData kinData;
 };
 

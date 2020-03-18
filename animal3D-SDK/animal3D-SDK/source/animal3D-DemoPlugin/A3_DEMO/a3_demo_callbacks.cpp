@@ -388,8 +388,8 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 			// render timer ticked, update demo state and draw
 			//a3demoTestInput(demoState);
 			a3demo_input(demoState, demoState->renderTimer->secondsPerTick);
-			a3netProcessInbound(gameManager.net);
-			a3demoProcessInput(demoState);
+//			a3netProcessInbound(gameManager.net);
+//			a3demoProcessInput(demoState);
 			a3_EventManager::Instance()->processEvents();
 			//			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessOutbound(gameManager.net);
@@ -567,114 +567,114 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey
 //	case 't':
 //		demoState->textMode = (demoState->textMode + 1) % demoState->textModeCount;
 //		break;
-	case ' ':
-		demoState->messageText[demoState->numberOfLettersInMessage] = ' ';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'a':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'a';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'b':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'b';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'c':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'c';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'd':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'd';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'e':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'e';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'f':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'f';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'g':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'g';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'h':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'h';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'i':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'i';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'j':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'j';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'k':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'k';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'l':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'l';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'm':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'm';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'n':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'n';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'o':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'o';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'p':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'p';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'q':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'q';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'r':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'r';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 's':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 's';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 't':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 't';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'u':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'u';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'v':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'v';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'w':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'w';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'x':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'x';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'y':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'y';
-		demoState->numberOfLettersInMessage++;
-		break;
-	case 'z':
-		demoState->messageText[demoState->numberOfLettersInMessage] = 'z';
-		demoState->numberOfLettersInMessage++;
-		break;
+//	case ' ':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = ' ';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'a':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'a';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'b':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'b';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'c':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'c';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'd':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'd';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'e':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'e';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'f':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'f';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'g':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'g';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'h':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'h';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'i':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'i';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'j':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'j';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'k':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'k';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'l':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'l';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'm':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'm';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'n':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'n';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'o':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'o';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'p':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'p';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'q':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'q';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'r':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'r';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 's':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 's';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 't':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 't';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'u':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'u';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'v':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'v';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'w':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'w';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'x':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'x';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'y':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'y';
+//		demoState->numberOfLettersInMessage++;
+//		break;
+//	case 'z':
+//		demoState->messageText[demoState->numberOfLettersInMessage] = 'z';
+//		demoState->numberOfLettersInMessage++;
+//		break;
 	}
 
 

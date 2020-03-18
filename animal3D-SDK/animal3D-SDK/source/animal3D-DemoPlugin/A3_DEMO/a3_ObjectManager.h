@@ -4,6 +4,7 @@
 #define A3_OBJECT_MANAGER_H
 
 #include <vector>
+#include "a3_Object.h"
 
 class a3_ObjectManager
 {
