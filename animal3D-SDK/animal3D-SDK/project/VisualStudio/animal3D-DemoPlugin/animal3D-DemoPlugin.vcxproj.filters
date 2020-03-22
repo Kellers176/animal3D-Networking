@@ -79,6 +79,9 @@
     <Filter Include="Header Files\A3_DEMO\a3_Vector">
       <UniqueIdentifier>{3388d185-bfeb-4f91-8f18-30f0c5348e8f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\common\A3_DEMO\a3_Vector">
+      <UniqueIdentifier>{b85e43fa-a43e-4d33-a32c-b21a51b1714e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_src_win\main_dll.c">
@@ -137,6 +140,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_ObjectManager.cpp">
       <Filter>Source Files\common\A3_DEMO\ObjectInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\BK_Vector.cpp">
+      <Filter>Source Files\common\A3_DEMO\a3_Vector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
