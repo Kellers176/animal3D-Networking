@@ -14,15 +14,19 @@ public:
 
 	void a3_RenderObject();
 
-	void a3_UpdateKinematics();
+	void a3_UpdateKinematics(float deltaTime);
 
 	void setObjectPos(float newX, float newY) { objectKinematic.position = BK_Vector2(newX, newY); }
+	void setObjectID(int newID) { objectID = newID; }
 
+	int getObjectID() { return objectID; }
 private:
 	a3_TextRenderer objectRenderer[1];
 	const a3byte* objectShape[1];
 
 	a3_Object_Kinematic objectKinematic;
+
+	int objectID;
 };
 
 

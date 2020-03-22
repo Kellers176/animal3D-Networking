@@ -28,4 +28,15 @@ void a3_ObjectManager::a3_CreateNewObject()
 	listOfObjects.push_back(newObject);
 }
 
+void a3_ObjectManager::a3_SetObjectPos(int objID, BK_Vector2 newPos)
+{
+	for (int i = 0; i < listOfObjects.size(); i++)
+	{
+		if (listOfObjects[i].getObjectID() == objID)
+		{
+
+		}
+	}
+}
+
 

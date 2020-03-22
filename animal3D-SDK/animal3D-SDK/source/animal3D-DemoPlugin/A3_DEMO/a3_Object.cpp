@@ -15,6 +15,8 @@ a3_Object::a3_Object()
 	//creates and initalizes the objectRenderer
 	a3textInitialize(objectRenderer, 18, 1, 0, 0, 0);
 
+	objectID = 0;
+
 }
 
 a3_Object::~a3_Object()
@@ -33,7 +35,7 @@ void a3_Object::a3_RenderObject()
 }
 
 
-void a3_Object::a3_UpdateKinematics()
+void a3_Object::a3_UpdateKinematics(float deltaTime)
 {
 	// update teh position;
 	objectKinematic.position = objectKinematic.position + objectKinematic.velocity;
