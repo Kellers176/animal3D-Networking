@@ -12,7 +12,7 @@ public:
 	a3_ObjectManager(){}
 	~a3_ObjectManager(){}
 
-	void a3_UpdateAllObjects();
+	void a3_UpdateAllObjects(float deltaTime);
 	void a3_RenderAllObjects();
 
 	void a3_CreateNewObject();
@@ -20,6 +20,7 @@ public:
 	a3_Object a3_GetObjectInPos(int objPos) { return listOfObjects[objPos]; }
 
 	void a3_SetObjectPos(int objID, BK_Vector2 newPos);
+	void a3_SetObjectRotation(int objID, float newRotation);
 
 private:
 	std::vector<a3_Object> listOfObjects;

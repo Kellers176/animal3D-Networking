@@ -320,7 +320,7 @@ A3DYLIBSYMBOL a3_DemoState* a3demoCB_load(a3_DemoState* demoState, a3boolean hot
 		// scene objects
 	//	a3demo_initScene(demoState);
 
-
+		gameManager.objectManager->a3_CreateNewObject();
 
 
 	}
@@ -391,6 +391,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 //			a3netProcessInbound(gameManager.net);
 //			a3demoProcessInput(demoState);
 			a3_EventManager::Instance()->processEvents();
+			gameManager.objectManager->a3_RenderAllObjects();
 			//			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessOutbound(gameManager.net);
 			a3demoTestRender(demoState);

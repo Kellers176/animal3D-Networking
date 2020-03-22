@@ -17,6 +17,7 @@ public:
 	void a3_UpdateKinematics(float deltaTime);
 
 	void setObjectPos(float newX, float newY) { objectKinematic.position = BK_Vector2(newX, newY); }
+	void setObjectRotation(float newRotation) { objectKinematic.rotation = newRotation; }
 	void setObjectID(int newID) { objectID = newID; }
 
 	int getObjectID() { return objectID; }
