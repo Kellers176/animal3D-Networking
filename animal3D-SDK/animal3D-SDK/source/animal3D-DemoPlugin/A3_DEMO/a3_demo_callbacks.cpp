@@ -398,7 +398,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 			a3shaderProgramDeactivate();
 			a3textureDeactivate(a3tex_unit00);
 
-			//glClear(GL_COLOR_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT);
 
 			gameManager.objectManager->a3_RenderAllObjects(demoState->text);
 
