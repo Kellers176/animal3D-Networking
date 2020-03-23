@@ -320,7 +320,7 @@ A3DYLIBSYMBOL a3_DemoState* a3demoCB_load(a3_DemoState* demoState, a3boolean hot
 		// scene objects
 	//	a3demo_initScene(demoState);
 
-		gameManager.objectManager->a3_CreateNewObject();
+		gameManager.objectManager->a3_CreateNewObject(demoState->text);
 
 
 	}

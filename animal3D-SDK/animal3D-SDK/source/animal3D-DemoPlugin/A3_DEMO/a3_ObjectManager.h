@@ -15,7 +15,7 @@ public:
 	void a3_UpdateAllObjects(float deltaTime);
 	void a3_RenderAllObjects();
 
-	void a3_CreateNewObject();
+	void a3_CreateNewObject(a3_TextRenderer* newRenderer);
 
 	a3_Object a3_GetObjectInPos(int objPos) { return listOfObjects[objPos]; }
 
