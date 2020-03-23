@@ -142,14 +142,16 @@ void a3demo_render_main_controls(const a3_DemoState *demoState,
 	const a3f32 textOffsetDelta = -0.08f;
 
 	// modes
+	/*
 	a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
 		"Demo mode (%u / %u) (',' prev | next '.'): %s", demoState->demoMode + 1, demoState->demoModeCount, modeText);
 	a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
 		"    Sub-mode (%u / %u) ('<' | '>'): %s", demoSubMode + 1, demoSubModeCount, subModeText[demoSubMode]);
 	a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
 		"        Output (%u / %u) ('{' | '}'): %s", demoOutput + 1, demoOutputCount, outputText[demoSubMode][demoOutput]);
-
+	*/
 	// toggles
+	/*
 //	a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
 //		"ACTIVE CAMERA ('c' | 'v'): %d / %d", demoState->activeCamera + 1, demoStateMaxCount_cameraObject);
 	a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
@@ -160,13 +162,14 @@ void a3demo_render_main_controls(const a3_DemoState *demoState,
 		"HIDDEN VOLUMES (toggle 'h') %d ", demoState->displayHiddenVolumes);
 	a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
 		"ANIMATION updates (toggle 'm') %d", demoState->updateAnimation);
+	*/
 //	a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
 //		"PIPELINE overlay (toggle 'o') %d", demoState->displayPipeline);
 
 
 	//  move down
 	textOffset = -0.5f;
-
+	/*
 	// display controls
 	if (a3XboxControlIsConnected(demoState->xcontrol))
 	{
@@ -187,7 +190,7 @@ void a3demo_render_main_controls(const a3_DemoState *demoState,
 	a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
 		"Toggle text display:        't' (toggle) | 'T' (alloc/dealloc) ");
 	a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
-		"Reload all shader programs: 'P' ****CHECK CONSOLE FOR ERRORS!**** ");
+		"Reload all shader programs: 'P' ****CHECK CONSOLE FOR ERRORS!**** ");*/
 }
 
 
@@ -207,6 +210,7 @@ void a3demo_render_data(const a3_DemoState* demoState)
 	textOffset = +0.9f;
 
 	// display some data
+	/*
 	a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
 		"t_render = %+.4lf ", demoState->renderTimer->totalTime);
 	a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
@@ -215,6 +219,7 @@ void a3demo_render_data(const a3_DemoState* demoState)
 		"fps_actual = %.4lf ", __a3recipF64(demoState->renderTimer->previousTick));
 	a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
 		"fps_target = %.4lf ", (a3f64)demoState->renderTimer->ticks / demoState->renderTimer->totalTime);
+	*/
 }
 
 

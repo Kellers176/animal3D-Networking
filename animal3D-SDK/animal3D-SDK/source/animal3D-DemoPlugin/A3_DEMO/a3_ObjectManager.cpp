@@ -19,12 +19,11 @@ void a3_ObjectManager::a3_RenderAllObjects(a3_TextRenderer* newRenderer)
 	}
 }
 
-void a3_ObjectManager::a3_CreateNewObject(a3_TextRenderer* newRenderer)
+void a3_ObjectManager::a3_CreateNewObject()
 {
 	a3_Object newObject = a3_Object();
 
 	newObject.setObjectPos(0, 0);
-	newObject.setObjectTextRenderer(newRenderer);
 
 	listOfObjects.push_back(newObject);
 }

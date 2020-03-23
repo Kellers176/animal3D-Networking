@@ -41,7 +41,7 @@
 #include "A3_DEMO/a3_NetworkingManager.h"
 #include "A3_DEMO/Manager.h"
 
-
+#include <iostream>
 
 Managers gameManager;
 //-----------------------------------------------------------------------------
@@ -320,7 +320,7 @@ A3DYLIBSYMBOL a3_DemoState* a3demoCB_load(a3_DemoState* demoState, a3boolean hot
 		// scene objects
 	//	a3demo_initScene(demoState);
 
-		gameManager.objectManager->a3_CreateNewObject(demoState->text);
+		gameManager.objectManager->a3_CreateNewObject();
 
 
 	}
@@ -393,12 +393,19 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 			a3_EventManager::Instance()->processEvents();
 
 			// we need to clear the buffer once per frame
+
+			a3framebufferDeactivate();
+			a3shaderProgramDeactivate();
+			a3textureDeactivate(a3tex_unit00);
+
+			//glClear(GL_COLOR_BUFFER_BIT);
+
 			gameManager.objectManager->a3_RenderAllObjects(demoState->text);
 
 
 			//			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessOutbound(gameManager.net);
-			a3demoTestRender(demoState);
+			// a3demoTestRender(demoState);
 			//			a3demo_render(demoState);
 						// update input
 			a3mouseUpdate(demoState->mouse);

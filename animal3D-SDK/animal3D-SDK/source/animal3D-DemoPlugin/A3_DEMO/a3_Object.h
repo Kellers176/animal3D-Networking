@@ -19,13 +19,9 @@ public:
 	void setObjectPos(float newX, float newY) { objectKinematic.position = BK_Vector2(newX, newY); }
 	void setObjectRotation(float newRotation) { objectKinematic.rotation = newRotation; }
 	void setObjectID(int newID) { objectID = newID; }
-	void setObjectTextRenderer(a3_TextRenderer* newRenderer) {
-		objectRenderer = newRenderer;
-	}
 
 	int getObjectID() { return objectID; }
 private:
-	a3_TextRenderer* objectRenderer;
 	const a3byte* objectShape[1];
 
 	a3_Object_Kinematic objectKinematic;
