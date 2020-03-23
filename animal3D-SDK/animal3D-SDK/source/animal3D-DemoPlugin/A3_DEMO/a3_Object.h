@@ -12,7 +12,7 @@ public:
 	a3_Object();
 	~a3_Object();
 
-	void a3_RenderObject();
+	void a3_RenderObject(a3_TextRenderer* newRenderer);
 
 	void a3_UpdateKinematics(float deltaTime);
 

@@ -13,7 +13,7 @@ public:
 	~a3_ObjectManager(){}
 
 	void a3_UpdateAllObjects(float deltaTime);
-	void a3_RenderAllObjects();
+	void a3_RenderAllObjects(a3_TextRenderer* newRenderer);
 
 	void a3_CreateNewObject(a3_TextRenderer* newRenderer);
 
