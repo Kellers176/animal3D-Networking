@@ -391,7 +391,11 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 //			a3netProcessInbound(gameManager.net);
 //			a3demoProcessInput(demoState);
 			a3_EventManager::Instance()->processEvents();
+
+			// we need to clear the buffer once per frame
 			gameManager.objectManager->a3_RenderAllObjects();
+
+
 			//			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
 			a3netProcessOutbound(gameManager.net);
 			a3demoTestRender(demoState);

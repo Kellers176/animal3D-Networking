@@ -6,14 +6,11 @@
 a3_Object::a3_Object()
 {
 	//set default position
-	objectKinematic.position.xVal = -0.99f;
-	objectKinematic.position.yVal = -0.95f;
+	objectKinematic.position.xVal = 0.0f;
+	objectKinematic.position.yVal = 0.0f;
 	
 	//create shape
 	objectShape[0] = "T";
-
-	//creates and initalizes the objectRenderer
-	a3textInitialize(objectRenderer, 18, 1, 0, 0, 0);
 
 	objectID = 0;
 
@@ -28,7 +25,7 @@ a3_Object::~a3_Object()
 void a3_Object::a3_RenderObject()
 {
 	//clear the screen then draw
-	glClear(GL_COLOR_BUFFER_BIT);
+	// glClear(GL_COLOR_BUFFER_BIT);
 	//-1,-1,-1 is bottom left corner
 	//draw text
 	a3textDraw(objectRenderer, objectKinematic.position.xVal, objectKinematic.position.yVal, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, objectShape[0]);

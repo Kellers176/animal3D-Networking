@@ -20,14 +20,12 @@ public:
 	void setObjectRotation(float newRotation) { objectKinematic.rotation = newRotation; }
 	void setObjectID(int newID) { objectID = newID; }
 	void setObjectTextRenderer(a3_TextRenderer* newRenderer) {
-		objectRenderer->object = newRenderer->object;
-		objectRenderer->handle = newRenderer->handle;
-		objectRenderer->base = newRenderer->base;
+		objectRenderer = newRenderer;
 	}
 
 	int getObjectID() { return objectID; }
 private:
-	a3_TextRenderer objectRenderer[1];
+	a3_TextRenderer* objectRenderer;
 	const a3byte* objectShape[1];
 
 	a3_Object_Kinematic objectKinematic;
