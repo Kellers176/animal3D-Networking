@@ -38,6 +38,8 @@
 #include "RakNet/BitStream.h"
 #include "RakNet/GetTime.h"
 
+#include "A3_DEMO/a3_ObjectManager.h"
+
 //-----------------------------------------------------------------------------
 
 #ifdef __cplusplus
@@ -60,13 +62,10 @@ extern "C"
 		RakNet::SystemAddress serverAddress;
 		a3ui16 maxConnect_inbound, maxConnect_outbound;
 		RakNet::RakPeerInterface* peer;
-		a3i32 CookieNumber;
 
 		a3boolean isServer;
-		a3i32 numberOfParticipants;
-		a3i32 userID;
-
-
+		int numberOfParticipants;
+		int userID;
 	};
 
 
@@ -89,10 +88,10 @@ extern "C"
 
 
 	// process inbound packets
-	a3i32 a3netProcessInbound(a3_NetworkingManager* net);
+	a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan);
 
 	// process outbound packets
-	a3i32 a3netProcessOutbound(a3_NetworkingManager* net);
+	a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan);
 
 
 //-----------------------------------------------------------------------------

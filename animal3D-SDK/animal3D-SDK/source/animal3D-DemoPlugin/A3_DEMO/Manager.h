@@ -4,8 +4,8 @@
 #define MANAGERS_H
 
 #include "A3_DEMO/a3_EventManager.h"
-#include "A3_DEMO/a3_NetworkingManager.h"
 #include "a3_ObjectManager.h"
+#include "A3_DEMO/a3_NetworkingManager.h"
 
 struct Managers
 {

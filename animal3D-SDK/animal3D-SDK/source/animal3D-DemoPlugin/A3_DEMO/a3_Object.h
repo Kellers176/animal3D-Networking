@@ -17,10 +17,14 @@ public:
 	void a3_UpdateKinematics(float deltaTime);
 
 	void setObjectPos(float newX, float newY) { objectKinematic.position = BK_Vector2(newX, newY); }
+	void setObjectVelocity(float newVelX, float newVelY) { objectKinematic.velocity = BK_Vector2(newVelX, newVelY); }
 	void setObjectRotation(float newRotation) { objectKinematic.rotation = newRotation; }
 	void setObjectID(int newID) { objectID = newID; }
 
 	int getObjectID() { return objectID; }
+	BK_Vector2 getPosition() { return objectKinematic.position; }
+	BK_Vector2 getVelocity() { return objectKinematic.velocity; }
+
 private:
 	const a3byte* objectShape[1];
 

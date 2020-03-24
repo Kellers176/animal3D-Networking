@@ -38,14 +38,16 @@
 #include <string.h>
 #include <GL/glew.h>
 #include "A3_DEMO/a3_EventManager.h"
-#include "A3_DEMO/a3_NetworkingManager.h"
 #include "A3_DEMO/Manager.h"
+
+Managers gameManager;
+
+#include "A3_DEMO/a3_NetworkingManager.h"
 
 #include "A3_DEMO/BK_Vector.h"
 
 #include <iostream>
 
-Managers gameManager;
 //-----------------------------------------------------------------------------
 // networking stuff
 
@@ -53,13 +55,12 @@ Managers gameManager;
 //CookieClicker myCookie;
 void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 {
-	a3netAddressStr const ipAddress = "216.93.149.206";
+	a3netAddressStr const ipAddress = "192.168.0.19";
 	a3ui16 const port_server = 60006;
 	a3ui16 const port_client = 60005;
 	a3ui16 const maxConnections_server = 16;
 	a3ui16 const maxConnections_client = 4;
 	gameManager.net->isServer = false;
-	gameManager.net->CookieNumber = 0;
 
 	if (isServer)
 	{
@@ -322,7 +323,7 @@ A3DYLIBSYMBOL a3_DemoState* a3demoCB_load(a3_DemoState* demoState, a3boolean hot
 		// scene objects
 	//	a3demo_initScene(demoState);
 
-		gameManager.objectManager->a3_CreateNewObject();
+		//gameManager.objectManager->a3_CreateNewObject();
 
 
 	}
@@ -402,11 +403,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			//BK_Vector2 screenUV = (i.screenPos.xy / i.screenPos.z) * 0.5f + 0.5f;
-
-			std::cout << (float)(demoState->mouse->x) / (demoState->frameWidth) - 0.5f << ", " <<
-				(float)(demoState->mouse->y) / (demoState->frameHeight) - 0.5f << std::endl;
-
+			// change 0 to the users id
 			gameManager.objectManager->a3_SetObjectPos( 0, 
 				BK_Vector2(
 						   ((float)(demoState->mouse->x) / (demoState->frameWidth)-0.5f)*2,
@@ -416,11 +413,8 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 			gameManager.objectManager->a3_RenderAllObjects(demoState->text);
 
 
-			//			a3demo_update(demoState, demoState->renderTimer->secondsPerTick);
-			a3netProcessOutbound(gameManager.net);
-			// a3demoTestRender(demoState);
-			//			a3demo_render(demoState);
-						// update input
+			a3netProcessOutbound(gameManager.net, gameManager.objectManager[0]);
+
 			a3mouseUpdate(demoState->mouse);
 			a3keyboardUpdate(demoState->keyboard);
 			a3XboxControlUpdate(demoState->xcontrol);
