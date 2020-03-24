@@ -24,11 +24,9 @@ a3_Object::~a3_Object()
 
 void a3_Object::a3_RenderObject(a3_TextRenderer* newRenderer)
 {
-	//clear the screen then draw
-	// glClear(GL_COLOR_BUFFER_BIT);
 	//-1,-1,-1 is bottom left corner
 	//draw text
-	a3textDraw(newRenderer, 0, 0, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, *objectShape);
+	a3textDraw(newRenderer, objectKinematic.position.xVal, objectKinematic.position.yVal, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, *objectShape);
 }
 
 

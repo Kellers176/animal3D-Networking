@@ -41,6 +41,8 @@
 #include "A3_DEMO/a3_NetworkingManager.h"
 #include "A3_DEMO/Manager.h"
 
+#include "A3_DEMO/BK_Vector.h"
+
 #include <iostream>
 
 Managers gameManager;
@@ -400,6 +402,17 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 
 			glClear(GL_COLOR_BUFFER_BIT);
 
+			//BK_Vector2 screenUV = (i.screenPos.xy / i.screenPos.z) * 0.5f + 0.5f;
+
+			std::cout << (float)(demoState->mouse->x) / (demoState->frameWidth) - 0.5f << ", " <<
+				(float)(demoState->mouse->y) / (demoState->frameHeight) - 0.5f << std::endl;
+
+			gameManager.objectManager->a3_SetObjectPos( 0, 
+				BK_Vector2(
+						   ((float)(demoState->mouse->x) / (demoState->frameWidth)-0.5f)*2,
+						   -((float)(demoState->mouse->y) / (demoState->frameHeight)-0.5f)*2
+						  )
+				);
 			gameManager.objectManager->a3_RenderAllObjects(demoState->text);
 
 
