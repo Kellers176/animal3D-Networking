@@ -206,7 +206,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 						net->serverAddress = packet->systemAddress;
 						
 						// read in the users id
-						bs_in.Read(net->userID);
+						//bs_in.Read(net->userID);
 
 						/*
 						// Use a BitStream to write a custom user message
@@ -234,12 +234,12 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 				{
 					// we add number of participants...
 					printf("A connection is incoming.\n");
-
+					/*
 					RakNet::BitStream bsOut[1];
 
 					bsOut->Write(ID_CONNECTION_REQUEST_ACCEPTED);
 					bsOut->Write(net->numberOfParticipants);
-
+					*/
 					RakNet::BitStream bsOutForUserInfo[1];
 
 					bsOutForUserInfo->Write(ID_CREATE_USERS_OBJECT);
@@ -325,6 +325,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 				}
 				case ID_CREATE_USERS_OBJECT:
 				{
+					printf("creating a new unit");
 					int unitsID = -1;
 
 					bs_in.Read(unitsID);
@@ -348,17 +349,14 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 // process outbound packets
 a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 {
+	
 	RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
 
 	RakNet::BitStream bsOut[1];
 
 	if (net && net->peer)
 	{
-		RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
-
-		RakNet::BitStream bsOut[1];
-		
-
+		RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;	
 
 		if (net->isServer)
 		{
@@ -367,7 +365,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan
 			{
 				for (int j = 0; j < newObjMan.GetSize(); j++)
 				{
-					if (newObjMan.a3_GetObjectInPos(j).getObjectID() != i)
+					if (newObjMan.a3_GetObjectInPos(j)->getObjectID() != i)
 					{
 						// we need the id and the position and the velocity
 						bsOut->Write((a3_NetGameMessages)ID_UPDATE_OBJECT_POS);
@@ -375,10 +373,10 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan
 						newObjMan.a3_GetObjectInPos(j);
 
 						bsOut->Write(newObjMan.a3_GetObjectInPos(j));
-						bsOut->Write(newObjMan.a3_GetObjectInPos(j).getPosition().xVal);
-						bsOut->Write(newObjMan.a3_GetObjectInPos(j).getPosition().yVal);
-						bsOut->Write(newObjMan.a3_GetObjectInPos(j).getVelocity().xVal);
-						bsOut->Write(newObjMan.a3_GetObjectInPos(j).getVelocity().yVal);
+						bsOut->Write(newObjMan.a3_GetObjectInPos(j)->getPosition().xVal);
+						bsOut->Write(newObjMan.a3_GetObjectInPos(j)->getPosition().yVal);
+						bsOut->Write(newObjMan.a3_GetObjectInPos(j)->getVelocity().xVal);
+						bsOut->Write(newObjMan.a3_GetObjectInPos(j)->getVelocity().yVal);
 
 						peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
 					}
@@ -389,19 +387,25 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan
 		}
 		else
 		{
-			// we need the id and the position and the velocity
-			bsOut->Write((a3_NetGameMessages)ID_UPDATE_OBJECT_POS);
-			bsOut->Write(newObjMan.a3_GetObjectInPos(net->userID).getObjectID());
-			bsOut->Write(newObjMan.a3_GetObjectInPos(net->userID).getPosition().xVal);
-			bsOut->Write(newObjMan.a3_GetObjectInPos(net->userID).getPosition().yVal);
-			bsOut->Write(newObjMan.a3_GetObjectInPos(net->userID).getVelocity().xVal);
-			bsOut->Write(newObjMan.a3_GetObjectInPos(net->userID).getVelocity().yVal);
+			a3_Object* temp = newObjMan.a3_GetObjectFromID(net->userID);
 
-			//sending to server
-			peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, false);
+			if (temp)
+			{
+				// we need the id and the position and the velocity
+				bsOut->Write((a3_NetGameMessages)ID_UPDATE_OBJECT_POS);
+				bsOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getObjectID());
+				bsOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getPosition().xVal);
+				bsOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getPosition().yVal);
+				bsOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getVelocity().xVal);
+				bsOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getVelocity().yVal);
+
+				//sending to server
+				peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, false);
+			}
+
 		}
-
 	}
+	
 	return 0;
 }
 

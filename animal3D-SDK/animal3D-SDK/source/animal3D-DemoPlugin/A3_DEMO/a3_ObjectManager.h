@@ -18,7 +18,8 @@ public:
 	void a3_CreateNewObject();
 	void a3_CreateNewObjectWithID(int newID);
 
-	a3_Object a3_GetObjectInPos(int objPos) { return listOfObjects[objPos]; }
+	a3_Object* a3_GetObjectInPos(int objPos);
+	a3_Object* a3_GetObjectFromID(int unitID);
 
 	void a3_SetObjectPos(int objID, BK_Vector2 newPos);
 	void a3_SetObjectVel(int objID, BK_Vector2 newPos);
@@ -27,7 +28,7 @@ public:
 	int GetSize() { return (int)listOfObjects.size(); }
 
 private:
-	std::vector<a3_Object> listOfObjects;
+	std::vector<a3_Object*> listOfObjects;
 };
 
 #endif
