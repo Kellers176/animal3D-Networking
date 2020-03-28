@@ -55,7 +55,7 @@ Managers gameManager;
 //CookieClicker myCookie;
 void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 {
-	a3netAddressStr const ipAddress = "192.168.0.19";
+	a3netAddressStr const ipAddress = "192.168.0.19"; //192.168.0.19
 	a3ui16 const port_server = 60006;
 	a3ui16 const port_client = 60005;
 	a3ui16 const maxConnections_server = 16;
@@ -74,8 +74,12 @@ void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 	else
 	{
 		if (a3netStartup(gameManager.net, 0, port_server, 0, maxConnections_client) > 0)
+		{
 			if (a3netConnect(gameManager.net, ipAddress) > 0)
+			{
 				printf("\n STARTED NETWORKING AS CLIENT \n");
+			}
+		}
 	}
 }
 

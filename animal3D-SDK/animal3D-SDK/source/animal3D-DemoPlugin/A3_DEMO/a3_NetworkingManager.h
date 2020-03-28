@@ -66,6 +66,8 @@ extern "C"
 		a3boolean isServer;
 		int numberOfParticipants;
 		int userID;
+
+		bool connectedToServer = false;
 	};
 
 
