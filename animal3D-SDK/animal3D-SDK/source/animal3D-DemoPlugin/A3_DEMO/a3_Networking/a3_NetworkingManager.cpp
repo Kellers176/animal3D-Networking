@@ -31,6 +31,7 @@
 #include "RakNet/RakNetTypes.h"
 #include "RakNet/BitStream.h"
 #include "RakNet/GetTime.h"
+#include <string>
 
 //-----------------------------------------------------------------------------
 // networking stuff
@@ -124,7 +125,34 @@ a3i32 a3netConnect(a3_NetworkingManager* net, a3netAddressStr const ip)
 	if (net && net->peer)
 	{
 		RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
-		peer->Connect(ip, net->port_outbound, 0, 0);
+		RakNet::ConnectionAttemptResult connectionRes;
+		connectionRes = peer->Connect(ip, net->port_outbound, 0, 0);
+
+		if (connectionRes == RakNet::ConnectionAttemptResult::CONNECTION_ATTEMPT_STARTED)
+		{
+			printf("connection attempt started");
+		}
+		else if (connectionRes == RakNet::ConnectionAttemptResult::ALREADY_CONNECTED_TO_ENDPOINT)
+		{
+			printf("already connected to endpoint");
+		}
+		else if (connectionRes == RakNet::ConnectionAttemptResult::CANNOT_RESOLVE_DOMAIN_NAME)
+		{
+			printf("cannot resolve domain name");
+		}
+		else if (connectionRes == RakNet::ConnectionAttemptResult::CONNECTION_ATTEMPT_ALREADY_IN_PROGRESS)
+		{
+			printf("connection attempt already in progress");
+		}
+		else if (connectionRes == RakNet::ConnectionAttemptResult::INVALID_PARAMETER)
+		{
+			printf("invalid parameter");
+		}
+		else if (connectionRes == RakNet::ConnectionAttemptResult::SECURITY_INITIALIZATION_FAILED)
+		{
+			printf("security initialization failed");
+		}
+
 		return 1;
 	}
 	return 0;
@@ -181,6 +209,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 			}
 				// do not break; proceed to default case to process actual message contents
 			default:
+				printf("there is no timestamp!!!");
 				switch (msg)
 				{
 				case ID_REMOTE_DISCONNECTION_NOTIFICATION:
@@ -309,10 +338,12 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 				case ID_UPDATE_OBJECT_POS:
 				{
 					int unitsID = -1;
+					bs_in.Read(unitsID);
+
+					printf("updating pos of" + unitsID);
 
 					float newPosX, newPosY, newVelX, newVelY;
 
-					bs_in.Read(unitsID);
 					bs_in.Read(newPosX);
 					bs_in.Read(newPosY);
 					bs_in.Read(newVelX);
@@ -356,7 +387,17 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan
 
 	if (net && net->peer)
 	{
-		RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;	
+
+		if (!net->connectedToServer)
+		{
+			bsOut->Write(ID_NEW_INCOMING_CONNECTION);
+			peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, false);
+			net->connectedToServer = true;
+		}
+		else
+		{
+
+		}
 
 		if (net->isServer)
 		{
