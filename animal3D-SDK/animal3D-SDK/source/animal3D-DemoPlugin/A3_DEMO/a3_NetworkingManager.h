@@ -67,7 +67,6 @@ extern "C"
 		int numberOfParticipants;
 		int userID;
 
-		bool connectedToServer = false;
 	};
 
 

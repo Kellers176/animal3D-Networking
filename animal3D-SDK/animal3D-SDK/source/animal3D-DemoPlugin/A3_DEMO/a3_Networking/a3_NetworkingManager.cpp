@@ -387,18 +387,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan
 
 	if (net && net->peer)
 	{
-
-		if (!net->connectedToServer)
-		{
-			bsOut->Write(ID_NEW_INCOMING_CONNECTION);
-			peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, false);
-			net->connectedToServer = true;
-		}
-		else
-		{
-
-		}
-
+		/*
 		if (net->isServer)
 		{
 			// sending to everyone:
@@ -445,6 +434,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan
 			}
 
 		}
+		*/
 	}
 	
 	return 0;
