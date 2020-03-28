@@ -69,7 +69,7 @@ enum a3_DemoStateObjectMaxCounts
 	demoStateMaxCount_cameraObject = 1,
 	demoStateMaxCount_projector = 1,
 
-	demoStateMaxCount_timer = 1,
+	demoStateMaxCount_timer = 2,
 	demoStateMaxCount_drawDataBuffer = 1,
 	demoStateMaxCount_vertexArray = 4,
 	demoStateMaxCount_drawable = 16,
@@ -205,6 +205,8 @@ struct a3_DemoState
 		struct {
 			a3_Timer
 				renderTimer[1];						// render FPS timer
+			a3_Timer
+				networkingTimer[1];
 		};
 	};
 

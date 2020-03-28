@@ -130,6 +130,7 @@ void a3demoProcessInput(a3_DemoState* demoState)
 void a3demoTestUpdate(a3_DemoState* demoState)
 {
 	//DO UPDATE
+	a3netNetworkingLoop(gameManager.net, gameManager.objectManager[0], (float)(demoState->networkingTimer->currentTick - demoState->networkingTimer->previousTick));
 }
 
 

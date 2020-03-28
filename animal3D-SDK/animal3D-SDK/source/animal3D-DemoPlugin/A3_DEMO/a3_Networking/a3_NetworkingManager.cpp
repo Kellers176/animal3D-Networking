@@ -112,9 +112,20 @@ a3i32 a3netShutdown(a3_NetworkingManager* net)
 	return 0;
 }
 
-a3i32 a3netNetworkingLoop(a3_NetworkingManager* net)
+a3i32 a3netNetworkingLoop(a3_NetworkingManager* net, a3_ObjectManager newObjMan, float deltaTime)
 {
 	//make own send function to send the stuff
+	for (int i = 0; i < 16; i++)
+	{
+		net->participants[i].timeSinceLastPing = net->participants[i].timeSinceLastPing + deltaTime;
+
+		if (net->participants[i].timeSinceLastPing > 1)
+		{
+			Participant temp = net->participants[i];
+			newObjMan.a3_SetObjectPos(temp.ID, temp.lastPos + (temp.lastVel * deltaTime));
+			net->participants[i].lastPos = temp.lastPos + (temp.lastVel * deltaTime);
+		}
+	}
 	return 0;
 }
 
@@ -190,8 +201,6 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 			RakNet::BitStream bs_in(packet->data, packet->length, false);
 			bs_in.Read(msg);
 
-			RakNet::BitStream bs_Data_Out[1];
-
 			switch (msg)
 			{
 				// check for timestamp and process
@@ -209,6 +218,8 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 			}
 				// do not break; proceed to default case to process actual message contents
 			default:
+			{
+
 				printf("there is no timestamp!!!");
 				switch (msg)
 				{
@@ -226,6 +237,10 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 				case ID_REMOTE_NEW_INCOMING_CONNECTION:
 				{
 					printf("Another client has connected.\n");
+					net->participants[net->numberOfParticipants].ID = net->numberOfParticipants;
+					net->participants[net->numberOfParticipants].lastPos = BK_Vector2(0,0);
+					net->participants[net->numberOfParticipants].lastVel = BK_Vector2(0,0);
+					net->participants[net->numberOfParticipants].timeSinceLastPing = 0;
 					net->numberOfParticipants = net->numberOfParticipants + 1;
 					break;
 				}
@@ -233,13 +248,13 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 					printf("Our connection request has been accepted.\n");
 					{
 						net->serverAddress = packet->systemAddress;
-						
+
 						// read in the users id
 						//bs_in.Read(net->userID);
 
 						/*
 						// Use a BitStream to write a custom user message
-						// Bitstreams are easier to use than sending casted structures, 
+						// Bitstreams are easier to use than sending casted structures,
 						//	and handle endian swapping automatically
 						RakNet::BitStream bsOut[1];
 						RakNet::Time sendTime;
@@ -371,6 +386,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 				}
 				break;
 			}
+			}
 		}
 		return count;
 	}
@@ -387,7 +403,6 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan
 
 	if (net && net->peer)
 	{
-		/*
 		if (net->isServer)
 		{
 			// sending to everyone:
@@ -434,7 +449,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan
 			}
 
 		}
-		*/
+
 	}
 	
 	return 0;

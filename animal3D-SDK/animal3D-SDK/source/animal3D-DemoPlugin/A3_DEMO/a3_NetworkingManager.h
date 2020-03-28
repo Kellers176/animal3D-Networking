@@ -54,6 +54,13 @@ extern "C"
 
 	typedef a3byte a3netAddressStr[16];
 
+	struct Participant
+	{
+		int ID;
+		float timeSinceLastPing;
+		BK_Vector2 lastPos;
+		BK_Vector2 lastVel;
+	};
 
 	// networking manager
 	struct a3_NetworkingManager
@@ -67,6 +74,7 @@ extern "C"
 		int numberOfParticipants;
 		int userID;
 
+		Participant participants[16];
 	};
 
 
@@ -79,7 +87,7 @@ extern "C"
 	a3i32 a3netShutdown(a3_NetworkingManager* net);
 
 	//networking loop
-	a3i32 a3netNetworkingLoop(a3_NetworkingManager* net);
+	a3i32 a3netNetworkingLoop(a3_NetworkingManager* net, a3_ObjectManager newObjMan, float deltaTime);
 
 	// connect
 	a3i32 a3netConnect(a3_NetworkingManager* net, a3netAddressStr const ip);
