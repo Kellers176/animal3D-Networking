@@ -99,16 +99,6 @@ void a3demoTestRender(a3_DemoState const* demoState)
 
 	a3textDraw(demoState->text, -0.99f, -0.95f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, demoState->messageText);
 
-	/*
-	for (int i = 0; i < gameManager.net->numberOfParticipants; i++)
-	{
-		// i use 10 cause its the max number of boids we are going to be giving someone
-		for (int j = 0; j < 10; j++)
-		{
-			//demoState->flockObjectArray[i][j].RenderObject();
-		}
-	}
-	*/
 }
 void a3demoProcessInput(a3_DemoState* demoState)
 {
@@ -411,12 +401,14 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 
 			// change 0 to the users id
 			
+			/*
 			gameManager.objectManager->a3_SetObjectPos( 0, 
 				BK_Vector2(
 						   ((float)(demoState->mouse->x) / (demoState->frameWidth)-0.5f)*2,
 						   -((float)(demoState->mouse->y) / (demoState->frameHeight)-0.5f)*2
 						  )
 				);
+			*/
 			gameManager.objectManager->a3_RenderAllObjects(demoState->text);
 
 

@@ -40,14 +40,14 @@ enum a3_NetGameMessages
 {
 	ID_CUSTOM_MESSAGE_START = ID_USER_PACKET_ENUM,
 
-	ID_GAME_MESSAGE_1,
+	ID_GAME_MESSAGE_1 = 135,
 
-	ID_ADD_INPUT,
-	ID_UPDATE_FOR_USER,
-	ID_ADD_EVENT,
+	ID_ADD_INPUT = 136,
+	ID_UPDATE_FOR_USER = 137,
+	ID_ADD_EVENT = 138,
 
-	ID_UPDATE_OBJECT_POS,
-	ID_CREATE_USERS_OBJECT
+	ID_UPDATE_OBJECT_POS = 139,
+	ID_CREATE_USERS_OBJECT = 140
 };
 
 
@@ -220,23 +220,23 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 			default:
 			{
 
-				printf("there is no timestamp!!!");
+				printf("\nThere is no timestamp!!!\n");
 				switch (msg)
 				{
 				case ID_REMOTE_DISCONNECTION_NOTIFICATION:
 				{
-					printf("Another client has disconnected.\n");
+					printf("\nAnother client has disconnected.\n");
 					break;
 				}
 				case ID_REMOTE_CONNECTION_LOST:
 				{
-					printf("Another client has lost the connection.\n");
+					printf("\nAnother client has lost the connection.\n");
 					net->numberOfParticipants = net->numberOfParticipants - 1;
 					break;
 				}
 				case ID_REMOTE_NEW_INCOMING_CONNECTION:
 				{
-					printf("Another client has connected.\n");
+					printf("\nAnother client has connected.\n");
 					net->participants[net->numberOfParticipants].ID = net->numberOfParticipants;
 					net->participants[net->numberOfParticipants].lastPos = BK_Vector2(0,0);
 					net->participants[net->numberOfParticipants].lastVel = BK_Vector2(0,0);
@@ -245,7 +245,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 					break;
 				}
 				case ID_CONNECTION_REQUEST_ACCEPTED:
-					printf("Our connection request has been accepted.\n");
+					printf("\nOur connection request has been accepted.\n");
 					{
 						net->serverAddress = packet->systemAddress;
 
@@ -277,22 +277,22 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 				case ID_NEW_INCOMING_CONNECTION:
 				{
 					// we add number of participants...
-					printf("A connection is incoming.\n");
-					/*
+					printf("\nA connection is incoming.\n");
+					
 					RakNet::BitStream bsOut[1];
 
-					bsOut->Write(ID_CONNECTION_REQUEST_ACCEPTED);
+					//RakNet::BitStream bsOutForUserInfo[1];
+
+					bsOut->Write(a3_NetGameMessages::ID_CREATE_USERS_OBJECT);
 					bsOut->Write(net->numberOfParticipants);
-					*/
-					RakNet::BitStream bsOutForUserInfo[1];
 
-					bsOutForUserInfo->Write(ID_CREATE_USERS_OBJECT);
-					bsOutForUserInfo->Write(net->numberOfParticipants);
+					//newObjMan.a3_CreateNewObjectWithID(net->numberOfParticipants);
 
-					newObjMan.a3_CreateNewObjectWithID(net->numberOfParticipants);
+					peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 
-					peer->Send(bsOutForUserInfo, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
+					printf("lol we making them have an object");
 
+					/*
 					for (signed int i = 0; i < net->numberOfParticipants; i++)
 					{
 						RakNet::BitStream bsOutForOthersInfo[1];
@@ -301,33 +301,33 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 						bsOutForOthersInfo->Write(i);
 						peer->Send(bsOutForOthersInfo, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
 					}
-
+					*/
 					net->numberOfParticipants = net->numberOfParticipants + 1;
 
 					break;
 				}
 				case ID_NO_FREE_INCOMING_CONNECTIONS:
-					printf("The server is full.\n");
+					printf("\nThe server is full.\n");
 					break;
 				case ID_DISCONNECTION_NOTIFICATION:
 					if (net->maxConnect_outbound) {
-						printf("A client has disconnected.\n");
+						printf("\nA client has disconnected.\n");
 					}
 					else {
-						printf("We have been disconnected.\n");
+						printf("\nWe have been disconnected.\n");
 					}
 					break;
 				case ID_CONNECTION_LOST:
 					if (net->maxConnect_outbound) {
-						printf("A client lost the connection.\n");
+						printf("\nA client lost the connection.\n");
 					}
 					else {
-						printf("Connection lost.\n");
+						printf("\nConnection lost.\n");
 					}
 					break;
 
 				case ID_GAME_MESSAGE_1:
-					printf("DEBUG MESSAGE: received packet ID_GAME_MESSAGE_1.\n");
+					printf("\nDEBUG MESSAGE: received packet ID_GAME_MESSAGE_1.\n");
 					{
 						RakNet::RakString rs;
 						bs_in.Read(rs);
@@ -355,7 +355,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 					int unitsID = -1;
 					bs_in.Read(unitsID);
 
-					printf("updating pos of" + unitsID);
+					printf("\nupdating pos of" + unitsID);
 
 					float newPosX, newPosY, newVelX, newVelY;
 
@@ -371,7 +371,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 				}
 				case ID_CREATE_USERS_OBJECT:
 				{
-					printf("creating a new unit");
+					printf("\ncreating a new unit\n");
 					int unitsID = -1;
 
 					bs_in.Read(unitsID);
@@ -381,7 +381,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 					break;
 				}
 				default:
-					printf("Message with identifier %i has arrived.\n", msg);
+					printf("\nMessage with identifier %i has arrived.\n", msg);
 					break;
 				}
 				break;
@@ -403,6 +403,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan
 
 	if (net && net->peer)
 	{
+		/*
 		if (net->isServer)
 		{
 			// sending to everyone:
@@ -449,7 +450,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan
 			}
 
 		}
-
+		*/
 	}
 	
 	return 0;
