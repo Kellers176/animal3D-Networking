@@ -55,7 +55,7 @@ Managers gameManager;
 //CookieClicker myCookie;
 void a3demo_startNetworking(a3_DemoState* demoState, a3boolean const isServer)
 {
-	a3netAddressStr const ipAddress = "192.168.0.19"; //192.168.0.19
+	a3netAddressStr const ipAddress = "127.0.0.1"; //192.168.0.19 // 127.0.0.1
 	a3ui16 const port_server = 60006;
 	a3ui16 const port_client = 60005;
 	a3ui16 const maxConnections_server = 16;
@@ -130,6 +130,7 @@ void a3demoProcessInput(a3_DemoState* demoState)
 void a3demoTestUpdate(a3_DemoState* demoState)
 {
 	//DO UPDATE
+	//a3netProcessInbound(gameManager.net, gameManager.objectManager[0]);
 	a3netNetworkingLoop(gameManager.net, gameManager.objectManager[0], (float)(demoState->networkingTimer->currentTick - demoState->networkingTimer->previousTick));
 }
 
@@ -396,7 +397,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 			// render timer ticked, update demo state and draw
 			//a3demoTestInput(demoState);
 			a3demo_input(demoState, demoState->renderTimer->secondsPerTick);
-//			a3netProcessInbound(gameManager.net);
+			a3netProcessInbound(gameManager.net, gameManager.objectManager[0]);
 //			a3demoProcessInput(demoState);
 			a3_EventManager::Instance()->processEvents();
 
@@ -409,6 +410,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			// change 0 to the users id
+			
 			gameManager.objectManager->a3_SetObjectPos( 0, 
 				BK_Vector2(
 						   ((float)(demoState->mouse->x) / (demoState->frameWidth)-0.5f)*2,
