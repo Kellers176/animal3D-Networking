@@ -47,7 +47,8 @@ enum a3_NetGameMessages
 	ID_ADD_EVENT = 138,
 
 	ID_UPDATE_OBJECT_POS = 139,
-	ID_CREATE_USERS_OBJECT = 140
+	ID_CREATE_USERS_OBJECT = 140,
+	ID_CREATE_OWN_OBJECT = 141
 };
 
 
@@ -242,8 +243,8 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 				{
 					printf("\nAnother client has connected.\n");
 					net->participants[net->numberOfParticipants].ID = net->numberOfParticipants;
-					net->participants[net->numberOfParticipants].lastPos = BK_Vector2(0,0);
-					net->participants[net->numberOfParticipants].lastVel = BK_Vector2(0,0);
+					net->participants[net->numberOfParticipants].lastPos = BK_Vector2(0, 0);
+					net->participants[net->numberOfParticipants].lastVel = BK_Vector2(0, 0);
 					net->participants[net->numberOfParticipants].timeSinceLastPing = 0;
 					net->numberOfParticipants = net->numberOfParticipants + 1;
 					break;
@@ -252,6 +253,8 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					printf("\nOur connection request has been accepted.\n");
 					{
 						net->serverAddress = packet->systemAddress;
+						bs_in.Read(net->userID);
+
 
 						// read in the users id
 						//bs_in.Read(net->userID);
@@ -282,38 +285,59 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 				{
 					// we add number of participants...
 					printf("\nA connection is incoming.\n");
-					
+
 					RakNet::BitStream bsOut[1];
 
-					//RakNet::BitStream bsOutForUserInfo[1];
-
-					bsOut->Write((RakNet::MessageID)ID_CREATE_USERS_OBJECT);
+					// make the person create their object
+					bsOut->Write((RakNet::MessageID)ID_CREATE_OWN_OBJECT);
 					bsOut->Write(net->numberOfParticipants);
-
-					//newObjMan.a3_CreateNewObjectWithID(net->numberOfParticipants);
 
 					peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 
 					printf("lol we making them have an object");
 
-					/*
-					for (signed int i = 0; i < net->numberOfParticipants; i++)
+					
+					if(net->numberOfParticipants > 0)
 					{
-						RakNet::BitStream bsOutForOthersInfo[1];
+						// tell new user to create objects for previous people
+						for (unsigned int i = 0; i < peer->GetNumberOfAddresses(); i++)
+						{
+							// we need the id and the position and the velocity
+							bsOut->Write((RakNet::MessageID)ID_CREATE_USERS_OBJECT);
 
-						bsOutForOthersInfo->Write(ID_CREATE_USERS_OBJECT);
-						bsOutForOthersInfo->Write(i);
-						peer->Send(bsOutForOthersInfo, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
+							bsOut->Write(i);
+
+							peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
+
+						}
+
+
+						// tell everyone to create an object:
+						for (unsigned int i = 0; i < peer->GetNumberOfAddresses(); i++)
+						{
+							// we need the id and the position and the velocity
+							bsOut->Write((RakNet::MessageID)ID_CREATE_USERS_OBJECT);
+
+							bsOut->Write(i);
+
+							peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
+
+						}
 					}
-					*/
+
+					newObjMan.a3_CreateNewObjectWithID(net->numberOfParticipants);
+
 					net->numberOfParticipants = net->numberOfParticipants + 1;
 
 					break;
 				}
 				case ID_NO_FREE_INCOMING_CONNECTIONS:
+				{
 					printf("\nThe server is full.\n");
 					break;
+				}
 				case ID_DISCONNECTION_NOTIFICATION:
+				{
 					if (net->maxConnect_outbound) {
 						printf("\nA client has disconnected.\n");
 					}
@@ -321,7 +345,9 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 						printf("\nWe have been disconnected.\n");
 					}
 					break;
+				}
 				case ID_CONNECTION_LOST:
+				{
 					if (net->maxConnect_outbound) {
 						printf("\nA client lost the connection.\n");
 					}
@@ -329,8 +355,9 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 						printf("\nConnection lost.\n");
 					}
 					break;
-
+				}
 				case ID_GAME_MESSAGE_1:
+				{
 					printf("\nDEBUG MESSAGE: received packet ID_GAME_MESSAGE_1.\n");
 					{
 						RakNet::RakString rs;
@@ -342,6 +369,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 
 					}
 					break;
+				}
 				case ID_ADD_EVENT:
 				{
 					//tell the client to process the envents
@@ -368,25 +396,43 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					bs_in.Read(newVelX);
 					bs_in.Read(newVelY);
 
-					newObjMan.a3_SetObjectPos(unitsID, BK_Vector2(newPosX, newPosY));
-					newObjMan.a3_SetObjectVel(unitsID, BK_Vector2(newVelX, newVelY));
+					if (1 > newPosX && newPosX > -1 && 1 > newPosY && newPosY > -1)
+					{
+						newObjMan.a3_SetObjectPos(unitsID, BK_Vector2(newPosX, newPosY));
+						newObjMan.a3_SetObjectVel(unitsID, BK_Vector2(newVelX, newVelY));
+					}
 
 					break;
 				}
 				case ID_CREATE_USERS_OBJECT:
 				{
+					//gameManager.net->userID
 					printf("\ncreating a new unit\n");
 					int unitsID = -1;
 
 					bs_in.Read(unitsID);
-
 					newObjMan.a3_CreateNewObjectWithID(unitsID);
 
 					break;
 				}
+				case ID_CREATE_OWN_OBJECT:
+				{
+					//gameManager.net->userID
+					printf("\ncreating a new unit\n");
+					int unitsID = -1;
+
+					bs_in.Read(unitsID);
+					net->userID = unitsID;
+					newObjMan.a3_CreateNewObjectWithID(unitsID);
+
+					break;
+					break;
+				}
 				default:
+				{
 					printf("\nMessage with identifier %i has arrived.\n", msg);
 					break;
+				}
 				}
 				break;
 			}
@@ -407,7 +453,6 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 
 	if (net && net->peer)
 	{
-
 		if (net->isServer)
 		{
 			// sending to everyone:
@@ -418,7 +463,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 					if (newObjMan.a3_GetObjectInPos(j)->getObjectID() != i)
 					{
 						// we need the id and the position and the velocity
-						bsOut->Write((a3_NetGameMessages)ID_UPDATE_OBJECT_POS);
+						bsOut->Write((RakNet::MessageID)ID_UPDATE_OBJECT_POS);
 
 						newObjMan.a3_GetObjectInPos(j);
 
@@ -442,7 +487,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 			if (temp)
 			{
 				// we need the id and the position and the velocity
-				bsOut->Write((a3_NetGameMessages)ID_UPDATE_OBJECT_POS);
+				bsOut->Write((RakNet::MessageID)ID_UPDATE_OBJECT_POS);
 				bsOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getObjectID());
 				bsOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getPosition().xVal);
 				bsOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getPosition().yVal);
