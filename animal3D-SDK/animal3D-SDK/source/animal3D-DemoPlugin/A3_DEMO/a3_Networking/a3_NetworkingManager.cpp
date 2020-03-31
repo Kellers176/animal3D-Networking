@@ -283,7 +283,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
 
 					//RakNet::BitStream bsOutForUserInfo[1];
 
-					bsOut->Write(a3_NetGameMessages::ID_CREATE_USERS_OBJECT);
+					bsOut->Write((RakNet::MessageID)ID_CREATE_USERS_OBJECT);
 					bsOut->Write(net->numberOfParticipants);
 
 					//newObjMan.a3_CreateNewObjectWithID(net->numberOfParticipants);
