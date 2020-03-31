@@ -97,7 +97,7 @@ extern "C"
 
 
 	// process inbound packets
-	a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan);
+	a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan);
 
 	// process outbound packets
 	a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan);
