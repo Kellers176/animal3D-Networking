@@ -121,7 +121,7 @@ void a3demoTestUpdate(a3_DemoState* demoState)
 {
 	//DO UPDATE
 	//a3netProcessInbound(gameManager.net, gameManager.objectManager[0]);
-	a3netNetworkingLoop(gameManager.net, gameManager.objectManager[0], (float)(demoState->networkingTimer->currentTick - demoState->networkingTimer->previousTick));
+	a3netNetworkingLoop(gameManager.net, gameManager.objectManager, (float)(demoState->networkingTimer->currentTick - demoState->networkingTimer->previousTick));
 }
 
 
@@ -387,7 +387,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 			// render timer ticked, update demo state and draw
 			//a3demoTestInput(demoState);
 			a3demo_input(demoState, demoState->renderTimer->secondsPerTick);
-			a3netProcessInbound(gameManager.net, gameManager.objectManager[0]);
+			a3netProcessInbound(gameManager.net, gameManager.objectManager);
 //			a3demoProcessInput(demoState);
 			a3_EventManager::Instance()->processEvents();
 
@@ -409,10 +409,10 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 						  )
 				);
 			*/
-			gameManager.objectManager->a3_RenderAllObjects(demoState->text);
+			gameManager.objectManager.a3_RenderAllObjects(demoState->text);
 
 
-			a3netProcessOutbound(gameManager.net, gameManager.objectManager[0]);
+			a3netProcessOutbound(gameManager.net, gameManager.objectManager);
 
 			a3mouseUpdate(demoState->mouse);
 			a3keyboardUpdate(demoState->keyboard);

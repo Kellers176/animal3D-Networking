@@ -6,6 +6,8 @@
 a3_Object::a3_Object()
 {
 	//set default position
+	objectKinematic = a3_Object_Kinematic();
+
 	objectKinematic.position.xVal = 0.0f;
 	objectKinematic.position.yVal = 0.0f;
 	
