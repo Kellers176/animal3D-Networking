@@ -112,8 +112,10 @@ a3i32 a3netShutdown(a3_NetworkingManager* net)
 	return 0;
 }
 
-a3i32 a3netNetworkingLoop(a3_NetworkingManager* net, a3_ObjectManager newObjMan, float deltaTime)
+a3i32 a3netNetworkingLoop(a3_NetworkingManager* net, a3_ObjectManager& newObjMan, float deltaTime)
 {
+	/*
+	this is wrong atm
 	//make own send function to send the stuff
 	for (int i = 0; i < 16; i++)
 	{
@@ -126,6 +128,8 @@ a3i32 a3netNetworkingLoop(a3_NetworkingManager* net, a3_ObjectManager newObjMan,
 			net->participants[i].lastPos = temp.lastPos + (temp.lastVel * deltaTime);
 		}
 	}
+	*/
+
 	return 0;
 }
 
@@ -394,7 +398,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 }
 
 // process outbound packets
-a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan)
+a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan)
 {
 	
 	RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
@@ -403,7 +407,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan
 
 	if (net && net->peer)
 	{
-		/*
+
 		if (net->isServer)
 		{
 			// sending to everyone:
@@ -450,7 +454,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan
 			}
 
 		}
-		*/
+
 	}
 	
 	return 0;

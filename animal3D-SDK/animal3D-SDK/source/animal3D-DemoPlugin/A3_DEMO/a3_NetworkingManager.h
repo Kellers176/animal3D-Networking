@@ -87,7 +87,7 @@ extern "C"
 	a3i32 a3netShutdown(a3_NetworkingManager* net);
 
 	//networking loop
-	a3i32 a3netNetworkingLoop(a3_NetworkingManager* net, a3_ObjectManager newObjMan, float deltaTime);
+	a3i32 a3netNetworkingLoop(a3_NetworkingManager* net, a3_ObjectManager& newObjMan, float deltaTime);
 
 	// connect
 	a3i32 a3netConnect(a3_NetworkingManager* net, a3netAddressStr const ip);
@@ -100,7 +100,7 @@ extern "C"
 	a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan);
 
 	// process outbound packets
-	a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager newObjMan);
+	a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan);
 
 
 //-----------------------------------------------------------------------------

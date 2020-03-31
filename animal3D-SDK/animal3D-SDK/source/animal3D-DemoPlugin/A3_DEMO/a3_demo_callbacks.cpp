@@ -401,14 +401,14 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 
 			// change 0 to the users id
 			
-			/*
-			gameManager.objectManager->a3_SetObjectPos( 0, 
+			
+			gameManager.objectManager.a3_SetObjectPos( 0, 
 				BK_Vector2(
 						   ((float)(demoState->mouse->x) / (demoState->frameWidth)-0.5f)*2,
 						   -((float)(demoState->mouse->y) / (demoState->frameHeight)-0.5f)*2
 						  )
 				);
-			*/
+			
 			gameManager.objectManager.a3_RenderAllObjects(demoState->text);
 
 
