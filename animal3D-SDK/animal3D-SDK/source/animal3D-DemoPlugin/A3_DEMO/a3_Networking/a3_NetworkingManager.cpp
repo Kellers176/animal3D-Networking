@@ -300,7 +300,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					if(net->numberOfParticipants > 0)
 					{
 						// tell new user to create objects for previous people
-						for (unsigned int i = 0; i < peer->GetNumberOfAddresses(); i++)
+						for (unsigned int i = 0; i <= peer->GetNumberOfAddresses(); i++)
 						{
 							// we need the id and the position and the velocity
 							bsOut->Write((RakNet::MessageID)ID_CREATE_USERS_OBJECT);
@@ -396,11 +396,15 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					bs_in.Read(newVelX);
 					bs_in.Read(newVelY);
 
-					if (1 > newPosX && newPosX > -1 && 1 > newPosY && newPosY > -1)
+					if (unitsID != net->userID)
 					{
-						newObjMan.a3_SetObjectPos(unitsID, BK_Vector2(newPosX, newPosY));
-						newObjMan.a3_SetObjectVel(unitsID, BK_Vector2(newVelX, newVelY));
+						if (1 > newPosX && newPosX > -1 && 1 > newPosY && newPosY > -1)
+						{
+							newObjMan.a3_SetObjectPos(unitsID, BK_Vector2(newPosX, newPosY));
+							newObjMan.a3_SetObjectVel(unitsID, BK_Vector2(newVelX, newVelY));
+						}
 					}
+
 
 					break;
 				}
@@ -456,25 +460,23 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 		if (net->isServer)
 		{
 			// sending to everyone:
-			for (unsigned int i = 0; i < peer->GetNumberOfAddresses(); i++)
+			for (unsigned int i = 0; i < net->peer->GetNumberOfAddresses(); i++)
 			{
 				for (int j = 0; j < newObjMan.GetSize(); j++)
 				{
-					if (newObjMan.a3_GetObjectInPos(j)->getObjectID() != i)
-					{
-						// we need the id and the position and the velocity
-						bsOut->Write((RakNet::MessageID)ID_UPDATE_OBJECT_POS);
+					// we need the id and the position and the velocity
+					bsOut->Write((RakNet::MessageID)ID_UPDATE_OBJECT_POS);
 
-						newObjMan.a3_GetObjectInPos(j);
+					newObjMan.a3_GetObjectInPos(j);
 
-						bsOut->Write(newObjMan.a3_GetObjectInPos(j));
-						bsOut->Write(newObjMan.a3_GetObjectInPos(j)->getPosition().xVal);
-						bsOut->Write(newObjMan.a3_GetObjectInPos(j)->getPosition().yVal);
-						bsOut->Write(newObjMan.a3_GetObjectInPos(j)->getVelocity().xVal);
-						bsOut->Write(newObjMan.a3_GetObjectInPos(j)->getVelocity().yVal);
+					bsOut->Write(newObjMan.a3_GetObjectInPos(j)->getObjectID());
+					bsOut->Write(newObjMan.a3_GetObjectInPos(j)->getPosition().xVal);
+					bsOut->Write(newObjMan.a3_GetObjectInPos(j)->getPosition().yVal);
+					bsOut->Write(newObjMan.a3_GetObjectInPos(j)->getVelocity().xVal);
+					bsOut->Write(newObjMan.a3_GetObjectInPos(j)->getVelocity().yVal);
 
-						peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
-					}
+					net->peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->peer->GetSystemAddressFromIndex(i), false);
+
 				}
 
 			}
@@ -495,7 +497,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 				bsOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getVelocity().yVal);
 
 				//sending to server
-				peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, false);
+				net->peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, false);
 			}
 
 		}
