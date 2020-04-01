@@ -122,7 +122,7 @@ a3i32 a3netNetworkingLoop(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 	{
 		net->participants[i].timeSinceLastPing = net->participants[i].timeSinceLastPing + deltaTime;
 
-		if (net->participants[i].timeSinceLastPing > 0.001f)
+		if (net->participants[i].timeSinceLastPing > 3.0f)
 		{
 			Participant temp = net->participants[i];
 			newObjMan.a3_SetObjectPos(temp.ID, temp.lastPos + (temp.lastVel * deltaTime));
@@ -251,6 +251,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					break;
 				}
 				case ID_CONNECTION_REQUEST_ACCEPTED:
+				{
 					printf("\nOur connection request has been accepted.\n");
 					{
 						net->serverAddress = packet->systemAddress;
@@ -281,6 +282,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 
 					}
 					break;
+				}
 				case ID_NEW_INCOMING_CONNECTION:
 				{
 					// we add number of participants...

@@ -71,6 +71,8 @@ extern "C"
 		RakNet::RakPeerInterface* peer;
 
 		a3boolean isServer;
+
+		// added :
 		int numberOfParticipants = 0;
 		int userID;
 

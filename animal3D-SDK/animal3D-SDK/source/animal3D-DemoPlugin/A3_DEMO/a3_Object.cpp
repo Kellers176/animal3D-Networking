@@ -35,7 +35,7 @@ void a3_Object::a3_RenderObject(a3_TextRenderer* newRenderer)
 void a3_Object::a3_UpdateKinematics(float deltaTime)
 {
 	// update teh position;
-	objectKinematic.position = objectKinematic.position + objectKinematic.velocity;
+	objectKinematic.position = objectKinematic.position + objectKinematic.velocity * deltaTime;
 
-	objectKinematic.rotation = objectKinematic.rotation + objectKinematic.angularVelocity;
+	objectKinematic.rotation = objectKinematic.rotation + objectKinematic.angularVelocity * deltaTime;
 }
