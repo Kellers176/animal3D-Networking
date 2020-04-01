@@ -9,6 +9,7 @@ void a3_ObjectManager::a3_UpdateAllObjects(float deltaTime)
 	{
 		listOfObjects[i]->a3_UpdateKinematics(deltaTime);
 	}
+
 }
 
 void a3_ObjectManager::a3_RenderAllObjects(a3_TextRenderer* newRenderer)

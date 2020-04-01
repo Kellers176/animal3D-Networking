@@ -100,6 +100,7 @@ void a3demoTestRender(a3_DemoState const* demoState)
 	a3textDraw(demoState->text, -0.99f, -0.95f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, demoState->messageText);
 
 }
+
 void a3demoProcessInput(a3_DemoState* demoState)
 {
 	if (demoState->enterPressed)
@@ -122,6 +123,9 @@ void a3demoTestUpdate(a3_DemoState* demoState)
 	//DO UPDATE
 	//a3netProcessInbound(gameManager.net, gameManager.objectManager[0]);
 	a3netNetworkingLoop(gameManager.net, gameManager.objectManager, (float)(demoState->networkingTimer->currentTick - demoState->networkingTimer->previousTick));
+
+	float deltaTimeBaby = (float)(demoState->networkingTimer->currentTick - demoState->networkingTimer->previousTick);
+	gameManager.objectManager.a3_UpdateAllObjects(deltaTimeBaby);
 }
 
 
@@ -401,6 +405,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 
 			// change 0 to the users id
 			
+			// updating the object pos
 			if (!gameManager.net->isServer)
 			{
 				gameManager.objectManager.a3_SetObjectPos(gameManager.net->userID,
@@ -411,6 +416,26 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 					);
 
 			}
+			
+			// updating object vel
+			if (!gameManager.net->isServer)
+			{
+				if (gameManager.objectManager.GetSize() > 0)
+				{
+					BK_Vector2 newVel;
+
+					BK_Vector2 mousePos = BK_Vector2(
+					((float)(demoState->mouse->x) / (demoState->frameWidth) - 0.5f) * 2,
+						-((float)(demoState->mouse->y) / (demoState->frameHeight) - 0.5f) * 2
+						);
+
+					BK_Vector2 objectPos = gameManager.objectManager.a3_GetObjectFromID(gameManager.net->userID)->getPosition();
+
+					newVel = mousePos - objectPos;
+
+					gameManager.objectManager.a3_SetObjectVel(gameManager.net->userID, newVel);
+				}
+			}
 
 			gameManager.objectManager.a3_RenderAllObjects(demoState->text);
 
@@ -420,7 +445,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 			a3keyboardUpdate(demoState->keyboard);
 			a3XboxControlUpdate(demoState->xcontrol);
 
-			
+			a3demoTestUpdate(demoState);
 
 			// render occurred this idle: return +1
 			return +1;
@@ -433,6 +458,10 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 	// demo should exit now: return -1
 	return -1;
 }
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // window gains focus
 A3DYLIBSYMBOL void a3demoCB_windowActivate(a3_DemoState* demoState)

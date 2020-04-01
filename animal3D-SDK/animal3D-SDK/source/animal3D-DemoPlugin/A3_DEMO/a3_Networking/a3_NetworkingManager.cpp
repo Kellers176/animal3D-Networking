@@ -115,21 +115,21 @@ a3i32 a3netShutdown(a3_NetworkingManager* net)
 
 a3i32 a3netNetworkingLoop(a3_NetworkingManager* net, a3_ObjectManager& newObjMan, float deltaTime)
 {
-	/*
-	this is wrong atm
+	
+	// this is wrong atm
 	//make own send function to send the stuff
 	for (int i = 0; i < 16; i++)
 	{
 		net->participants[i].timeSinceLastPing = net->participants[i].timeSinceLastPing + deltaTime;
 
-		if (net->participants[i].timeSinceLastPing > 1)
+		if (net->participants[i].timeSinceLastPing > 0.001f)
 		{
 			Participant temp = net->participants[i];
 			newObjMan.a3_SetObjectPos(temp.ID, temp.lastPos + (temp.lastVel * deltaTime));
 			net->participants[i].lastPos = temp.lastPos + (temp.lastVel * deltaTime);
 		}
 	}
-	*/
+
 
 	return 0;
 }
@@ -141,9 +141,10 @@ a3i32 a3netConnect(a3_NetworkingManager* net, a3netAddressStr const ip)
 	if (net && net->peer)
 	{
 		RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
-		RakNet::ConnectionAttemptResult connectionRes;
-		connectionRes = peer->Connect(ip, net->port_outbound, 0, 0);
-
+		//RakNet::ConnectionAttemptResult connectionRes;
+		//connectionRes = peer->Connect(ip, net->port_outbound, 0, 0);
+		peer->Connect(ip, net->port_outbound, 0, 0);
+		/*
 		if (connectionRes == RakNet::ConnectionAttemptResult::CONNECTION_ATTEMPT_STARTED)
 		{
 			printf("connection attempt started");
@@ -168,7 +169,7 @@ a3i32 a3netConnect(a3_NetworkingManager* net, a3netAddressStr const ip)
 		{
 			printf("security initialization failed");
 		}
-
+		*/
 		return 1;
 	}
 	return 0;
@@ -402,6 +403,13 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 						newObjMan.a3_SetObjectVel(unitsID, BK_Vector2(newVelX, newVelY));
 					}
 
+					for (int i = 0; i < 16; i++)
+					{
+						if (net->participants[i].ID == unitsID)
+						{
+							net->participants[i].timeSinceLastPing = 0;
+						}
+					}
 
 					break;
 				}
