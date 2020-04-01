@@ -293,39 +293,37 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 
 					peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 
-					printf("lol we making them have an object");
-
-					if (net->numberOfParticipants > 0)
-					{
-						// tell new user to create objects for previous people
-						for (unsigned int i = 0; i <= peer->GetNumberOfAddresses(); i++)
-						{
-							// we need the id and the position and the velocity
-							bsOut->Write((RakNet::MessageID)ID_CREATE_USERS_OBJECT);
-
-							bsOut->Write(i);
-
-							peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
-
-						}
-
-
-						// tell everyone to create an object:
-						for (unsigned int i = 0; i < peer->GetNumberOfAddresses(); i++)
-						{
-							// we need the id and the position and the velocity
-							bsOut->Write((RakNet::MessageID)ID_CREATE_USERS_OBJECT);
-
-							bsOut->Write(i);
-
-							peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
-
-						}
-					}
-
+					// create an object with the id we sent them...
 					int tempID = net->numberOfParticipants;
 
 					newObjMan.a3_CreateNewObjectWithID(tempID);
+
+					// tell the new guy make objects for the other people
+					RakNet::BitStream bsToNewUserOut[1];
+					
+					if (net->numberOfParticipants > 0)
+					{
+						for (int i = 0; i < net->numberOfParticipants; i++)
+						{
+							bsToNewUserOut->Write((RakNet::MessageID)ID_CREATE_USERS_OBJECT);
+							bsToNewUserOut->Write(i);
+
+							peer->Send(bsToNewUserOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
+						}
+					}
+
+					RakNet::BitStream bsToOthersOut[1];
+					// tell the previous people to make a new person
+					if (net->numberOfParticipants > 0)
+					{
+						for (int i = 0; i < net->numberOfParticipants; i++)
+						{
+							bsToOthersOut->Write((RakNet::MessageID)ID_CREATE_USERS_OBJECT);
+							bsToOthersOut->Write(net->numberOfParticipants + 1);
+
+							peer->Send(bsToOthersOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->peer->GetSystemAddressFromIndex(i), false);
+						}
+					}
 
 					net->numberOfParticipants = net->numberOfParticipants + 1;
 
@@ -400,11 +398,8 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 
 					if (unitsID != net->userID)
 					{
-						if (1 > newPosX && newPosX > -1 && 1 > newPosY && newPosY > -1)
-						{
-							newObjMan.a3_SetObjectPos(unitsID, BK_Vector2(newPosX, newPosY));
-							newObjMan.a3_SetObjectVel(unitsID, BK_Vector2(newVelX, newVelY));
-						}
+						newObjMan.a3_SetObjectPos(unitsID, BK_Vector2(newPosX, newPosY));
+						newObjMan.a3_SetObjectVel(unitsID, BK_Vector2(newVelX, newVelY));
 					}
 
 
@@ -453,7 +448,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 	
 	RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
 
-	RakNet::BitStream bsOut[1];
+	//RakNet::BitStream bsServerOut[1];
 
 	if (net && net->peer)
 	{
@@ -464,18 +459,20 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 			{
 				for (int j = 0; j < newObjMan.GetSize(); j++)
 				{
+					RakNet::BitStream bsServerOut[1];
+
 					// we need the id and the position and the velocity
-					bsOut->Write((RakNet::MessageID)ID_UPDATE_OBJECT_POS);
+					bsServerOut->Write((RakNet::MessageID)ID_UPDATE_OBJECT_POS);
 
-					newObjMan.a3_GetObjectInPos(j);
+					// newObjMan.a3_GetObjectInPos(j);
 
-					bsOut->Write(newObjMan.a3_GetObjectInPos(j)->getObjectID());
-					bsOut->Write(newObjMan.a3_GetObjectInPos(j)->getPosition().xVal);
-					bsOut->Write(newObjMan.a3_GetObjectInPos(j)->getPosition().yVal);
-					bsOut->Write(newObjMan.a3_GetObjectInPos(j)->getVelocity().xVal);
-					bsOut->Write(newObjMan.a3_GetObjectInPos(j)->getVelocity().yVal);
+					bsServerOut->Write(newObjMan.a3_GetObjectInPos(j)->getObjectID());
+					bsServerOut->Write(newObjMan.a3_GetObjectInPos(j)->getPosition().xVal);
+					bsServerOut->Write(newObjMan.a3_GetObjectInPos(j)->getPosition().yVal);
+					bsServerOut->Write(newObjMan.a3_GetObjectInPos(j)->getVelocity().xVal);
+					bsServerOut->Write(newObjMan.a3_GetObjectInPos(j)->getVelocity().yVal);
 
-					net->peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->peer->GetSystemAddressFromIndex(i), false);
+					net->peer->Send(bsServerOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->peer->GetSystemAddressFromIndex(i), false);
 
 				}
 
@@ -488,16 +485,18 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 
 			if (temp)
 			{
+				RakNet::BitStream bsClientOut[1];
+
 				// we need the id and the position and the velocity
-				bsOut->Write((RakNet::MessageID)ID_UPDATE_OBJECT_POS);
-				bsOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getObjectID());
-				bsOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getPosition().xVal);
-				bsOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getPosition().yVal);
-				bsOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getVelocity().xVal);
-				bsOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getVelocity().yVal);
+				bsClientOut->Write((RakNet::MessageID)ID_UPDATE_OBJECT_POS);
+				bsClientOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getObjectID());
+				bsClientOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getPosition().xVal);
+				bsClientOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getPosition().yVal);
+				bsClientOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getVelocity().xVal);
+				bsClientOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getVelocity().yVal);
 
 				//sending to server
-				net->peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, false);
+				net->peer->Send(bsClientOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, false);
 			}
 
 		}
