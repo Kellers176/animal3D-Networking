@@ -448,7 +448,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 	
 	RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
 
-	//RakNet::BitStream bsServerOut[1];
+	//RakNet::BitStream bsOut[1];
 
 	if (net && net->peer)
 	{
@@ -472,7 +472,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 					bsServerOut->Write(newObjMan.a3_GetObjectInPos(j)->getVelocity().xVal);
 					bsServerOut->Write(newObjMan.a3_GetObjectInPos(j)->getVelocity().yVal);
 
-					net->peer->Send(bsServerOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->peer->GetSystemAddressFromIndex(i), false);
+					net->peer->Send(bsServerOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, true);
 
 				}
 
