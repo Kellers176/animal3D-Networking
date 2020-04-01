@@ -319,7 +319,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 						for (int i = 0; i < net->numberOfParticipants; i++)
 						{
 							bsToOthersOut->Write((RakNet::MessageID)ID_CREATE_USERS_OBJECT);
-							bsToOthersOut->Write(net->numberOfParticipants + 1);
+							bsToOthersOut->Write(net->numberOfParticipants);
 
 							peer->Send(bsToOthersOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->peer->GetSystemAddressFromIndex(i), false);
 						}
