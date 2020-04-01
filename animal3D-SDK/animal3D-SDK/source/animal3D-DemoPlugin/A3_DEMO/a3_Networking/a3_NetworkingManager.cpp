@@ -253,7 +253,6 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					printf("\nOur connection request has been accepted.\n");
 					{
 						net->serverAddress = packet->systemAddress;
-						bs_in.Read(net->userID);
 
 
 						// read in the users id
@@ -326,6 +325,8 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					newObjMan.a3_CreateNewObjectWithID(net->numberOfParticipants);
 
 					net->numberOfParticipants = net->numberOfParticipants + 1;
+
+					net->userID = -1;
 
 					break;
 				}
