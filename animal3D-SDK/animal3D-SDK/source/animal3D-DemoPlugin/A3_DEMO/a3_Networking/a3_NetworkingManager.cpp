@@ -297,33 +297,31 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					printf("lol we making them have an object");
 
 					
-					if(net->numberOfParticipants > 0)
+					// tell new user to create objects for previous people
+					for (unsigned int i = 0; i < peer->GetNumberOfAddresses(); i++)
 					{
-						// tell new user to create objects for previous people
-						for (unsigned int i = 0; i <= peer->GetNumberOfAddresses(); i++)
-						{
-							// we need the id and the position and the velocity
-							bsOut->Write((RakNet::MessageID)ID_CREATE_USERS_OBJECT);
+						// we need the id and the position and the velocity
+						bsOut->Write((RakNet::MessageID)ID_CREATE_USERS_OBJECT);
 
-							bsOut->Write(i);
+						bsOut->Write(i);
 
-							peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
+						peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 
-						}
-
-
-						// tell everyone to create an object:
-						for (unsigned int i = 0; i < peer->GetNumberOfAddresses(); i++)
-						{
-							// we need the id and the position and the velocity
-							bsOut->Write((RakNet::MessageID)ID_CREATE_USERS_OBJECT);
-
-							bsOut->Write(i);
-
-							peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
-
-						}
 					}
+
+
+					// tell everyone to create an object:
+					for (unsigned int i = 0; i < peer->GetNumberOfAddresses(); i++)
+					{
+						// we need the id and the position and the velocity
+						bsOut->Write((RakNet::MessageID)ID_CREATE_USERS_OBJECT);
+
+						bsOut->Write(i);
+
+						peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, peer->GetSystemAddressFromIndex(i), false);
+
+					}
+
 
 					newObjMan.a3_CreateNewObjectWithID(net->numberOfParticipants);
 
