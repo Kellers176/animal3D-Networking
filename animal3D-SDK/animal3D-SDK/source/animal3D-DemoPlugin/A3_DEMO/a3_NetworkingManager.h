@@ -79,12 +79,12 @@ extern "C"
 
 		a3boolean isServer;
 
-		// added :
 		int numberOfParticipants = 0;
 		int userID;
 
 		Participant participants[16];
 
+		// added :
 		ServerShareType shareType = push;
 	};
 

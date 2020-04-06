@@ -12,7 +12,7 @@ a3_Object::a3_Object()
 	objectKinematic.position.yVal = 0.0f;
 	
 	//create shape
-	objectShape[0] = "T";
+	objectShape[0] = "O";
 
 	userID = 0;
 	objectID = 0;

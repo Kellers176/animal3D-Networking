@@ -418,24 +418,24 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 			}
 			
 			// updating object vel
-			if (!gameManager.net->isServer)
-			{
-				if (gameManager.objectManager.GetSize() > 0)
-				{
-					BK_Vector2 newVel;
-
-					BK_Vector2 mousePos = BK_Vector2(
-					((float)(demoState->mouse->x) / (demoState->frameWidth) - 0.5f) * 2,
-						-((float)(demoState->mouse->y) / (demoState->frameHeight) - 0.5f) * 2
-						);
-
-					BK_Vector2 objectPos = gameManager.objectManager.a3_GetObjectFromID(gameManager.net->userID)->getPosition();
-
-					newVel = mousePos - objectPos;
-
-					gameManager.objectManager.a3_SetObjectVel(gameManager.net->userID, gameManager.net->userID, newVel);
-				}
-			}
+			// if (!gameManager.net->isServer)
+			// {
+			// 	if (gameManager.objectManager.GetSize() > 0)
+			// 	{
+			// 		BK_Vector2 newVel;
+			// 
+			// 		BK_Vector2 mousePos = BK_Vector2(
+			// 		((float)(demoState->mouse->x) / (demoState->frameWidth) - 0.5f) * 2,
+			// 			-((float)(demoState->mouse->y) / (demoState->frameHeight) - 0.5f) * 2
+			// 			);
+			// 
+			// 		BK_Vector2 objectPos = gameManager.objectManager.a3_GetObjectFromID(gameManager.net->userID,gameManager.net->userID)->getPosition();
+			// 
+			// 		newVel = mousePos - objectPos;
+			// 
+			// 		gameManager.objectManager.a3_SetObjectVel(gameManager.net->userID, gameManager.net->userID, newVel);
+			// 	}
+			// }
 
 			gameManager.objectManager.a3_RenderAllObjects(demoState->text);
 

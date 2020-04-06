@@ -141,6 +141,32 @@ a3i32 a3netNetworkingLoop(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 	// 	}
 	// }
 
+	if (net->isServer)
+	{
+		if (net->shareType == push)
+		{
+			for (signed int k = 0; k < net->numberOfParticipants; k++)
+			{
+				for (int i = 0; i < 10; i++)
+				{
+					newObjMan.a3_GetObjectFromID(k, i)->a3_UpdateSteering(deltaTime);
+				}
+			}
+			
+		}
+
+	}
+	else
+	{
+		if (net->shareType == share || net->shareType == coupling)
+		{
+			for (int i = 0; i < 10; i++)
+			{
+				newObjMan.a3_GetObjectFromID(net->userID, i)->a3_UpdateSteering(deltaTime);
+			}
+		}
+	}
+
 
 	return 0;
 }
@@ -479,6 +505,8 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					bs_in.Read(newVelX);
 					bs_in.Read(newVelY);
 
+					newObjMan.a3_SetObjectPos(userID, unitID, BK_Vector2(newPosX, newPosY));
+
 					break;
 				}
 				case ID_RECEIVE_SHARE_DATA:
@@ -505,7 +533,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 
 						RakNet::BitStream bsOut[1];
 
-						bsOut->Write((RakNet::MessageID)ID_RECEIVE_COUPLING_DATA);
+						bsOut->Write((RakNet::MessageID)ID_RECEIVE_SHARE_DATA);
 
 						bsOut->Write(userID);
 						bsOut->Write(unitID);
@@ -546,6 +574,8 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 							bs_in.Read(newPosY);
 							bs_in.Read(newVelX);
 							bs_in.Read(newVelY);
+
+							newObjMan.a3_SetObjectPos(userID, unitID, BK_Vector2(newPosX, newPosY));
 						}
 
 					}
@@ -581,7 +611,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 
 					newObjMan.a3_SetObjectPos(userID, unitID, BK_Vector2(newPosX, newPosY));
 
-					newObjMan.a3_GetObjectFromID(userID, unitID)->a3_UpdateSteering(dt);
+					newObjMan.a3_GetObjectFromID(userID, unitID)->a3_UpdateSteering((float)dt);
 
 					if (net->isServer)
 					{	
@@ -650,7 +680,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 			{
 			case push:
 			{
-				// send all that shit my way bebe
+				// send all that data my way bebe
 				break;
 			}
 			case share:
@@ -681,11 +711,20 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 			case share:
 			{
 				// send it
+				for (int i = 0; i < 10; i++)
+				{
+					// send our object data
+				}
 				break;
 			}
 			case coupling:
 			{
 				// send it
+				for (int i = 0; i < 10; i++)
+				{
+					// send our object data
+				}
+
 				break;
 			}
 			default:
