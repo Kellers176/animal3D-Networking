@@ -14,6 +14,7 @@ a3_Object::a3_Object()
 	//create shape
 	objectShape[0] = "T";
 
+	userID = 0;
 	objectID = 0;
 
 }
@@ -38,4 +39,15 @@ void a3_Object::a3_UpdateKinematics(float deltaTime)
 	objectKinematic.position = objectKinematic.position + objectKinematic.velocity * deltaTime;
 
 	objectKinematic.rotation = objectKinematic.rotation + objectKinematic.angularVelocity * deltaTime;
+}
+
+void a3_Object::a3_UpdateSteering(float deltaTime)
+{
+	// calculate steering
+
+	// steering = separation + wander
+
+	// velocity = steering.linear 
+
+	objectKinematic.position = objectKinematic.position + objectKinematic.velocity * deltaTime;
 }

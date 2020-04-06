@@ -32,13 +32,15 @@ void a3_ObjectManager::a3_CreateNewObject()
 	listOfObjects.push_back(newObject);
 }
 
-void a3_ObjectManager::a3_CreateNewObjectWithID(int newID)
+void a3_ObjectManager::a3_CreateNewObjectWithID(int userID, int newID)
 {
 	a3_Object* newObject = new a3_Object();
 
 	newObject->setObjectPos(0, 0);
 	
 	newObject->setObjectID(newID);
+
+	newObject->setObjectUserID(userID);
 
 	listOfObjects.push_back(newObject);
 }
@@ -51,11 +53,11 @@ a3_Object* a3_ObjectManager::a3_GetObjectInPos(int objPos)
 		return nullptr;
 }
 
-a3_Object* a3_ObjectManager::a3_GetObjectFromID(int unitID)
+a3_Object* a3_ObjectManager::a3_GetObjectFromID(int userID, int unitID)
 {
 	for (int i = 0; i < listOfObjects.size(); i++)
 	{
-		if (listOfObjects[i]->getObjectID() == unitID)
+		if (listOfObjects[i]->getObjectID() == unitID && listOfObjects[i]->getUserID() == userID)
 		{
 			return listOfObjects[i];
 		}
@@ -63,9 +65,8 @@ a3_Object* a3_ObjectManager::a3_GetObjectFromID(int unitID)
 	return nullptr;
 }
 
-
 //for all other objects that are not us, update Position
-void a3_ObjectManager::a3_SetObjectPos(int objID, BK_Vector2 newPos)
+void a3_ObjectManager::a3_SetObjectPos(int userID, int objID, BK_Vector2 newPos)
 {
 	for (int i = 0; i < listOfObjects.size(); i++)
 	{
@@ -76,7 +77,7 @@ void a3_ObjectManager::a3_SetObjectPos(int objID, BK_Vector2 newPos)
 	}
 }
 
-void a3_ObjectManager::a3_SetObjectVel(int objID, BK_Vector2 newVel)
+void a3_ObjectManager::a3_SetObjectVel(int userID, int objID, BK_Vector2 newVel)
 {
 	for (int i = 0; i < listOfObjects.size(); i++)
 	{
@@ -88,7 +89,7 @@ void a3_ObjectManager::a3_SetObjectVel(int objID, BK_Vector2 newVel)
 }
 
 //for all other objects that are not us, update rotation
-void a3_ObjectManager::a3_SetObjectRotation(int objID, float newRotation)
+void a3_ObjectManager::a3_SetObjectRotation(int userID, int objID, float newRotation)
 {
 	for (int i = 0; i < listOfObjects.size(); i++)
 	{

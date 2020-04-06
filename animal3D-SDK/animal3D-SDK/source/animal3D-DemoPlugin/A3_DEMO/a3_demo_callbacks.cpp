@@ -408,7 +408,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 			// updating the object pos
 			if (!gameManager.net->isServer)
 			{
-				gameManager.objectManager.a3_SetObjectPos(gameManager.net->userID,
+				gameManager.objectManager.a3_SetObjectPos(gameManager.net->userID, gameManager.net->userID,
 					BK_Vector2(
 					((float)(demoState->mouse->x) / (demoState->frameWidth) - 0.5f) * 2,
 						-((float)(demoState->mouse->y) / (demoState->frameHeight) - 0.5f) * 2
@@ -433,7 +433,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 
 					newVel = mousePos - objectPos;
 
-					gameManager.objectManager.a3_SetObjectVel(gameManager.net->userID, newVel);
+					gameManager.objectManager.a3_SetObjectVel(gameManager.net->userID, gameManager.net->userID, newVel);
 				}
 			}
 

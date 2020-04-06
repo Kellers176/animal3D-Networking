@@ -1,21 +1,27 @@
+
+
 #ifndef ALIGN_H
 #define ALIGN_H
+
+#include "BK_Vector.h"
+#include "a3_ObjectKinematic.h"
+#include "SteeringOutput.h"
 
 class AlignBehavior
 {
 public:
 	AlignBehavior()
 	{
-		character = Kinematic();
+		character = a3_Object_Kinematic();
 		maxAngularAcc = 2;
 		maxRotation = 2;
 		targetRadius = 5;
 		slowRadius = 10;
 
-		target = Kinematic();
+		target = a3_Object_Kinematic();
 	}
 
-	AlignBehavior(Kinematic newChar, float newMaxAcc, float newMaxRot, float newTargetRad, float newSlowRad)
+	AlignBehavior(a3_Object_Kinematic newChar, float newMaxAcc, float newMaxRot, float newTargetRad, float newSlowRad)
 	{
 		character = newChar;
 		maxAngularAcc = newMaxAcc;
@@ -23,7 +29,7 @@ public:
 		targetRadius = newTargetRad;
 		slowRadius = newSlowRad;
 
-		target = Kinematic();
+		target = a3_Object_Kinematic();
 	}
 
 	~AlignBehavior()
@@ -49,8 +55,8 @@ public:
 
 
 	// holds kinematic  data for teh character and target
-	Kinematic character;
-	Kinematic target;
+	a3_Object_Kinematic character;
+	a3_Object_Kinematic target;
 
 	// holds the max angular acceleration and rotation of the character
 	float maxAngularAcc;
@@ -94,7 +100,7 @@ public:
 		SteeringOutput* steering = new SteeringOutput();
 
 		// get the naive direction to the target
-		float rotation = target.orientation - character.orientation;
+		float rotation = target.rotation - character.rotation;
 
 		// map result to the (-pi, pi) interval
 		rotation = MapToRange(rotation);
@@ -141,7 +147,7 @@ public:
 		a3vec2 zeroVec;
 		zeroVec.x = 0;
 		zeroVec.y = 0;
-		steering->linear = zeroVec;
+		steering->linear = BK_Vector2(0,0);
 		return steering;
 	}
 

@@ -4,15 +4,19 @@
 #include "a3_Align_Behavior.h"
 #include "animal3D-A3DM/a3math/a3trig.h"
 
+#include "BK_Vector.h"
+#include "a3_ObjectKinematic.h"
+#include "SteeringOutput.h"
+
 class FaceBehavior
 {
 public:
 	FaceBehavior()
 	{
-		faceTarget = Kinematic();
+		faceTarget = a3_Object_Kinematic();
 	}
 
-	FaceBehavior(Kinematic newTarget)
+	FaceBehavior(a3_Object_Kinematic newTarget)
 	{
 		faceTarget = newTarget;
 	}
@@ -23,7 +27,7 @@ public:
 	}
 
 	// overrides the align.target member
-	Kinematic faceTarget;
+	a3_Object_Kinematic faceTarget;
 
 	// ... other data is derived from the superclass
 
@@ -33,11 +37,11 @@ public:
 		// calculate the target to delegate to align
 		// work out the direction to target
 		a3vec2 direction;
-		direction.x = faceTarget.positionX - align->character.positionX;
-		direction.y = faceTarget.positionY - align->character.positionY;
+		direction.x = faceTarget.position.xVal - align->character.position.xVal;
+		direction.y = faceTarget.position.yVal - align->character.position.yVal;
 
 		// check for a zero direction and make no change if so
-		float directionMagnitude = a3sqrt(direction.x * direction.x + direction.y * direction.y);
+		float directionMagnitude = sqrtf(direction.x * direction.x + direction.y * direction.y);
 
 		if (directionMagnitude == 0)
 		{
@@ -46,7 +50,7 @@ public:
 
 		// put the target togather
 		align->target = faceTarget;
-		align->target.orientation = a3atan2d(-direction.x, direction.y);
+		align->target.rotation = a3atan2d(-direction.x, direction.y);
 
 		// delegate to align
 		return align->getSteering();

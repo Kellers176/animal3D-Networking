@@ -1,13 +1,17 @@
 #ifndef ARRIVE_H
 #define ARRIVE_H
 
+#include "BK_Vector.h"
+#include "a3_ObjectKinematic.h"
+#include "SteeringOutput.h"
+
 class ArriveBehavior
 {
 public:
 	ArriveBehavior()
 	{
-		character = Kinematic();
-		target = Kinematic();
+		character = a3_Object_Kinematic();
+		target = a3_Object_Kinematic();
 
 		maxAcceleration = 1;
 		maxSpeed = 3;
@@ -17,10 +21,10 @@ public:
 		targetRadius = 2;
 	}
 
-	ArriveBehavior(Kinematic newCharKin, float newMaxAcc, float newMaxSpeed, float newSlowRadius, float newTargetRadius)
+	ArriveBehavior(a3_Object_Kinematic newCharKin, float newMaxAcc, float newMaxSpeed, float newSlowRadius, float newTargetRadius)
 	{
 		character = newCharKin;
-		target = Kinematic();
+		target = a3_Object_Kinematic();
 
 		maxAcceleration = newMaxAcc;
 		maxSpeed = newMaxSpeed;
@@ -36,8 +40,8 @@ public:
 	}
 
 	// holds the kinematic data for the character and target
-	Kinematic character;
-	Kinematic target;
+	a3_Object_Kinematic character;
+	a3_Object_Kinematic target;
 
 	// holds the max acceleration and speed of the character
 	float maxAcceleration;
@@ -61,9 +65,9 @@ public:
 
 		// get the direction to the target
 		a3vec2 direction;
-		direction.x = target.positionX - character.positionX;
-		direction.y = target.positionY - character.positionY;
-		float distance = a3sqrt(direction.x * direction.x + direction.y * direction.y);
+		direction.x = target.position.xVal - character.position.xVal;
+		direction.y = target.position.yVal - character.position.yVal;
+		float distance = sqrtf(direction.x * direction.x + direction.y * direction.y);
 
 		// check if we are there, return no steering
 		if (distance < targetRadius)
@@ -85,7 +89,7 @@ public:
 		a3vec2 targetVelocity = direction;
 
 		// normalize the velocity
-		float velMag = a3sqrt(targetVelocity.x * targetVelocity.x + targetVelocity.y * targetVelocity.y);
+		float velMag = sqrtf(targetVelocity.x * targetVelocity.x + targetVelocity.y * targetVelocity.y);
 		targetVelocity.x = targetVelocity.x / velMag;
 		targetVelocity.y = targetVelocity.y / velMag;
 
@@ -94,21 +98,21 @@ public:
 		targetVelocity.y *= targetSpeed;
 
 		// acceleration tries to get to the target velocity
-		steering->linear.x = targetVelocity.x - character.velocityX;
-		steering->linear.y = targetVelocity.y - character.velocityY;
-
-		steering->linear.x = steering->linear.x / timeToTarget;
-		steering->linear.y = steering->linear.y / timeToTarget;
+		steering->linear.xVal = targetVelocity.x - character.velocity.xVal;
+		steering->linear.yVal = targetVelocity.y - character.velocity.yVal;
+						  
+		steering->linear.xVal = steering->linear.xVal / timeToTarget;
+		steering->linear.yVal = steering->linear.yVal / timeToTarget;
 
 		// check if the acceleration is too fast
-		float linearMag = a3sqrt(steering->linear.x * steering->linear.x + steering->linear.y * steering->linear.y);
+		float linearMag = sqrtf(steering->linear.xVal * steering->linear.xVal + steering->linear.yVal * steering->linear.yVal);
 		if (linearMag > maxAcceleration)
 		{
 			// normalize the linear
-			steering->linear.x = steering->linear.x / linearMag;
-			steering->linear.y = steering->linear.y / linearMag;
-			steering->linear.x *= maxAcceleration;
-			steering->linear.y *= maxAcceleration;
+			steering->linear.xVal = steering->linear.xVal / linearMag;
+			steering->linear.yVal = steering->linear.yVal / linearMag;
+			steering->linear.xVal *= maxAcceleration;
+			steering->linear.yVal *= maxAcceleration;
 		}
 
 		// output the steering 

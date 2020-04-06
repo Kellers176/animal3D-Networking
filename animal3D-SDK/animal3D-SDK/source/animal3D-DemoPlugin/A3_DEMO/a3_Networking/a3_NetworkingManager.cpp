@@ -48,9 +48,20 @@ enum a3_NetGameMessages
 
 	ID_UPDATE_OBJECT_POS = 139,
 	ID_CREATE_USERS_OBJECT = 140,
-	ID_CREATE_OWN_OBJECT = 141
+	ID_CREATE_OWN_OBJECT = 141,
+
+
+	ID_RECEIVE_PUSH_DATA = 142,
+	ID_RECEIVE_SHARE_DATA = 143,
+	ID_RECEIVE_COUPLING_DATA = 144,
+	ID_RECEIVE_SERVER_TYPE = 145
 };
 
+// data share, data push, data coupling
+
+// data share comes from people to server to other people
+// data push comes from server to the people
+// data coupling comes from people to server calculates more and then push to other
 
 #pragma pack(push, 1)
 
@@ -118,17 +129,17 @@ a3i32 a3netNetworkingLoop(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 	
 	// this is wrong atm
 	//make own send function to send the stuff
-	for (int i = 0; i < 16; i++)
-	{
-		net->participants[i].timeSinceLastPing = net->participants[i].timeSinceLastPing + deltaTime;
-
-		if (net->participants[i].timeSinceLastPing > 3.0f)
-		{
-			Participant temp = net->participants[i];
-			newObjMan.a3_SetObjectPos(temp.ID, temp.lastPos + (temp.lastVel * deltaTime));
-			net->participants[i].lastPos = temp.lastPos + (temp.lastVel * deltaTime);
-		}
-	}
+	// for (int i = 0; i < 16; i++)
+	// {
+	// 	net->participants[i].timeSinceLastPing = net->participants[i].timeSinceLastPing + deltaTime;
+	// 
+	// 	if (net->participants[i].timeSinceLastPing > 3.0f)
+	// 	{
+	// 		Participant temp = net->participants[i];
+	// 		newObjMan.a3_SetObjectPos(net->userID,temp.ID, temp.lastPos + (temp.lastVel * deltaTime));
+	// 		net->participants[i].lastPos = temp.lastPos + (temp.lastVel * deltaTime);
+	// 	}
+	// }
 
 
 	return 0;
@@ -288,6 +299,12 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					// we add number of participants...
 					printf("\nA connection is incoming.\n");
 
+					RakNet::BitStream bsInitialDataOut[1];
+					bsInitialDataOut->Write((RakNet::MessageID)ID_RECEIVE_SERVER_TYPE);
+					bsInitialDataOut->Write(net->shareType);
+					peer->Send(bsInitialDataOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
+
+
 					RakNet::BitStream bsOut[1];
 
 					// make the person create their object
@@ -299,7 +316,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					// create an object with the id we sent them...
 					int tempID = net->numberOfParticipants;
 
-					newObjMan.a3_CreateNewObjectWithID(tempID);
+					newObjMan.a3_CreateNewObjectWithID(net->userID, tempID);
 
 					// tell the new guy make objects for the other people
 					RakNet::BitStream bsToNewUserOut[1];
@@ -401,8 +418,8 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 
 					if (unitsID != net->userID)
 					{
-						newObjMan.a3_SetObjectPos(unitsID, BK_Vector2(newPosX, newPosY));
-						newObjMan.a3_SetObjectVel(unitsID, BK_Vector2(newVelX, newVelY));
+						newObjMan.a3_SetObjectPos(net->userID, unitsID, BK_Vector2(newPosX, newPosY));
+						newObjMan.a3_SetObjectVel(net->userID, unitsID, BK_Vector2(newVelX, newVelY));
 					}
 
 					for (int i = 0; i < 16; i++)
@@ -418,23 +435,190 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 				case ID_CREATE_USERS_OBJECT:
 				{
 					printf("\ncreating a new unit\n");
-					int unitsID = -1;
+					int usersID = -1;
 
-					bs_in.Read(unitsID);
-					newObjMan.a3_CreateNewObjectWithID(unitsID);
+					bs_in.Read(usersID);
+
+					for (int i = 0; i < 10; i++)
+					{
+						newObjMan.a3_CreateNewObjectWithID(usersID,i);
+					}
 
 					break;
 				}
 				case ID_CREATE_OWN_OBJECT:
 				{
 					printf("\ncreating a new unit\n");
-					int unitsID = -1;
+					int usersID = -1;
 
-					bs_in.Read(unitsID);
-					net->userID = unitsID;
-					newObjMan.a3_CreateNewObjectWithID(unitsID);
+					bs_in.Read(usersID);
+					net->userID = usersID;
+
+					for (int i = 0; i < 10; i++)
+					{
+						newObjMan.a3_CreateNewObjectWithID(net->userID, i);
+					}
 
 					break;
+				}
+				case ID_RECEIVE_PUSH_DATA:
+				{
+					// received by the clients from teh server always
+					int userID = -1;
+					int unitID = -1;
+
+					// get the user that is updating
+					bs_in.Read(userID);
+					// get uniot of that user
+					bs_in.Read(unitID);
+
+					float newPosX, newPosY, newVelX, newVelY;
+
+					bs_in.Read(newPosX);
+					bs_in.Read(newPosY);
+					bs_in.Read(newVelX);
+					bs_in.Read(newVelY);
+
+					break;
+				}
+				case ID_RECEIVE_SHARE_DATA:
+				{
+					// check if server or not
+					if (net->isServer)
+					{
+						// get the user that is updating
+						int userID = -1;
+						bs_in.Read(userID);
+
+						int unitID = -1;
+
+
+						// get unit of that user
+						bs_in.Read(unitID);
+
+						float newPosX, newPosY, newVelX, newVelY;
+
+						bs_in.Read(newPosX);
+						bs_in.Read(newPosY);
+						bs_in.Read(newVelX);
+						bs_in.Read(newVelY);
+
+						RakNet::BitStream bsOut[1];
+
+						bsOut->Write((RakNet::MessageID)ID_RECEIVE_COUPLING_DATA);
+
+						bsOut->Write(userID);
+						bsOut->Write(unitID);
+
+						bsOut->Write(newObjMan.a3_GetObjectFromID(userID, unitID)->getPosition().xVal);
+						bsOut->Write(newObjMan.a3_GetObjectFromID(userID, unitID)->getPosition().yVal);
+						bsOut->Write(newObjMan.a3_GetObjectFromID(userID, unitID)->getVelocity().xVal);
+						bsOut->Write(newObjMan.a3_GetObjectFromID(userID, unitID)->getVelocity().yVal);
+
+						if (net->numberOfParticipants > 1)
+						{
+							for (int i = 0; i < net->numberOfParticipants; i++)
+							{
+								peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->peer->GetSystemAddressFromIndex(i), false);
+							}
+						}
+
+					}
+					else
+					{
+						// if client then update stuff if its not your stuff
+
+						// get the user that is updating
+						int userID = -1;
+						bs_in.Read(userID);
+
+						if (userID != net->userID)
+						{
+							int unitID = -1;
+
+
+							// get uniot of that user
+							bs_in.Read(unitID);
+
+							float newPosX, newPosY, newVelX, newVelY;
+
+							bs_in.Read(newPosX);
+							bs_in.Read(newPosY);
+							bs_in.Read(newVelX);
+							bs_in.Read(newVelY);
+						}
+
+					}
+
+					break;
+				}
+				case ID_RECEIVE_COUPLING_DATA:
+				{
+					RakNet::Time sendTime, recieveTime, dt;
+					bs_in.Read(sendTime);
+					recieveTime = RakNet::GetTime();
+					dt = recieveTime - sendTime;
+					printf("\n SEND TIME: %u \n", (unsigned int)sendTime);
+					printf("\n RECIEVE TIME: %u \n", (unsigned int)recieveTime);
+					printf("\n DIFF TIME: %u \n", (unsigned int)dt); 
+
+					// get the user that is updating
+					int userID = -1;
+					bs_in.Read(userID);
+
+					int unitID = -1;
+
+
+					// get uniot of that user
+					bs_in.Read(unitID);
+
+					float newPosX, newPosY, newVelX, newVelY;
+
+					bs_in.Read(newPosX);
+					bs_in.Read(newPosY);
+					bs_in.Read(newVelX);
+					bs_in.Read(newVelY);
+
+					newObjMan.a3_SetObjectPos(userID, unitID, BK_Vector2(newPosX, newPosY));
+
+					newObjMan.a3_GetObjectFromID(userID, unitID)->a3_UpdateSteering(dt);
+
+					if (net->isServer)
+					{	
+						RakNet::BitStream bsOut[1];
+
+						bsOut->Write((RakNet::MessageID)ID_RECEIVE_COUPLING_DATA);
+
+						bsOut->Write(RakNet::GetTime());
+
+						bsOut->Write(userID);
+						bsOut->Write(unitID);
+
+						bsOut->Write(newObjMan.a3_GetObjectFromID(userID, unitID)->getPosition().xVal);
+						bsOut->Write(newObjMan.a3_GetObjectFromID(userID, unitID)->getPosition().yVal);
+						bsOut->Write(newObjMan.a3_GetObjectFromID(userID, unitID)->getVelocity().xVal);
+						bsOut->Write(newObjMan.a3_GetObjectFromID(userID, unitID)->getVelocity().yVal);
+
+						if (net->numberOfParticipants > 1)
+						{
+							for (int i = 0; i < net->numberOfParticipants; i++)
+							{
+								peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->peer->GetSystemAddressFromIndex(i), false);
+							}
+						}
+					}
+
+					break;
+				}
+				case ID_RECEIVE_SERVER_TYPE:
+				{
+					ServerShareType tempType;
+					bs_in.Read(tempType);
+
+					if (tempType == 0 || tempType == 1 || tempType == 2)
+					{
+						net->shareType = tempType;
+					}
 					break;
 				}
 				default:
@@ -458,8 +642,60 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 	
 	RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
 
-	//RakNet::BitStream bsOut[1];
+	if (net && net->peer)
+	{
+		if (net->isServer)
+		{
+			switch (net->shareType)
+			{
+			case push:
+			{
+				// send all that shit my way bebe
+				break;
+			}
+			case share:
+			{
+				//  we dont do anything because when we receive the data from the user
+				// we do stuff then send it through the inbound
+				break;
+			}
+			case coupling:
+			{
+				// we dont do anything because when we receive the data from the user
+				// we do stuff then send it through the inbound 
+				break;
+			}
+			default:
+				break;
+			}
+		}
+		else
+		{
+			switch (net->shareType)
+			{
+			case push:
+			{
+				// do nothing we are only receiving 
+				break;
+			}
+			case share:
+			{
+				// send it
+				break;
+			}
+			case coupling:
+			{
+				// send it
+				break;
+			}
+			default:
+				break;
+			}
+		}
+	}
 
+	//RakNet::BitStream bsOut[1];
+	/*
 	if (net && net->peer)
 	{
 		if (net->isServer)
@@ -512,7 +748,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 		}
 
 	}
-	
+	*/
 	return 0;
 }
 

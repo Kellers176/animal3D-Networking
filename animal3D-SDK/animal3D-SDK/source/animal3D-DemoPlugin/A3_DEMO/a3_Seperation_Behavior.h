@@ -1,16 +1,20 @@
 #ifndef SEPARATION_H
 #define SEPARATION_H
 
+#include "BK_Vector.h"
+#include "a3_ObjectKinematic.h"
+#include "SteeringOutput.h"
+
 class Separation_Behavior
 {
 public:
 	Separation_Behavior()
 	{
-		character = Kinematic();
+		character = a3_Object_Kinematic();
 
 		for (int i = 0; i < 10; i++)
 		{
-			targetsArray[i] = Kinematic();
+			targetsArray[i] = a3_Object_Kinematic();
 		}
 
 		float threshold = 5;
@@ -20,7 +24,7 @@ public:
 		float maxAcceleration = 2;
 	}
 
-	Separation_Behavior(Kinematic newCharKin, Kinematic newListOfOtherKin[10], float newThreshold, float newDecayCoeff, float newMaxAcc)
+	Separation_Behavior(a3_Object_Kinematic newCharKin, a3_Object_Kinematic newListOfOtherKin[10], float newThreshold, float newDecayCoeff, float newMaxAcc)
 	{
 		character = newCharKin;
 
@@ -42,10 +46,10 @@ public:
 	}
 
 	// holds the kinematic data for the character
-	Kinematic character;
+	a3_Object_Kinematic character;
 
 	// holds a list of potential targets
-	Kinematic targetsArray[10];
+	a3_Object_Kinematic targetsArray[10];
 
 	// holds the threshold to take action
 	float threshold;
@@ -64,13 +68,13 @@ public:
 
 		// loop througheach target
 		// foreach loop
-		for (Kinematic target : targetsArray)
+		for (a3_Object_Kinematic target : targetsArray)
 		{
 			// check if the target is close
 			a3vec2 direction;
-			direction.x = target.positionX - character.positionX;
-			direction.y = target.positionY - character.positionY;
-			float distance = a3sqrt(direction.x * direction.x + direction.y * direction.y);
+			direction.x = target.position.xVal - character.position.xVal;
+			direction.y = target.position.yVal - character.position.yVal;
+			float distance = sqrtf(direction.x * direction.x + direction.y * direction.y);
 
 			if (distance < threshold)
 			{
@@ -81,8 +85,8 @@ public:
 				// normalize teh direction
 				direction.x = direction.x / distance;
 				direction.y = direction.y / distance;
-				steering->linear.x += direction.x * strength;
-				steering->linear.y += direction.y * strength;
+				steering->linear.xVal += direction.x * strength;
+				steering->linear.yVal += direction.y * strength;
 			}
 		}
 

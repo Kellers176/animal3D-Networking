@@ -62,6 +62,13 @@ extern "C"
 		BK_Vector2 lastVel;
 	};
 
+	enum ServerShareType
+	{
+		push = 0,
+		share = 1,
+		coupling = 2
+	};
+
 	// networking manager
 	struct a3_NetworkingManager
 	{
@@ -77,6 +84,8 @@ extern "C"
 		int userID;
 
 		Participant participants[16];
+
+		ServerShareType shareType = push;
 	};
 
 
