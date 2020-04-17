@@ -3,18 +3,18 @@
 
 #include <iostream>
 #include <string>
-a3_Object::a3_Object()
+a3_Object::a3_Object(a3byte** newText, BK_Vector2 newPos)
 {
 	//set default position
 	objectKinematic = a3_Object_Kinematic();
 
-	objectKinematic.position.xVal = 0.0f;
-	objectKinematic.position.yVal = 0.0f;
+	objectKinematic.position.xVal = newPos.xVal;
+	objectKinematic.position.yVal = newPos.yVal;
 	
 	//create shape
-	objectShape[0] = "T";
+	objectShape[0] = newText[0];
 
-	objectID = 0;
+	objectID = -1;
 
 }
 
@@ -28,14 +28,17 @@ void a3_Object::a3_RenderObject(a3_TextRenderer* newRenderer)
 {
 	//-1,-1,-1 is bottom left corner
 	//draw text
-	a3textDraw(newRenderer, objectKinematic.position.xVal, objectKinematic.position.yVal, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, *objectShape);
+	a3textDraw(newRenderer, objectKinematic.position.xVal, objectKinematic.position.yVal, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, objectShape[0]);
 }
 
 
 void a3_Object::a3_UpdateKinematics(float deltaTime)
 {
 	// update teh position;
-	objectKinematic.position = objectKinematic.position + objectKinematic.velocity * deltaTime;
+	if (!isStaticObject)
+	{
+		objectKinematic.position = objectKinematic.position + objectKinematic.velocity * deltaTime;
 
-	objectKinematic.rotation = objectKinematic.rotation + objectKinematic.angularVelocity * deltaTime;
+		objectKinematic.rotation = objectKinematic.rotation + objectKinematic.angularVelocity * deltaTime;
+	}
 }

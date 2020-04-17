@@ -404,7 +404,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			// change 0 to the users id
-			
+			/*
 			// updating the object pos
 			if (!gameManager.net->isServer)
 			{
@@ -436,7 +436,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 					gameManager.objectManager.a3_SetObjectVel(gameManager.net->userID, newVel);
 				}
 			}
-
+			*/
 			gameManager.objectManager.a3_RenderAllObjects(demoState->text);
 
 			a3netProcessOutbound(gameManager.net, gameManager.objectManager);
@@ -598,6 +598,11 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey
 		// start networking as client
 	case '2':
 		a3demo_startNetworking(demoState, 0);
+		break;
+	case '3':
+		std::string pacManMapFileName = "C:/Users/cambe/Desktop/BH_Networking/animal3D-SDK/animal3D-SDK/source/animal3D-DemoPlugin/A3_DEMO/PacManMap.txt";
+		std::cout << pacManMapFileName << std::endl;
+		gameManager.objectManager.CreateLevel(pacManMapFileName);
 		break;
 
 		// reload (T) or toggle (t) text

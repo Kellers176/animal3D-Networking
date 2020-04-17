@@ -235,6 +235,9 @@
     <None Include="..\..\..\resource\glsl\4x\vs\passthru_transform_vs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\vs\passthru_vs4x.glsl" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\PacManMap.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

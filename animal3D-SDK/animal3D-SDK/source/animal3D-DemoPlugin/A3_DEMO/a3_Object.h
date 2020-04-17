@@ -9,7 +9,7 @@
 class a3_Object
 {
 public:
-	a3_Object();
+	a3_Object(a3byte** newText, BK_Vector2 newPos);
 	~a3_Object();
 
 	void a3_RenderObject(a3_TextRenderer* newRenderer);
@@ -25,12 +25,21 @@ public:
 	BK_Vector2 getPosition() { return objectKinematic.position; }
 	BK_Vector2 getVelocity() { return objectKinematic.velocity; }
 
+	void setIsStaticObject(bool newBool) { isStaticObject = newBool; }
+	bool getIsStaticObject() { return isStaticObject; }
+
+	void setCanMoveToThisObject(bool newBool) { canMoveToThisObject = newBool; }
+	bool getCanMoveToThisObject() { return canMoveToThisObject; }
+
 private:
 	const a3byte* objectShape[1];
 
 	a3_Object_Kinematic objectKinematic;
 
 	int objectID;
+
+	bool isStaticObject = true;
+	bool canMoveToThisObject = false;
 };
 
 

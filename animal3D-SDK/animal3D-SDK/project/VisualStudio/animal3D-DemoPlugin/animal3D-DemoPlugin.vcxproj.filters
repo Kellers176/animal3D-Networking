@@ -82,6 +82,9 @@
     <Filter Include="Source Files\common\A3_DEMO\a3_Vector">
       <UniqueIdentifier>{b85e43fa-a43e-4d33-a32c-b21a51b1714e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Maps">
+      <UniqueIdentifier>{7ba9489a-a7b1-4c03-b35c-e29e79645427}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_src_win\main_dll.c">
@@ -208,5 +211,10 @@
     <None Include="..\..\..\resource\glsl\4x\vs\passthru_vs4x.glsl">
       <Filter>Resource Files\A3_DEMO\glsl\4x\vs</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\PacManMap.txt">
+      <Filter>Resource Files\Maps</Filter>
+    </Text>
   </ItemGroup>
 </Project>

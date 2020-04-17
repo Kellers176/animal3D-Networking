@@ -50,6 +50,8 @@ struct BK_Vector2
 	}
 };
 
+bool operator==(BK_Vector2 left, BK_Vector2 right);
+
 BK_Vector2 operator+(BK_Vector2 left, BK_Vector2 right);
 
 BK_Vector2 operator+=(BK_Vector2 left, BK_Vector2 right);
