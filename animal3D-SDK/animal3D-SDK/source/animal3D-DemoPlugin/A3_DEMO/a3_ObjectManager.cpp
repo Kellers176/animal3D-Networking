@@ -11,7 +11,7 @@ void a3_ObjectManager::CreateLevel(std::string fileName)
 	ifstream fin;
 	string line;
 
-	int mWidth = 39;
+	int mWidth = 20;
 	int mHeight = 23;
 
 	// creates the strings for each header object based on the current level
@@ -38,6 +38,7 @@ void a3_ObjectManager::CreateLevel(std::string fileName)
 
 		int xPos = 1;
 		int yPos = 1;
+		int i = 0;
 
 		// replace 300 with the actual size of the grid
 		while(input != '$')
@@ -78,7 +79,7 @@ void a3_ObjectManager::CreateLevel(std::string fileName)
 				a3byte* objectShape[1];
 				objectShape[0] = "#";
 
-				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), true, false,false);
+				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), i, true, false, false);
 			}
 			else if (input == '.')
 			{
@@ -86,42 +87,44 @@ void a3_ObjectManager::CreateLevel(std::string fileName)
 				objectShape[0] = ".";
 
 
-				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), true, true,false);
+				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), i, true, true, false);
 			}
 			else if (input == ' ')
 			{
 				a3byte* objectShape[1];
 				objectShape[0] = " ";
 
-				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), true, false,false);
+				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), i, true, false, false);
 			}
 			else if (input == 'O')
 			{
 				a3byte* objectShape[1];
 				objectShape[0] = "O";
 
-				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), true, true,false);
+				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), i, true, true, false);
 			}
 			else if (input == '+')
 			{
 				a3byte* objectShape[1];
 				objectShape[0] = ".";
 
-				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), true, true,true);
+				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), i, true, true, true);
 			}
 			else if (input == '-')
 			{
 				a3byte* objectShape[1];
 				objectShape[0] = "-";
 
-				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), true, false, false);
+				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), i, true, false, false);
 			}
 			else if(input =='\n')
 			{
 				yPos++;
 				xPos = 0;
+				i--;
 			}
 
+			i++;
 			xPos++;
 
 			/*
@@ -191,7 +194,7 @@ void a3_ObjectManager::a3_RenderAllObjects(a3_TextRenderer* newRenderer)
 	}
 }
 
-void a3_ObjectManager::a3_CreateNewObject(a3byte** newText, BK_Vector2 newPos, bool isStatic, bool canMoveToObject, bool isTurnSpot)
+void a3_ObjectManager::a3_CreateNewObject(a3byte** newText, BK_Vector2 newPos, int posInArray,bool isStatic, bool canMoveToObject, bool isTurnSpot)
 {
 	a3_Object* newObject = new a3_Object(newText, newPos);
 
@@ -200,6 +203,8 @@ void a3_ObjectManager::a3_CreateNewObject(a3byte** newText, BK_Vector2 newPos, b
 	newObject->setCanMoveToThisObject(canMoveToObject);
 
 	newObject->setisTurnSpotObject(isTurnSpot);
+
+	newObject->setConnections(posInArray);
 
 	listOfObjects.push_back(newObject);
 }

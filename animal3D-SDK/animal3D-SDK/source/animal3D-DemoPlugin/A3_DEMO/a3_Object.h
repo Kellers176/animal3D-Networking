@@ -12,6 +12,8 @@ public:
 	a3_Object(a3byte** newText, BK_Vector2 newPos);
 	~a3_Object();
 
+	void setConnections(int objectNodePos);
+
 	void a3_RenderObject(a3_TextRenderer* newRenderer);
 
 	void a3_UpdateKinematics(float deltaTime);
@@ -44,6 +46,8 @@ private:
 	bool isStaticObject = true;
 	bool canMoveToThisObject = false;
 	bool isTurnSpot = false;
+
+	std::vector<int> connectionPos;
 };
 
 

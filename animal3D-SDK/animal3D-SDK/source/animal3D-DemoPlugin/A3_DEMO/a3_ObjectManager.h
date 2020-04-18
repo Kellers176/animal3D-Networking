@@ -16,7 +16,7 @@ public:
 	void a3_UpdateAllObjects(float deltaTime);
 	void a3_RenderAllObjects(a3_TextRenderer* newRenderer);
 
-	void a3_CreateNewObject(a3byte** newText, BK_Vector2 newPos, bool isStatic, bool canMoveToObject, bool isTurnSpot);
+	void a3_CreateNewObject(a3byte** newText, BK_Vector2 newPos,int posInArray, bool isStatic, bool canMoveToObject, bool isTurnSpot);
 	void a3_CreateNewObjectWithID(int newID);
 
 	a3_Object* a3_GetObjectInPos(int objPos);

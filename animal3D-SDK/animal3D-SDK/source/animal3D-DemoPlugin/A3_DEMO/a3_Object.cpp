@@ -24,6 +24,28 @@ a3_Object::~a3_Object()
 
 }
 
+void a3_Object::setConnections(int objectNodePos)
+{
+	if ((objectNodePos - 1) >= 0)
+	{
+		connectionPos.push_back((objectNodePos - 1));
+	}
+	if ((objectNodePos - 20) >= 0)
+	{
+		connectionPos.push_back((objectNodePos - 20));
+	}
+	if ((objectNodePos + 20) <= 460)
+	{
+		connectionPos.push_back((objectNodePos + 20));
+
+	}
+	if ((objectNodePos + 1) <= 460)
+	{
+		connectionPos.push_back((objectNodePos + 1));
+	}
+}
+
+
 void a3_Object::a3_RenderObject(a3_TextRenderer* newRenderer)
 {
 	//-1,-1,-1 is bottom left corner
