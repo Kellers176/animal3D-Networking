@@ -40,7 +40,7 @@ void a3_ObjectManager::CreateLevel(std::string fileName)
 		int yPos = 1;
 
 		// replace 300 with the actual size of the grid
-		while(input != '+')
+		while(input != '$')
 		{
 			fin.get(input);
 
@@ -78,29 +78,43 @@ void a3_ObjectManager::CreateLevel(std::string fileName)
 				a3byte* objectShape[1];
 				objectShape[0] = "#";
 
-				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), true, false);
+				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), true, false,false);
 			}
 			else if (input == '.')
 			{
 				a3byte* objectShape[1];
-				objectShape[0] = " ";
+				objectShape[0] = ".";
 
 
-				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), true, true);
+				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), true, true,false);
 			}
 			else if (input == ' ')
 			{
 				a3byte* objectShape[1];
 				objectShape[0] = " ";
 
-				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), true, false);
+				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), true, false,false);
 			}
 			else if (input == 'O')
 			{
 				a3byte* objectShape[1];
 				objectShape[0] = "O";
 
-				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), true, true);
+				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), true, true,false);
+			}
+			else if (input == '+')
+			{
+				a3byte* objectShape[1];
+				objectShape[0] = ".";
+
+				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), true, true,true);
+			}
+			else if (input == '-')
+			{
+				a3byte* objectShape[1];
+				objectShape[0] = "-";
+
+				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), true, false, false);
 			}
 			else if(input =='\n')
 			{
@@ -177,13 +191,15 @@ void a3_ObjectManager::a3_RenderAllObjects(a3_TextRenderer* newRenderer)
 	}
 }
 
-void a3_ObjectManager::a3_CreateNewObject(a3byte** newText, BK_Vector2 newPos, bool isStatic, bool canMoveToObject)
+void a3_ObjectManager::a3_CreateNewObject(a3byte** newText, BK_Vector2 newPos, bool isStatic, bool canMoveToObject, bool isTurnSpot)
 {
 	a3_Object* newObject = new a3_Object(newText, newPos);
 
 	newObject->setIsStaticObject(isStatic);
 
 	newObject->setCanMoveToThisObject(canMoveToObject);
+
+	newObject->setisTurnSpotObject(isTurnSpot);
 
 	listOfObjects.push_back(newObject);
 }

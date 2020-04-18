@@ -29,7 +29,10 @@ public:
 	bool getIsStaticObject() { return isStaticObject; }
 
 	void setCanMoveToThisObject(bool newBool) { canMoveToThisObject = newBool; }
-	bool getCanMoveToThisObject() { return canMoveToThisObject; }
+	bool getCanMoveToThisObject() { return canMoveToThisObject; }	
+	
+	void setisTurnSpotObject(bool newBool) { isTurnSpot = newBool; }
+	bool getisTurnSpotObject() { return isTurnSpot; }
 
 private:
 	const a3byte* objectShape[1];
@@ -40,6 +43,7 @@ private:
 
 	bool isStaticObject = true;
 	bool canMoveToThisObject = false;
+	bool isTurnSpot = false;
 };
 
 
