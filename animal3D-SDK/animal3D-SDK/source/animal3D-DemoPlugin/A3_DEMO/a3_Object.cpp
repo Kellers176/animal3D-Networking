@@ -16,6 +16,10 @@ a3_Object::a3_Object(a3byte** newText, BK_Vector2 newPos)
 
 	objectID = -1;
 
+	movement = left;
+
+	//currentNode = -1;
+
 }
 
 a3_Object::~a3_Object()
@@ -26,23 +30,29 @@ a3_Object::~a3_Object()
 
 void a3_Object::setConnections(int objectNodePos)
 {
+	// left
 	if ((objectNodePos - 1) >= 0)
 	{
 		connectionPos.push_back((objectNodePos - 1));
 	}
-	if ((objectNodePos - 20) >= 0)
-	{
-		connectionPos.push_back((objectNodePos - 20));
-	}
+	// down
 	if ((objectNodePos + 20) <= 460)
 	{
 		connectionPos.push_back((objectNodePos + 20));
 
 	}
+	//right
 	if ((objectNodePos + 1) <= 460)
 	{
 		connectionPos.push_back((objectNodePos + 1));
 	}
+	// up
+	if ((objectNodePos - 20) >= 0)
+	{
+		connectionPos.push_back((objectNodePos - 20));
+	}
+	// stop
+	connectionPos.push_back(objectNodePos);
 }
 
 
@@ -54,13 +64,46 @@ void a3_Object::a3_RenderObject(a3_TextRenderer* newRenderer)
 }
 
 
-void a3_Object::a3_UpdateKinematics(float deltaTime)
+void a3_Object::a3_UpdateKinematics(float deltaTime, BK_Vector2 nodePos)
 {
-	// update teh position;
+	float movementSpeedX = 0.04f;
+	float movementSpeedY = 0.08f;
+
+	BK_Vector2 playerMove;
+	
+	switch (movement)
+	{
+	case left:
+		playerMove = BK_Vector2(-movementSpeedX, 0);
+		break;
+
+	case down:
+		playerMove = BK_Vector2(0, -movementSpeedY);
+		break;
+
+	case right:
+		playerMove = BK_Vector2(movementSpeedX, 0);
+		break;
+	case up:
+		playerMove = BK_Vector2(0, movementSpeedY);
+		break;
+	case stop:
+		playerMove = BK_Vector2(0, 0);
+		break;
+	default:
+		playerMove = BK_Vector2(0, 0);
+		break;
+	}
+	
+	objectKinematic.velocity.xVal = playerMove.xVal;
+	objectKinematic.velocity.yVal = playerMove.yVal;
+
+	// need to get delta time working
 	if (!isStaticObject)
 	{
 		objectKinematic.position = objectKinematic.position + objectKinematic.velocity * deltaTime;
-
+	
 		objectKinematic.rotation = objectKinematic.rotation + objectKinematic.angularVelocity * deltaTime;
 	}
+	
 }

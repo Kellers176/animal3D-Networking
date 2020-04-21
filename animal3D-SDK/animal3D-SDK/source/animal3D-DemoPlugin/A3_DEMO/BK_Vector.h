@@ -24,7 +24,17 @@ struct BK_Vector2
 		yVal = newYVal;
 	}
 
-	float magnitude() { return (float)sqrt( (double)xVal * (double)xVal + (double) yVal * (double)yVal); }
+	float magnitude() 
+	{ 
+		float mag;
+
+		float xSquare = xVal * xVal;
+		float ySquare = yVal * yVal;
+
+		mag = sqrtf(xSquare + ySquare);
+
+		return mag;
+	}
 
 	float Dot(BK_Vector2 other)
 	{
@@ -41,10 +51,16 @@ struct BK_Vector2
 	BK_Vector2 normalized()
 	{
 		BK_Vector2 normalVersion = BK_Vector2();
-		float newMag = magnitude();
 
-		normalVersion.xVal = xVal / newMag;
-		normalVersion.yVal = yVal / newMag;
+		float mag;
+
+		float xSquare = xVal * xVal;
+		float ySquare = yVal * yVal;
+
+		mag = sqrtf(xSquare + ySquare);
+
+		normalVersion.xVal = xVal / mag;
+		normalVersion.yVal = yVal / mag;
 
 		return normalVersion;
 	}

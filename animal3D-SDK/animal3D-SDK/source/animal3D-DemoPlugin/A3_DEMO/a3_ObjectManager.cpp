@@ -126,15 +126,8 @@ void a3_ObjectManager::CreateLevel(std::string fileName)
 
 			i++;
 			xPos++;
-
+			
 			/*
-			else if (input == '@')
-			{
-				a3byte objectShape[1];
-				objectShape[0] = '@';
-
-				a3_CreateNewObject(objectShape, BK_Vector2((float)xPos, (float)yPos),false,false);
-			}
 			else if (input == 'B')
 			{
 				a3byte objectShape[1];
@@ -172,13 +165,95 @@ void a3_ObjectManager::CreateLevel(std::string fileName)
 
 	fin.clear();
 	fin.close();
+
+	// we have loaded the map and now we will spawn pacman
+	a3byte* pacmanShape[1];
+	pacmanShape[0] = "@";
+
+	BK_Vector2 pacmanPos = BK_Vector2(listOfObjects[348]->getPosition().xVal, listOfObjects[348]->getPosition().yVal);
+
+	a3_CreateNewDynamicObject(pacmanShape, pacmanPos, 348);
 }
 
 void a3_ObjectManager::a3_UpdateAllObjects(float deltaTime)
 {
-	for (int i = 0; i < listOfObjects.size(); i++)
+	for (int i = 0; i < listOfDynamicObjects.size(); i++)
 	{
-		listOfObjects[i]->a3_UpdateKinematics(deltaTime);
+		
+		BK_Vector2 diff = listOfDynamicObjects[i]->getPosition() - listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->getPosition();
+		if (diff.magnitude() <= 0.01f)
+		{
+			std::cout << "\nwe reached our goal baby\n";
+			bool isSameDirection = (playerInputDirection == listOfDynamicObjects[i]->getDirection());
+
+			// change in direction
+			if (listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->getisTurnSpotObject())
+			{	
+				if (!isSameDirection)
+				{
+					int playerDirection = listOfDynamicObjects[i]->getDirection();
+					int oldCurrentNode = listOfDynamicObjects[i]->getCurrentNode();
+					int newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(playerInputDirection);
+
+					if (listOfObjects[newCurrentNode]->getCanMoveToThisObject())
+					{
+						listOfDynamicObjects[i]->setDirection(playerInputDirection);
+						listOfDynamicObjects[i]->setCurrentNode(newCurrentNode);
+					}
+					else
+					{
+						playerInputDirection = listOfDynamicObjects[i]->getDirection();
+						newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(playerInputDirection);
+						listOfDynamicObjects[i]->setCurrentNode(newCurrentNode);
+
+					}
+				}
+				else
+				{
+					int playerDirection = listOfDynamicObjects[i]->getDirection();
+					int oldCurrentNode = listOfDynamicObjects[i]->getCurrentNode();
+					int newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(playerDirection);
+
+					if (listOfObjects[newCurrentNode]->getCanMoveToThisObject())
+					{
+						std::cout << "\nwe are going to next node\n";
+
+						listOfDynamicObjects[i]->setCurrentNode(newCurrentNode);
+					}
+					else
+					{
+						std::cout << "\nwe are stopping\n";
+
+						listOfDynamicObjects[i]->setDirection(Direction::stop);
+						listOfDynamicObjects[i]->setCurrentNode(oldCurrentNode);
+					}
+				}
+
+			}
+			else
+			{
+				int playerDirection = listOfDynamicObjects[i]->getDirection();
+				int oldCurrentNode = listOfDynamicObjects[i]->getCurrentNode();
+				int newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(playerDirection);
+
+				if (listOfObjects[newCurrentNode]->getCanMoveToThisObject())
+				{
+					std::cout << "\nwe are going to next node\n";
+
+					listOfDynamicObjects[i]->setCurrentNode(newCurrentNode);
+				}
+				else
+				{
+					std::cout << "\nwe are stopping\n";
+
+					listOfDynamicObjects[i]->setDirection(Direction::stop);
+					newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(playerDirection);
+					listOfDynamicObjects[i]->setCurrentNode(newCurrentNode);
+				}
+			}
+		}
+		
+		listOfDynamicObjects[i]->a3_UpdateKinematics(deltaTime, listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->getPosition());
 	}
 
 }
@@ -190,6 +265,20 @@ void a3_ObjectManager::a3_RenderAllObjects(a3_TextRenderer* newRenderer)
 		for (int i = 0; i < listOfObjects.size(); i++)
 		{
 			listOfObjects[i]->a3_RenderObject(newRenderer);
+		}
+	}
+	if (listOfDynamicObjects.size() > 0)
+	{
+		for (int i = 0; i < listOfDynamicObjects.size(); i++)
+		{
+			listOfDynamicObjects[i]->a3_RenderObject(newRenderer);
+		}
+	}
+	if (listOfGhostObjects.size() > 0)
+	{
+		for (int i = 0; i < listOfGhostObjects.size(); i++)
+		{
+			listOfGhostObjects[i]->a3_RenderObject(newRenderer);
 		}
 	}
 }
@@ -208,6 +297,17 @@ void a3_ObjectManager::a3_CreateNewObject(a3byte** newText, BK_Vector2 newPos, i
 
 	listOfObjects.push_back(newObject);
 }
+
+void a3_ObjectManager::a3_CreateNewDynamicObject(a3byte** newText, BK_Vector2 newPos,int currentNode)
+{
+	a3_Object* newObject = new a3_Object(newText, newPos);
+
+	newObject->setIsStaticObject(false);
+	newObject->setCurrentNode(currentNode);
+
+	listOfDynamicObjects.push_back(newObject);
+}
+
 
 void a3_ObjectManager::a3_CreateNewObjectWithID(int newID)
 {

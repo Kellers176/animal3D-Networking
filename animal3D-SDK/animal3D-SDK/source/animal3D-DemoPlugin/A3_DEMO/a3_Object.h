@@ -6,6 +6,15 @@
 #include "animal3D-A3DG/a3graphics/a3_TextRenderer.h"
 #include "a3_ObjectKinematic.h"
 
+enum Direction
+{
+	left = 0,
+	down = 1, 
+	right = 2,
+	up = 3,
+	stop = 4
+};
+
 class a3_Object
 {
 public:
@@ -13,10 +22,11 @@ public:
 	~a3_Object();
 
 	void setConnections(int objectNodePos);
+	int getConnections(int connectionDirection) { return connectionPos[connectionDirection]; }
 
 	void a3_RenderObject(a3_TextRenderer* newRenderer);
 
-	void a3_UpdateKinematics(float deltaTime);
+	void a3_UpdateKinematics(float deltaTime, BK_Vector2 nodePos);
 
 	void setObjectPos(float newX, float newY) { objectKinematic.position = BK_Vector2(newX, newY); }
 	void setObjectVelocity(float newVelX, float newVelY) { objectKinematic.velocity = BK_Vector2(newVelX, newVelY); }
@@ -36,6 +46,12 @@ public:
 	void setisTurnSpotObject(bool newBool) { isTurnSpot = newBool; }
 	bool getisTurnSpotObject() { return isTurnSpot; }
 
+	void setCurrentNode(int newNode) { currentNode = newNode; }
+	int getCurrentNode() { return currentNode; }
+
+	void setDirection(Direction newDirection) { movement = newDirection; }
+	Direction getDirection() { return movement; }
+
 private:
 	const a3byte* objectShape[1];
 
@@ -48,6 +64,9 @@ private:
 	bool isTurnSpot = false;
 
 	std::vector<int> connectionPos;
+
+	Direction movement;
+	int currentNode;
 };
 
 

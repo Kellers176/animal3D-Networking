@@ -124,7 +124,8 @@ void a3demoTestUpdate(a3_DemoState* demoState)
 	//a3netProcessInbound(gameManager.net, gameManager.objectManager[0]);
 	a3netNetworkingLoop(gameManager.net, gameManager.objectManager, (float)(demoState->networkingTimer->currentTick - demoState->networkingTimer->previousTick));
 
-	float deltaTimeBaby = (float)(demoState->networkingTimer->currentTick - demoState->networkingTimer->previousTick);
+	float deltaTimeBaby;// = (float)(demoState->networkingTimer->currentTick - demoState->networkingTimer->previousTick);
+	deltaTimeBaby = std::abs( float(demoState->renderTimer->currentTick - demoState->renderTimer->previousTick));
 	gameManager.objectManager.a3_UpdateAllObjects(deltaTimeBaby);
 }
 
@@ -574,6 +575,7 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey
 	{
 		demoState->enterPressed = true;
 	}
+	std::string pacManMapFileName;
 
 	// handle special cases immediately
 	switch (asciiKey)
@@ -600,11 +602,26 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey
 		a3demo_startNetworking(demoState, 0);
 		break;
 	case '3':
-		std::string pacManMapFileName = "C:/Users/cambe/Desktop/BH_Networking/animal3D-SDK/animal3D-SDK/source/animal3D-DemoPlugin/A3_DEMO/PacManMap.txt";
+		pacManMapFileName = "C:/Users/cambe/Desktop/BH_Networking/animal3D-SDK/animal3D-SDK/source/animal3D-DemoPlugin/A3_DEMO/PacManMap.txt";
 		std::cout << pacManMapFileName << std::endl;
 		gameManager.objectManager.CreateLevel(pacManMapFileName);
 		break;
-
+	case 'W':
+	case 'w':
+		gameManager.objectManager.a3_SetPlayerDirection(Direction::up);
+		break;
+	case 'A':
+	case 'a':
+		gameManager.objectManager.a3_SetPlayerDirection(Direction::left);
+		break;
+	case 'S':
+	case 's':
+		gameManager.objectManager.a3_SetPlayerDirection(Direction::down);
+		break;
+	case 'D':
+	case 'd':
+		gameManager.objectManager.a3_SetPlayerDirection(Direction::right);
+		break;
 		// reload (T) or toggle (t) text
 //	case 'T':
 //		if (!a3textIsInitialized(demoState->text))
