@@ -602,7 +602,7 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey
 		a3demo_startNetworking(demoState, 0);
 		break;
 	case '3':
-		pacManMapFileName = "C:/Users/cambe/Desktop/BH_Networking/animal3D-SDK/animal3D-SDK/source/animal3D-DemoPlugin/A3_DEMO/PacManMap.txt";
+		pacManMapFileName = "../../../../resource/PacManMap.txt";
 		std::cout << pacManMapFileName << std::endl;
 		gameManager.objectManager.CreateLevel(pacManMapFileName);
 		break;
