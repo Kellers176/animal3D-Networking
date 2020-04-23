@@ -52,6 +52,13 @@ public:
 	void setDirection(Direction newDirection) { movement = newDirection; }
 	Direction getDirection() { return movement; }
 
+	void setHasStartMoving(bool newBool) { hasStartedMoving = newBool; }
+	bool getHasStartedMoving() { return hasStartedMoving; }
+
+	void setIsEdible(bool newBool) { isEdible = newBool; }
+	bool getIsEdible() { return isEdible; }
+
+	void changeObjectShape(a3byte** newText) { objectShape[0] = newText[0];}
 private:
 	const a3byte* objectShape[1];
 
@@ -67,6 +74,10 @@ private:
 
 	Direction movement;
 	int currentNode;
+
+	bool hasStartedMoving = false;
+
+	bool isEdible = true;
 };
 
 

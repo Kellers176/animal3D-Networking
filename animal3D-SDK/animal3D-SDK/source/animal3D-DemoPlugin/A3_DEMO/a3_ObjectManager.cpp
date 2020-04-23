@@ -173,62 +173,76 @@ void a3_ObjectManager::CreateLevel(std::string fileName)
 	BK_Vector2 pacmanPos = BK_Vector2(listOfObjects[348]->getPosition().xVal, listOfObjects[348]->getPosition().yVal);
 
 	a3_CreateNewDynamicObject(pacmanShape, pacmanPos, 348);
+
+	// creating ghosts:
+	a3byte* binkyShape[1];
+	binkyShape[0] = "B";
+
+	a3byte* pinkyShape[1];
+	pinkyShape[0] = "P";
+
+	a3byte* inkyShape[1];
+	inkyShape[0] = "I";
+
+	a3byte* clydeShape[1];
+	clydeShape[0] = "C";
+
+	int binkyNode = 188;
+	int pinkyNode = 189;
+	int inkyNode = 208;
+	int clydeNode = 209;
+
+	BK_Vector2 binkyPos = BK_Vector2(listOfObjects[binkyNode]->getPosition().xVal, listOfObjects[binkyNode]->getPosition().yVal);
+	BK_Vector2 pinkyPos = BK_Vector2(listOfObjects[pinkyNode]->getPosition().xVal, listOfObjects[pinkyNode]->getPosition().yVal);
+	BK_Vector2 inkyPos = BK_Vector2(listOfObjects[inkyNode]->getPosition().xVal, listOfObjects[inkyNode]->getPosition().yVal);
+	BK_Vector2 clydePos = BK_Vector2(listOfObjects[clydeNode]->getPosition().xVal, listOfObjects[clydeNode]->getPosition().yVal);
+
+	a3_CreateNewGhostObject(binkyShape, binkyPos, 186);
+	a3_CreateNewGhostObject(pinkyShape, pinkyPos, 188);
+	a3_CreateNewGhostObject(inkyShape, inkyPos, 206);
+	a3_CreateNewGhostObject(clydeShape, clydePos, 208);
 }
 
 void a3_ObjectManager::a3_UpdateAllObjects(float deltaTime)
 {
+	ghostTimer += deltaTime;
+
+	// updating the players' movement
 	for (int i = 0; i < listOfDynamicObjects.size(); i++)
 	{
-		
+		// pacman's movement:
 		BK_Vector2 diff = listOfDynamicObjects[i]->getPosition() - listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->getPosition();
-		if (diff.magnitude() <= 0.01f)
+		if (diff.magnitude() <= 0.001f)
 		{
-			std::cout << "\nwe reached our goal baby\n";
+			if (listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->getIsEdible())
+			{
+				a3byte* blankSpaceShape[1];
+				blankSpaceShape[0] = " ";
+				listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->changeObjectShape(blankSpaceShape);
+			}
+
 			bool isSameDirection = (playerInputDirection == listOfDynamicObjects[i]->getDirection());
 
 			// change in direction
-			if (listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->getisTurnSpotObject())
-			{	
-				if (!isSameDirection)
+
+			if (!isSameDirection)
+			{
+				int playerDirection = listOfDynamicObjects[i]->getDirection();
+				int oldCurrentNode = listOfDynamicObjects[i]->getCurrentNode();
+				int newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(playerInputDirection);
+
+				if (listOfObjects[newCurrentNode]->getCanMoveToThisObject())
 				{
-					int playerDirection = listOfDynamicObjects[i]->getDirection();
-					int oldCurrentNode = listOfDynamicObjects[i]->getCurrentNode();
-					int newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(playerInputDirection);
-
-					if (listOfObjects[newCurrentNode]->getCanMoveToThisObject())
-					{
-						listOfDynamicObjects[i]->setDirection(playerInputDirection);
-						listOfDynamicObjects[i]->setCurrentNode(newCurrentNode);
-					}
-					else
-					{
-						playerInputDirection = listOfDynamicObjects[i]->getDirection();
-						newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(playerInputDirection);
-						listOfDynamicObjects[i]->setCurrentNode(newCurrentNode);
-
-					}
+					listOfDynamicObjects[i]->setDirection(playerInputDirection);
+					listOfDynamicObjects[i]->setCurrentNode(newCurrentNode);
 				}
 				else
 				{
-					int playerDirection = listOfDynamicObjects[i]->getDirection();
-					int oldCurrentNode = listOfDynamicObjects[i]->getCurrentNode();
-					int newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(playerDirection);
+					//playerInputDirection = listOfDynamicObjects[i]->getDirection();
+					newCurrentNode = listOfDynamicObjects[i]->getDirection();
+					listOfDynamicObjects[i]->setCurrentNode(listOfObjects[oldCurrentNode]->getConnections(newCurrentNode));
 
-					if (listOfObjects[newCurrentNode]->getCanMoveToThisObject())
-					{
-						std::cout << "\nwe are going to next node\n";
-
-						listOfDynamicObjects[i]->setCurrentNode(newCurrentNode);
-					}
-					else
-					{
-						std::cout << "\nwe are stopping\n";
-
-						listOfDynamicObjects[i]->setDirection(Direction::stop);
-						listOfDynamicObjects[i]->setCurrentNode(oldCurrentNode);
-					}
 				}
-
 			}
 			else
 			{
@@ -238,23 +252,167 @@ void a3_ObjectManager::a3_UpdateAllObjects(float deltaTime)
 
 				if (listOfObjects[newCurrentNode]->getCanMoveToThisObject())
 				{
-					std::cout << "\nwe are going to next node\n";
+					//std::cout << "\nwe are going to next node\n";
 
 					listOfDynamicObjects[i]->setCurrentNode(newCurrentNode);
 				}
 				else
 				{
-					std::cout << "\nwe are stopping\n";
+					//std::cout << "\nwe are stopping\n";
 
 					listOfDynamicObjects[i]->setDirection(Direction::stop);
-					newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(playerDirection);
-					listOfDynamicObjects[i]->setCurrentNode(newCurrentNode);
+					listOfDynamicObjects[i]->setCurrentNode(oldCurrentNode);
 				}
 			}
+
+
 		}
 		
 		listOfDynamicObjects[i]->a3_UpdateKinematics(deltaTime, listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->getPosition());
 	}
+
+	// updating the ghosts movement
+	for (int i = 0; i < listOfGhostObjects.size(); i++)
+	{
+		if (ghostTimer > 8.0f)
+		{
+			if (!listOfGhostObjects[i]->getHasStartedMoving())
+			{
+				ghostTimer = 0;
+				//std::cout << "\na ghost is spawning\n";
+				int spawnNodePos = 148;
+				BK_Vector2 ghostStart = BK_Vector2(listOfObjects[spawnNodePos]->getPosition().xVal, listOfObjects[spawnNodePos]->getPosition().yVal);
+				listOfGhostObjects[i]->setObjectPos(ghostStart.xVal,ghostStart.yVal);
+				listOfGhostObjects[i]->setHasStartMoving(true);
+				listOfGhostObjects[i]->setDirection(Direction::left);
+				listOfGhostObjects[i]->setCurrentNode(spawnNodePos);
+			}
+		}
+
+		// their movement
+		if (listOfGhostObjects[i]->getHasStartedMoving())
+		{
+			BK_Vector2 diff = listOfGhostObjects[i]->getPosition() - listOfObjects[listOfGhostObjects[i]->getCurrentNode()]->getPosition();
+			if (diff.magnitude() <= 0.001f)
+			{
+				std::cout << "\nwe reached our goal baby\n";
+
+
+				// change in direction
+				if (listOfObjects[listOfGhostObjects[i]->getCurrentNode()]->getisTurnSpotObject())
+				{
+					Direction randomDir;
+
+					bool validLocation = false;
+					int playerDirection = listOfGhostObjects[i]->getDirection();
+					int oldCurrentNode = listOfGhostObjects[i]->getCurrentNode();
+					int newCurrentNode = -1;
+					do 
+					{
+						randomDir = (Direction)(rand() % 4);
+
+						playerDirection = listOfGhostObjects[i]->getDirection();
+						oldCurrentNode = listOfGhostObjects[i]->getCurrentNode();
+						newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(randomDir);
+
+						if (listOfObjects[newCurrentNode]->getCanMoveToThisObject())
+						{
+							switch (listOfGhostObjects[i]->getDirection())
+							{
+							case Direction::left:
+								if (randomDir != Direction::right)
+								{
+									validLocation = true;
+								}
+								break;
+							case Direction::down:
+								if (randomDir != Direction::up)
+								{
+									validLocation = true;
+								}
+								break;
+							case Direction::right:
+								if (randomDir != Direction::left)
+								{
+									validLocation = true;
+								}
+								break;
+							case Direction::up:
+								if (randomDir != Direction::down)
+								{
+									validLocation = true;
+								}
+								break;
+							default:
+								break;
+							}
+						}
+					} while (!validLocation);
+
+					bool isSameDirection = (randomDir == listOfGhostObjects[i]->getDirection());
+
+					if (!isSameDirection)
+					{
+
+						if (listOfObjects[newCurrentNode]->getCanMoveToThisObject())
+						{
+							listOfGhostObjects[i]->setDirection(randomDir);
+							listOfGhostObjects[i]->setCurrentNode(newCurrentNode);
+						}
+						else
+						{
+							playerInputDirection = listOfGhostObjects[i]->getDirection();
+							newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(playerInputDirection);
+							listOfGhostObjects[i]->setCurrentNode(newCurrentNode);
+
+						}
+					}
+					else
+					{
+						if (listOfObjects[newCurrentNode]->getCanMoveToThisObject())
+						{
+							std::cout << "\nwe are going to next node\n";
+
+							listOfGhostObjects[i]->setCurrentNode(newCurrentNode);
+						}
+						else
+						{
+							std::cout << "\nwe are stopping\n";
+
+							listOfGhostObjects[i]->setDirection(Direction::stop);
+							listOfGhostObjects[i]->setCurrentNode(oldCurrentNode);
+						}
+					}
+
+				}
+				else
+				{
+					int playerDirection = listOfGhostObjects[i]->getDirection();
+					int oldCurrentNode = listOfGhostObjects[i]->getCurrentNode();
+					int newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(playerDirection);
+
+					if (listOfObjects[newCurrentNode]->getCanMoveToThisObject())
+					{
+						std::cout << "\nwe are going to next node\n";
+
+						listOfGhostObjects[i]->setCurrentNode(newCurrentNode);
+					}
+					else
+					{
+						std::cout << "\nwe are stopping\n";
+
+						listOfGhostObjects[i]->setDirection(Direction::stop);
+						newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(playerDirection);
+						listOfGhostObjects[i]->setCurrentNode(newCurrentNode);
+					}
+				}
+			}
+			listOfGhostObjects[i]->a3_UpdateKinematics(deltaTime, listOfObjects[listOfGhostObjects[i]->getCurrentNode()]->getPosition());
+		}
+	}
+
+
+
 
 }
 
@@ -306,6 +464,17 @@ void a3_ObjectManager::a3_CreateNewDynamicObject(a3byte** newText, BK_Vector2 ne
 	newObject->setCurrentNode(currentNode);
 
 	listOfDynamicObjects.push_back(newObject);
+}
+
+void a3_ObjectManager::a3_CreateNewGhostObject(a3byte** newText, BK_Vector2 newPos, int currentNode)
+{
+	a3_Object* newObject = new a3_Object(newText, newPos);
+
+	newObject->setIsStaticObject(false);
+	newObject->setCurrentNode(currentNode);
+	newObject->setIsEdible(false);
+
+	listOfGhostObjects.push_back(newObject);
 }
 
 

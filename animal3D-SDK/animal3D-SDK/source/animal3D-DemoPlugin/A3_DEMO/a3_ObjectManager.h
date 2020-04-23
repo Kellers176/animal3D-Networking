@@ -17,7 +17,10 @@ public:
 	void a3_RenderAllObjects(a3_TextRenderer* newRenderer);
 
 	void a3_CreateNewObject(a3byte** newText, BK_Vector2 newPos,int posInArray, bool isStatic, bool canMoveToObject, bool isTurnSpot);
+
 	void a3_CreateNewDynamicObject(a3byte** newText, BK_Vector2 newPos,int currentNode);
+	void a3_CreateNewGhostObject(a3byte** newText, BK_Vector2 newPos, int currentNode);
+
 	void a3_CreateNewObjectWithID(int newID);
 
 	a3_Object* a3_GetObjectInPos(int objPos);
@@ -38,6 +41,8 @@ private:
 	std::vector<a3_Object*> listOfObjects;
 	std::vector<a3_Object*> listOfDynamicObjects; // actually player but i dont want to rename
 	std::vector<a3_Object*> listOfGhostObjects;
+
+	float ghostTimer = 0;
 };
 
 #endif
