@@ -3,7 +3,62 @@
 #include "a3_ObjectManager.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <string>
 using namespace std;
+
+void a3_ObjectManager::ResetAllObjects()
+{
+	lives--;
+
+	edibleTimer = 0;
+	ghostTimer = 0;
+	int pacmanNode = 348;
+	BK_Vector2 pacmanPos = BK_Vector2(listOfObjects[pacmanNode]->getPosition().xVal, listOfObjects[pacmanNode]->getPosition().yVal);
+
+	int binkyNode = 188;
+	int pinkyNode = 189;
+	int inkyNode = 208;
+	int clydeNode = 209;
+
+	BK_Vector2 binkyPos = BK_Vector2(listOfObjects[binkyNode]->getPosition().xVal, listOfObjects[binkyNode]->getPosition().yVal);
+	BK_Vector2 pinkyPos = BK_Vector2(listOfObjects[pinkyNode]->getPosition().xVal, listOfObjects[pinkyNode]->getPosition().yVal);
+	BK_Vector2 inkyPos = BK_Vector2(listOfObjects[inkyNode]->getPosition().xVal, listOfObjects[inkyNode]->getPosition().yVal);
+	BK_Vector2 clydePos = BK_Vector2(listOfObjects[clydeNode]->getPosition().xVal, listOfObjects[clydeNode]->getPosition().yVal);
+
+	for (int i = 0; i < listOfDynamicObjects.size(); i++)
+	{
+		listOfDynamicObjects[i]->setObjectPos(pacmanPos.xVal,pacmanPos.yVal);
+		listOfDynamicObjects[i]->setIsStaticObject(false);
+		listOfDynamicObjects[i]->setCurrentNode(pacmanNode);
+	}
+
+	listOfGhostObjects[0]->setObjectPos(binkyPos.xVal, binkyPos.yVal);
+	listOfGhostObjects[0]->setHasStartMoving(false);
+	listOfGhostObjects[0]->setIsStaticObject(false);
+	listOfGhostObjects[0]->setCurrentNode(binkyNode);
+	listOfGhostObjects[0]->setIsEdible(false);
+
+	listOfGhostObjects[1]->setObjectPos(pinkyPos.xVal, pinkyPos.yVal);
+	listOfGhostObjects[1]->setHasStartMoving(false);
+	listOfGhostObjects[1]->setIsStaticObject(false);
+	listOfGhostObjects[1]->setCurrentNode(pinkyNode);
+	listOfGhostObjects[1]->setIsEdible(false);
+
+	listOfGhostObjects[2]->setObjectPos(inkyPos.xVal, inkyPos.yVal);
+	listOfGhostObjects[2]->setHasStartMoving(false);
+	listOfGhostObjects[2]->setIsStaticObject(false);
+	listOfGhostObjects[2]->setCurrentNode(inkyNode);
+	listOfGhostObjects[2]->setIsEdible(false);
+
+	listOfGhostObjects[3]->setObjectPos(clydePos.xVal, clydePos.yVal);
+	listOfGhostObjects[3]->setHasStartMoving(false);
+	listOfGhostObjects[3]->setIsStaticObject(false);
+	listOfGhostObjects[3]->setCurrentNode(clydeNode);
+	listOfGhostObjects[3]->setIsEdible(false);
+
+	// subtract life here...
+}
 
 void a3_ObjectManager::CreateLevel(std::string fileName)
 {
@@ -79,7 +134,7 @@ void a3_ObjectManager::CreateLevel(std::string fileName)
 				a3byte* objectShape[1];
 				objectShape[0] = "#";
 
-				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), i, true, false, false);
+				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), i, true, false, false,false);
 			}
 			else if (input == '.')
 			{
@@ -87,35 +142,35 @@ void a3_ObjectManager::CreateLevel(std::string fileName)
 				objectShape[0] = ".";
 
 
-				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), i, true, true, false);
+				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), i, true, true, false,false);
 			}
 			else if (input == ' ')
 			{
 				a3byte* objectShape[1];
 				objectShape[0] = " ";
 
-				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), i, true, false, false);
+				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), i, true, false, false,false);
 			}
 			else if (input == 'O')
 			{
 				a3byte* objectShape[1];
 				objectShape[0] = "O";
 
-				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), i, true, true, false);
+				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), i, true, true, false,true);
 			}
 			else if (input == '+')
 			{
 				a3byte* objectShape[1];
 				objectShape[0] = ".";
 
-				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), i, true, true, true);
+				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), i, true, true, true,false);
 			}
 			else if (input == '-')
 			{
 				a3byte* objectShape[1];
 				objectShape[0] = "-";
 
-				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), i, true, false, false);
+				a3_CreateNewObject(objectShape, BK_Vector2(realPosX, realPosY), i, true, false, false,false);
 			}
 			else if(input =='\n')
 			{
@@ -126,38 +181,6 @@ void a3_ObjectManager::CreateLevel(std::string fileName)
 
 			i++;
 			xPos++;
-			
-			/*
-			else if (input == 'B')
-			{
-				a3byte objectShape[1];
-				objectShape[0] = 'B';
-
-				a3_CreateNewObject(objectShape, BK_Vector2((float)xPos, (float)yPos));
-			}
-			else if (input == 'I')
-			{
-				a3byte objectShape[1];
-				objectShape[0] = 'I';
-
-				a3_CreateNewObject(objectShape, BK_Vector2((float)xPos, (float)yPos));
-			}
-			else if (input == 'P')
-			{
-				a3byte objectShape[1];
-				objectShape[0] = 'P';
-
-				a3_CreateNewObject(objectShape, BK_Vector2((float)xPos, (float)yPos));
-			}
-			else if (input == 'C')
-			{
-				a3byte objectShape[1];
-				objectShape[0] = 'C';
-
-				a3_CreateNewObject(objectShape, BK_Vector2((float)xPos, (float)yPos));
-			}
-			*/
-
 			
 		}
 
@@ -206,6 +229,16 @@ void a3_ObjectManager::CreateLevel(std::string fileName)
 void a3_ObjectManager::a3_UpdateAllObjects(float deltaTime)
 {
 	ghostTimer += deltaTime;
+	edibleTimer += deltaTime;
+
+	if (edibleTimer >= 12)
+	{
+		edibleTimer = 0;
+		for (int k = 0; k < listOfGhostObjects.size(); k++)
+		{
+			listOfGhostObjects[k]->setIsEdible(false);
+		}
+	}
 
 	// updating the players' movement
 	for (int i = 0; i < listOfDynamicObjects.size(); i++)
@@ -216,9 +249,26 @@ void a3_ObjectManager::a3_UpdateAllObjects(float deltaTime)
 		{
 			if (listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->getIsEdible())
 			{
+				if (listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->getIsPowerPip())
+				{
+					score += 500;
+					// make all ghosts edible for X sec
+					edibleTimer = 0;
+
+					for (int k = 0; k < listOfGhostObjects.size(); k++)
+					{
+						listOfGhostObjects[k]->setIsEdible(true);
+					}
+				}
+				else
+				{
+					score += 100;
+				}
+
 				a3byte* blankSpaceShape[1];
 				blankSpaceShape[0] = " ";
 				listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->changeObjectShape(blankSpaceShape);
+				listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->setIsEdible(false);
 			}
 
 			bool isSameDirection = (playerInputDirection == listOfDynamicObjects[i]->getDirection());
@@ -267,13 +317,44 @@ void a3_ObjectManager::a3_UpdateAllObjects(float deltaTime)
 
 
 		}
-		
+
 		listOfDynamicObjects[i]->a3_UpdateKinematics(deltaTime, listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->getPosition());
+
+		// collisions to the ghosts
+		for (int j = 0; j < listOfGhostObjects.size(); j++)
+		{
+			if (listOfGhostObjects[j]->getHasStartedMoving())
+			{
+				BK_Vector2 ghostDiff = listOfDynamicObjects[i]->getPosition() - listOfGhostObjects[j]->getPosition();
+
+				if (ghostDiff.magnitude() <= 0.01f)
+				{
+					if (listOfGhostObjects[j]->getIsEdible())
+					{
+						// respawn the ghost and make it none edible... and make it not started moving
+						int binkyNode = 188;
+						BK_Vector2 binkyPos = BK_Vector2(listOfObjects[binkyNode]->getPosition().xVal, listOfObjects[binkyNode]->getPosition().yVal);
+
+						ghostTimer = 0;
+						listOfGhostObjects[j]->setObjectPos(binkyPos.xVal, binkyPos.yVal);
+						listOfGhostObjects[j]->setHasStartMoving(false);
+						listOfGhostObjects[j]->setIsEdible(false);
+					}
+					else
+					{
+						ResetAllObjects();
+					}
+				}
+			}
+		}
+
+
 	}
 
 	// updating the ghosts movement
 	for (int i = 0; i < listOfGhostObjects.size(); i++)
 	{
+		// check the spawn of the ghosts
 		if (ghostTimer > 8.0f)
 		{
 			if (!listOfGhostObjects[i]->getHasStartedMoving())
@@ -371,13 +452,13 @@ void a3_ObjectManager::a3_UpdateAllObjects(float deltaTime)
 					{
 						if (listOfObjects[newCurrentNode]->getCanMoveToThisObject())
 						{
-							std::cout << "\nwe are going to next node\n";
+							//std::cout << "\nwe are going to next node\n";
 
 							listOfGhostObjects[i]->setCurrentNode(newCurrentNode);
 						}
 						else
 						{
-							std::cout << "\nwe are stopping\n";
+							//std::cout << "\nwe are stopping\n";
 
 							listOfGhostObjects[i]->setDirection(Direction::stop);
 							listOfGhostObjects[i]->setCurrentNode(oldCurrentNode);
@@ -393,13 +474,13 @@ void a3_ObjectManager::a3_UpdateAllObjects(float deltaTime)
 
 					if (listOfObjects[newCurrentNode]->getCanMoveToThisObject())
 					{
-						std::cout << "\nwe are going to next node\n";
+						//std::cout << "\nwe are going to next node\n";
 
 						listOfGhostObjects[i]->setCurrentNode(newCurrentNode);
 					}
 					else
 					{
-						std::cout << "\nwe are stopping\n";
+						//std::cout << "\nwe are stopping\n";
 
 						listOfGhostObjects[i]->setDirection(Direction::stop);
 						newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(playerDirection);
@@ -439,9 +520,56 @@ void a3_ObjectManager::a3_RenderAllObjects(a3_TextRenderer* newRenderer)
 			listOfGhostObjects[i]->a3_RenderObject(newRenderer);
 		}
 	}
+
+	// show teh score
+
+	float frameWidth = 960;
+	float frameHeight = 540;
+
+	BK_Vector2 scorePos = BK_Vector2(0, 0.1f);
+
+	stringstream intToString;
+	std::string scoreString;
+	intToString <<"Score: "<< score;
+	intToString >> scoreString;
+
+	a3byte* scoreShape[128][1];
+	
+
+	for (int i = 0; i < scoreString.size(); i++)
+	{
+		scorePos.xVal += 0.03f;
+		a3i8* charVal = new a3i8();
+		*charVal = scoreString[i];
+		scoreShape[i][0] = charVal;
+
+		a3textDraw(newRenderer, scorePos.xVal, scorePos.yVal, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, scoreShape[i][0]);
+	}
+
+	// show lives
+
+
+	BK_Vector2 livesPos = BK_Vector2(0, 0);
+
+	stringstream livesToString;
+	std::string livesString;
+	livesToString <<"Lives: "<< lives;
+	livesToString >> livesString;
+
+	a3byte* livesShape[128][1];
+	for (int i = 0; i < livesString.size(); i++)
+	{
+		livesPos.xVal += 0.03f;
+		a3i8* charVal = new a3i8();
+		*charVal = livesString[i];
+		livesShape[i][0] = charVal;
+
+		a3textDraw(newRenderer, livesPos.xVal, livesPos.yVal, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, livesShape[i][0]);
+	}
+	
 }
 
-void a3_ObjectManager::a3_CreateNewObject(a3byte** newText, BK_Vector2 newPos, int posInArray,bool isStatic, bool canMoveToObject, bool isTurnSpot)
+void a3_ObjectManager::a3_CreateNewObject(a3byte** newText, BK_Vector2 newPos, int posInArray,bool isStatic, bool canMoveToObject, bool isTurnSpot, bool isPower)
 {
 	a3_Object* newObject = new a3_Object(newText, newPos);
 
@@ -452,6 +580,7 @@ void a3_ObjectManager::a3_CreateNewObject(a3byte** newText, BK_Vector2 newPos, i
 	newObject->setisTurnSpotObject(isTurnSpot);
 
 	newObject->setConnections(posInArray);
+	newObject->setIsPowerPip(isPower);
 
 	listOfObjects.push_back(newObject);
 }
@@ -481,15 +610,17 @@ void a3_ObjectManager::a3_CreateNewGhostObject(a3byte** newText, BK_Vector2 newP
 void a3_ObjectManager::a3_CreateNewObjectWithID(int newID)
 {
 	a3byte* objectShape[1];
-	objectShape[0] = "T";
+	objectShape[0] = "@";
 
-	a3_Object* newObject = new a3_Object(objectShape, BK_Vector2(0,0));
+	BK_Vector2 pacmanPos = BK_Vector2(listOfObjects[348]->getPosition().xVal, listOfObjects[348]->getPosition().yVal);
 
-	newObject->setObjectPos(0, 0);
+	a3_Object* newObject = new a3_Object(objectShape, pacmanPos);
+
+	newObject->setObjectPos(pacmanPos.xVal, pacmanPos.yVal);
 	
 	newObject->setObjectID(newID);
 
-	listOfObjects.push_back(newObject);
+	listOfDynamicObjects.push_back(newObject);
 }
 
 a3_Object* a3_ObjectManager::a3_GetObjectInPos(int objPos)

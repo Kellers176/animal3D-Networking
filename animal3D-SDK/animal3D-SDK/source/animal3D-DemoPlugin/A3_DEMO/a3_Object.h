@@ -5,6 +5,7 @@
 
 #include "animal3D-A3DG/a3graphics/a3_TextRenderer.h"
 #include "a3_ObjectKinematic.h"
+#include <string>
 
 enum Direction
 {
@@ -58,7 +59,11 @@ public:
 	void setIsEdible(bool newBool) { isEdible = newBool; }
 	bool getIsEdible() { return isEdible; }
 
+	void setIsPowerPip(bool newBool) { isPowerPip = newBool; }
+	bool getIsPowerPip() { return isPowerPip; }
+
 	void changeObjectShape(a3byte** newText) { objectShape[0] = newText[0];}
+	std::string getObjectShape() { return objectShape[0]; }
 private:
 	const a3byte* objectShape[1];
 
@@ -78,6 +83,7 @@ private:
 	bool hasStartedMoving = false;
 
 	bool isEdible = true;
+	bool isPowerPip = false;
 };
 
 

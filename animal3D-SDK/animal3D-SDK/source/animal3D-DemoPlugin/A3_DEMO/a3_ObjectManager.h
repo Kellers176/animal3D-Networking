@@ -16,7 +16,7 @@ public:
 	void a3_UpdateAllObjects(float deltaTime);
 	void a3_RenderAllObjects(a3_TextRenderer* newRenderer);
 
-	void a3_CreateNewObject(a3byte** newText, BK_Vector2 newPos,int posInArray, bool isStatic, bool canMoveToObject, bool isTurnSpot);
+	void a3_CreateNewObject(a3byte** newText, BK_Vector2 newPos,int posInArray, bool isStatic, bool canMoveToObject, bool isTurnSpot, bool isPower);
 
 	void a3_CreateNewDynamicObject(a3byte** newText, BK_Vector2 newPos,int currentNode);
 	void a3_CreateNewGhostObject(a3byte** newText, BK_Vector2 newPos, int currentNode);
@@ -33,6 +33,7 @@ public:
 	int GetSize() { return (int)listOfObjects.size(); }
 
 	void CreateLevel(std::string fileName);
+	void ResetAllObjects();
 
 	void a3_SetPlayerDirection(Direction newDir) { playerInputDirection = newDir; }
 
@@ -43,6 +44,10 @@ private:
 	std::vector<a3_Object*> listOfGhostObjects;
 
 	float ghostTimer = 0;
+	float edibleTimer = 0;
+
+	int lives = 3;
+	int score = 0;
 };
 
 #endif
