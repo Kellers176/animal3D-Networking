@@ -238,6 +238,17 @@ void a3_ObjectManager::a3_UpdateAllObjects(float deltaTime)
 		{
 			listOfGhostObjects[k]->setIsEdible(false);
 		}
+
+		for (int k = 0; k < listOfGhostObjects.size(); k++)
+		{
+			listOfGhostObjects[k]->setIsEdible(false);
+			listOfGhostObjects[k]->setObjectColor(1, 1, 0);
+		}
+
+		for (int k = 0; k < listOfObjects.size(); k++)
+		{
+			listOfObjects[k]->setObjectColor(1, 1, 0);
+		}
 	}
 
 	// updating the players' movement
@@ -258,6 +269,12 @@ void a3_ObjectManager::a3_UpdateAllObjects(float deltaTime)
 					for (int k = 0; k < listOfGhostObjects.size(); k++)
 					{
 						listOfGhostObjects[k]->setIsEdible(true);
+						listOfGhostObjects[k]->setObjectColor(0, 1.0f, 1);
+					}
+
+					for (int k = 0; k < listOfObjects.size(); k++)
+					{
+						listOfObjects[k]->setObjectColor(0, 0, 1);
 					}
 				}
 				else
@@ -530,7 +547,7 @@ void a3_ObjectManager::a3_RenderAllObjects(a3_TextRenderer* newRenderer)
 
 	stringstream intToString;
 	std::string scoreString;
-	intToString <<"Score: "<< score;
+	intToString <<"Score:"<< score;
 	intToString >> scoreString;
 
 	a3byte* scoreShape[128][1];
@@ -553,7 +570,7 @@ void a3_ObjectManager::a3_RenderAllObjects(a3_TextRenderer* newRenderer)
 
 	stringstream livesToString;
 	std::string livesString;
-	livesToString <<"Lives: "<< lives;
+	livesToString <<"Lives:"<< lives;
 	livesToString >> livesString;
 
 	a3byte* livesShape[128][1];

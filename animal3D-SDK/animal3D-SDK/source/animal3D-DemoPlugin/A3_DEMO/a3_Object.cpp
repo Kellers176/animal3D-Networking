@@ -20,6 +20,11 @@ a3_Object::a3_Object(a3byte** newText, BK_Vector2 newPos)
 
 	//currentNode = -1;
 
+	objectColor.r = 1;
+	objectColor.g = 1;
+	objectColor.b = 0;
+	objectColor.a = 1;
+
 }
 
 a3_Object::~a3_Object()
@@ -60,7 +65,7 @@ void a3_Object::a3_RenderObject(a3_TextRenderer* newRenderer)
 {
 	//-1,-1,-1 is bottom left corner
 	//draw text
-	a3textDraw(newRenderer, objectKinematic.position.xVal, objectKinematic.position.yVal, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, objectShape[0]);
+	a3textDraw(newRenderer, objectKinematic.position.xVal, objectKinematic.position.yVal, 0.0f, objectColor.r, objectColor.g, objectColor.b, 1.0f, objectShape[0]);
 }
 
 

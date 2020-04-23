@@ -16,6 +16,11 @@ enum Direction
 	stop = 4
 };
 
+struct Color
+{
+	float r, g, b, a;
+};
+
 class a3_Object
 {
 public:
@@ -64,6 +69,15 @@ public:
 
 	void changeObjectShape(a3byte** newText) { objectShape[0] = newText[0];}
 	std::string getObjectShape() { return objectShape[0]; }
+
+	void setObjectColor(float r, float g, float b)
+	{
+		objectColor.r = r;
+		objectColor.g = g;
+		objectColor.b = b;
+		objectColor.a = 1;
+	}
+
 private:
 	const a3byte* objectShape[1];
 
@@ -84,6 +98,8 @@ private:
 
 	bool isEdible = true;
 	bool isPowerPip = false;
+
+	Color objectColor;
 };
 
 
