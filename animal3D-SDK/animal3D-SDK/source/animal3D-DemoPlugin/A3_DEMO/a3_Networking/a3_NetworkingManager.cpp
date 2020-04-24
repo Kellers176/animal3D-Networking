@@ -46,7 +46,7 @@ enum a3_NetGameMessages
 	ID_UPDATE_FOR_USER = 137,
 	ID_ADD_EVENT = 138,
 
-	ID_UPDATE_OBJECT_POS = 139,
+	//ID_UPDATE_OBJECT_POS = 139,
 	ID_CREATE_USERS_OBJECT = 140,
 	ID_CREATE_OWN_OBJECT = 141,
 	ID_SEND_PIP_GAINED, // from player to server to other player
@@ -391,6 +391,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					net->userID = newID;
 					break;
 				}
+				/*
 				case ID_UPDATE_OBJECT_POS:
 				{
 					int unitsID = -1;
@@ -409,7 +410,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					{
 						// redo these functions in object manager
 						newObjMan.a3_SetObjectPos(unitsID, BK_Vector2(newPosX, newPosY));
-						newObjMan.a3_SetObjectVel(unitsID, BK_Vector2(newVelX, newVelY));
+						//newObjMan.a3_SetObjectVel(unitsID, BK_Vector2(newVelX, newVelY));
 					}
 
 					for (int i = 0; i < 16; i++)
@@ -422,6 +423,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 
 					break;
 				}
+				*/
 				case ID_CREATE_USERS_OBJECT:
 				{
 					printf("\ncreating a new unit\n");

@@ -57,6 +57,7 @@ public:
 
 	void setDirection(Direction newDirection) { movement = newDirection; }
 	Direction getDirection() { return movement; }
+
 	void setPlayerInput(Direction newDirection) { playerInput = newDirection; }
 	Direction getPlayerInput() { return playerInput; }
 

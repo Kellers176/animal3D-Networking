@@ -300,7 +300,7 @@ void a3_ObjectManager::a3_UpdateAllObjects(float deltaTime)
 	{
 		// pacman's movement:
 		BK_Vector2 diff = listOfDynamicObjects[i]->getPosition() - listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->getPosition();
-		if (diff.magnitude() <= 0.001f)
+		if (diff.magnitude() <= 0.003f)
 		{
 			if (listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->getIsEdible())
 			{
@@ -680,14 +680,15 @@ void a3_ObjectManager::a3_CreateNewObjectWithID(int newID)
 	BK_Vector2 pacmanPos = BK_Vector2(listOfObjects[pacManStartNode]->getPosition().xVal, listOfObjects[pacManStartNode]->getPosition().yVal);
 
 	a3_Object* newObject = new a3_Object(objectShape, pacmanPos);
-
-	newObject->setObjectPos(pacmanPos.xVal, pacmanPos.yVal);
 	
 	newObject->setObjectID(newID);
 
 	newObject->setCurrentNode(pacManStartNode);
-	newObject->setPlayerInput(Direction::left);
 	newObject->setDirection(Direction::left);
+	newObject->setPlayerInput(Direction::left);
+
+	newObject->setIsStaticObject(false);
+	newObject->setCurrentNode(pacManStartNode);
 
 	listOfDynamicObjects.push_back(newObject);
 }
