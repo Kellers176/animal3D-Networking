@@ -49,10 +49,15 @@ enum a3_NetGameMessages
 	ID_UPDATE_OBJECT_POS = 139,
 	ID_CREATE_USERS_OBJECT = 140,
 	ID_CREATE_OWN_OBJECT = 141,
-	ID_SEND_PIP_GAINED,
+	ID_SEND_PIP_GAINED, // from player to server to other player
 	ID_SEND_POWER_GAINED,
-	ID_SEND_SCORE,
-	ID_SEND_DIRECTION
+	ID_SEND_SCORE, // from server to the players
+	ID_SEND_DIRECTION,
+
+	ID_START_GAME,
+	ID_PLAYER_DIED,
+
+	ID_SET_ID
 
 };
 
@@ -247,6 +252,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 				}
 				case ID_REMOTE_NEW_INCOMING_CONNECTION:
 				{
+					// redo some of this
 					printf("\nAnother client has connected.\n");
 					net->participants[net->numberOfParticipants].ID = net->numberOfParticipants;
 					net->participants[net->numberOfParticipants].lastPos = BK_Vector2(0, 0);
@@ -290,50 +296,37 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 				}
 				case ID_NEW_INCOMING_CONNECTION:
 				{
+					// redo this
+
 					// we add number of participants...
 					printf("\nA connection is incoming.\n");
 
-					RakNet::BitStream bsOut[1];
+					RakNet::BitStream idOutput[1];
+					idOutput->Write((RakNet::MessageID)ID_SET_ID);
+					idOutput->Write(net->numberOfParticipants);
 
-					// make the person create their object
-					bsOut->Write((RakNet::MessageID)ID_CREATE_OWN_OBJECT);
-					bsOut->Write(net->numberOfParticipants);
-
-					peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
-
-					// create an object with the id we sent them...
-					int tempID = net->numberOfParticipants;
-
-					newObjMan.a3_CreateNewObjectWithID(tempID);
-
-					// tell the new guy make objects for the other people
-					RakNet::BitStream bsToNewUserOut[1];
-					
-					if (net->numberOfParticipants > 0)
-					{
-						for (int i = 0; i < net->numberOfParticipants; i++)
-						{
-							bsToNewUserOut->Write((RakNet::MessageID)ID_CREATE_USERS_OBJECT);
-							bsToNewUserOut->Write(i);
-
-							peer->Send(bsToNewUserOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
-						}
-					}
-
-					RakNet::BitStream bsToOthersOut[1];
-					// tell the previous people to make a new person
-					if (net->numberOfParticipants > 0)
-					{
-						for (int i = 0; i < net->numberOfParticipants; i++)
-						{
-							bsToOthersOut->Write((RakNet::MessageID)ID_CREATE_USERS_OBJECT);
-							bsToOthersOut->Write(net->numberOfParticipants);
-
-							peer->Send(bsToOthersOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->peer->GetSystemAddressFromIndex(i), false);
-						}
-					}
+					peer->Send(idOutput, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 
 					net->numberOfParticipants = net->numberOfParticipants + 1;
+
+					if (net->numberOfParticipants == 2)
+					{
+						RakNet::BitStream bsOut[1];
+
+						bsOut->Write((RakNet::MessageID)ID_START_GAME);
+
+						if (net->numberOfParticipants > 0)
+						{
+							for (int i = 0; i < net->numberOfParticipants; i++)
+							{
+
+								peer->Send(bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->peer->GetSystemAddressFromIndex(i), false);
+							}
+						}
+					}
+
+
+
 
 					net->userID = -1;
 
@@ -389,7 +382,15 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					//a3_EventManager::Instance()->addEvent(shift_Event);
 					break;
 				}
+				case ID_SET_ID:
+				{
+					int newID = -1;
 
+					bs_in.Read(newID);
+
+					net->userID = newID;
+					break;
+				}
 				case ID_UPDATE_OBJECT_POS:
 				{
 					int unitsID = -1;
@@ -406,6 +407,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 
 					if (unitsID != net->userID)
 					{
+						// redo these functions in object manager
 						newObjMan.a3_SetObjectPos(unitsID, BK_Vector2(newPosX, newPosY));
 						newObjMan.a3_SetObjectVel(unitsID, BK_Vector2(newVelX, newVelY));
 					}
@@ -426,6 +428,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					int unitsID = -1;
 
 					bs_in.Read(unitsID);
+					// change this with dynamic objects for pacman
 					newObjMan.a3_CreateNewObjectWithID(unitsID);
 
 					break;
@@ -437,9 +440,72 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 
 					bs_in.Read(unitsID);
 					net->userID = unitsID;
+					// change this with dynamic objects for pacman
 					newObjMan.a3_CreateNewObjectWithID(unitsID);
 
+					
 					break;
+				}
+				case ID_SEND_PIP_GAINED:
+				{
+					int newPipPos = -1;
+					bs_in.Read(newPipPos);
+					// we will send which pip was eaten... (int)
+					newObjMan.a3_EatenPip(newPipPos);
+
+					// set the score 
+					if (net->isServer)
+					{
+						newObjMan.a3_SetScore(newObjMan.a3_GetScore() + 100);
+					}
+					break;
+				}
+				case ID_SEND_POWER_GAINED:
+				{
+					// this will be sent from the player to the server to the other players
+
+					int newPipPos = -1;
+					bs_in.Read(newPipPos);
+					// we will send which pip was eaten... (int)
+					newObjMan.a3_EatenPip(newPipPos);
+					newObjMan.a3_PowerGained();
+
+					// set the score 
+					if (net->isServer)
+					{
+						newObjMan.a3_SetScore(newObjMan.a3_GetScore() + 500);
+					}
+
+					break;
+				}
+				case ID_SEND_SCORE:
+				{
+					int newScore = 0;
+					bs_in.Read(newScore);
+					newObjMan.a3_SetScore(newScore);
+				}
+				case ID_SEND_DIRECTION:
+				{
+					int userID = -1;
+
+					bs_in.Read(userID);
+
+					int direction=-1;
+					bs_in.Read(direction);
+
+					if (userID != net->userID)
+						newObjMan.a3_SetPlayerDirection(userID, (Direction)direction);
+
+					break;
+				}
+				case ID_START_GAME:
+				{
+					// received by the server
+					std::string pacManMapFileName = "../../../../resource/PacManMap.txt";
+
+					int numOfPlayers = 2;
+
+					newObjMan.CreateLevel(pacManMapFileName, numOfPlayers);
 					break;
 				}
 				default:
@@ -460,7 +526,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 // process outbound packets
 a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan)
 {
-	
+	/*
 	RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
 
 	//RakNet::BitStream bsOut[1];
@@ -517,7 +583,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 		}
 
 	}
-	
+	*/
 	return 0;
 }
 

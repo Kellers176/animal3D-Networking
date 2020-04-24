@@ -213,7 +213,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\PacManMap.txt">
+    <Text Include="..\..\..\resource\PacManMap.txt">
       <Filter>Resource Files\Maps</Filter>
     </Text>
   </ItemGroup>

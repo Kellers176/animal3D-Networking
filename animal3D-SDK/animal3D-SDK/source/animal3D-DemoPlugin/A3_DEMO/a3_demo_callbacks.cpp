@@ -604,23 +604,23 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey
 	case '3':
 		pacManMapFileName = "../../../../resource/PacManMap.txt";
 		std::cout << pacManMapFileName << std::endl;
-		gameManager.objectManager.CreateLevel(pacManMapFileName);
+		gameManager.objectManager.CreateLevel(pacManMapFileName,1);
 		break;
 	case 'W':
 	case 'w':
-		gameManager.objectManager.a3_SetPlayerDirection(Direction::up);
+		gameManager.objectManager.a3_SetPlayerDirection(gameManager.net->userID, Direction::up);
 		break;
 	case 'A':
 	case 'a':
-		gameManager.objectManager.a3_SetPlayerDirection(Direction::left);
+		gameManager.objectManager.a3_SetPlayerDirection(gameManager.net->userID, Direction::left);
 		break;
 	case 'S':
 	case 's':
-		gameManager.objectManager.a3_SetPlayerDirection(Direction::down);
+		gameManager.objectManager.a3_SetPlayerDirection(gameManager.net->userID, Direction::down);
 		break;
 	case 'D':
 	case 'd':
-		gameManager.objectManager.a3_SetPlayerDirection(Direction::right);
+		gameManager.objectManager.a3_SetPlayerDirection(gameManager.net->userID, Direction::right);
 		break;
 		// reload (T) or toggle (t) text
 //	case 'T':

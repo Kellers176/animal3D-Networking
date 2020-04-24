@@ -7,6 +7,44 @@
 #include <string>
 using namespace std;
 
+void a3_ObjectManager::a3_PowerGained()
+{
+	// make all ghosts edible for X sec
+	edibleTimer = 0;
+
+	for (int k = 0; k < listOfGhostObjects.size(); k++)
+	{
+		listOfGhostObjects[k]->setIsEdible(true);
+		listOfGhostObjects[k]->setObjectColor(0, 1.0f, 1);
+	}
+
+	for (int k = 0; k < listOfObjects.size(); k++)
+	{
+		listOfObjects[k]->setObjectColor(0, 0, 1);
+	}
+}
+
+void a3_ObjectManager::a3_EatenPip(int pipPos)
+{
+	a3byte* blankSpaceShape[1];
+	blankSpaceShape[0] = " ";
+	listOfObjects[listOfDynamicObjects[pipPos]->getCurrentNode()]->changeObjectShape(blankSpaceShape);
+	listOfObjects[listOfDynamicObjects[pipPos]->getCurrentNode()]->setIsEdible(false);
+}
+
+void a3_ObjectManager::a3_SetPlayerDirection(int playerID, Direction newDir)
+{
+	for (int i = 0; i < listOfDynamicObjects.size(); i++)
+	{
+		if (listOfDynamicObjects[i]->getObjectID() == playerID)
+		{
+			listOfDynamicObjects[i]->setPlayerInput(newDir);
+		}
+	}
+}
+
+
+
 void a3_ObjectManager::ResetAllObjects()
 {
 	lives--;
@@ -60,7 +98,8 @@ void a3_ObjectManager::ResetAllObjects()
 	// subtract life here...
 }
 
-void a3_ObjectManager::CreateLevel(std::string fileName)
+// edit this
+void a3_ObjectManager::CreateLevel(std::string fileName,int numberOfPlayers)
 {
 	// variables used for reading in from the file
 	ifstream fin;
@@ -190,12 +229,17 @@ void a3_ObjectManager::CreateLevel(std::string fileName)
 	fin.close();
 
 	// we have loaded the map and now we will spawn pacman
-	a3byte* pacmanShape[1];
-	pacmanShape[0] = "@";
+	for (int i = 0; i < numberOfPlayers; i++)
+	{
+		a3byte* pacmanShape[1];
+		pacmanShape[0] = "@";
 
-	BK_Vector2 pacmanPos = BK_Vector2(listOfObjects[348]->getPosition().xVal, listOfObjects[348]->getPosition().yVal);
+		BK_Vector2 pacmanPos = BK_Vector2(listOfObjects[348]->getPosition().xVal, listOfObjects[348]->getPosition().yVal);
 
-	a3_CreateNewDynamicObject(pacmanShape, pacmanPos, 348);
+		//a3_CreateNewDynamicObject(pacmanShape, pacmanPos, 348);
+		a3_CreateNewObjectWithID(i);
+	}
+
 
 	// creating ghosts:
 	a3byte* binkyShape[1];
@@ -286,9 +330,11 @@ void a3_ObjectManager::a3_UpdateAllObjects(float deltaTime)
 				blankSpaceShape[0] = " ";
 				listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->changeObjectShape(blankSpaceShape);
 				listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->setIsEdible(false);
+
+				// sending an event of some sort so the networking manager knows to send that we ate the pip
 			}
 
-			bool isSameDirection = (playerInputDirection == listOfDynamicObjects[i]->getDirection());
+			bool isSameDirection = (listOfDynamicObjects[i]->getPlayerInput() == listOfDynamicObjects[i]->getDirection());
 
 			// change in direction
 
@@ -296,11 +342,11 @@ void a3_ObjectManager::a3_UpdateAllObjects(float deltaTime)
 			{
 				int playerDirection = listOfDynamicObjects[i]->getDirection();
 				int oldCurrentNode = listOfDynamicObjects[i]->getCurrentNode();
-				int newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(playerInputDirection);
+				int newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(listOfDynamicObjects[i]->getPlayerInput());
 
 				if (listOfObjects[newCurrentNode]->getCanMoveToThisObject())
 				{
-					listOfDynamicObjects[i]->setDirection(playerInputDirection);
+					listOfDynamicObjects[i]->setDirection(listOfDynamicObjects[i]->getPlayerInput());
 					listOfDynamicObjects[i]->setCurrentNode(newCurrentNode);
 				}
 				else
@@ -459,8 +505,8 @@ void a3_ObjectManager::a3_UpdateAllObjects(float deltaTime)
 						}
 						else
 						{
-							playerInputDirection = listOfGhostObjects[i]->getDirection();
-							newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(playerInputDirection);
+							Direction ghostDirection = listOfGhostObjects[i]->getDirection();
+							newCurrentNode = listOfObjects[oldCurrentNode]->getConnections(ghostDirection);
 							listOfGhostObjects[i]->setCurrentNode(newCurrentNode);
 
 						}
@@ -623,19 +669,25 @@ void a3_ObjectManager::a3_CreateNewGhostObject(a3byte** newText, BK_Vector2 newP
 	listOfGhostObjects.push_back(newObject);
 }
 
-
+// creates a player obj with an id
 void a3_ObjectManager::a3_CreateNewObjectWithID(int newID)
 {
 	a3byte* objectShape[1];
 	objectShape[0] = "@";
 
-	BK_Vector2 pacmanPos = BK_Vector2(listOfObjects[348]->getPosition().xVal, listOfObjects[348]->getPosition().yVal);
+	int pacManStartNode = 348;
+
+	BK_Vector2 pacmanPos = BK_Vector2(listOfObjects[pacManStartNode]->getPosition().xVal, listOfObjects[pacManStartNode]->getPosition().yVal);
 
 	a3_Object* newObject = new a3_Object(objectShape, pacmanPos);
 
 	newObject->setObjectPos(pacmanPos.xVal, pacmanPos.yVal);
 	
 	newObject->setObjectID(newID);
+
+	newObject->setCurrentNode(pacManStartNode);
+	newObject->setPlayerInput(Direction::left);
+	newObject->setDirection(Direction::left);
 
 	listOfDynamicObjects.push_back(newObject);
 }
@@ -648,13 +700,14 @@ a3_Object* a3_ObjectManager::a3_GetObjectInPos(int objPos)
 		return nullptr;
 }
 
+// gets the dynamic object
 a3_Object* a3_ObjectManager::a3_GetObjectFromID(int unitID)
 {
-	for (int i = 0; i < listOfObjects.size(); i++)
+	for (int i = 0; i < listOfDynamicObjects.size(); i++)
 	{
-		if (listOfObjects[i]->getObjectID() == unitID)
+		if (listOfDynamicObjects[i]->getObjectID() == unitID)
 		{
-			return listOfObjects[i];
+			return listOfDynamicObjects[i];
 		}
 	}
 	return nullptr;

@@ -57,6 +57,8 @@ public:
 
 	void setDirection(Direction newDirection) { movement = newDirection; }
 	Direction getDirection() { return movement; }
+	void setPlayerInput(Direction newDirection) { playerInput = newDirection; }
+	Direction getPlayerInput() { return playerInput; }
 
 	void setHasStartMoving(bool newBool) { hasStartedMoving = newBool; }
 	bool getHasStartedMoving() { return hasStartedMoving; }
@@ -92,6 +94,7 @@ private:
 	std::vector<int> connectionPos;
 
 	Direction movement;
+	Direction playerInput;
 	int currentNode;
 
 	bool hasStartedMoving = false;

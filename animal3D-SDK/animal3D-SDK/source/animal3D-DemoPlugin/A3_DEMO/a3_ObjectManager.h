@@ -24,6 +24,7 @@ public:
 	void a3_CreateNewObjectWithID(int newID);
 
 	a3_Object* a3_GetObjectInPos(int objPos);
+	// gets the dynamic object
 	a3_Object* a3_GetObjectFromID(int unitID);
 
 	void a3_SetObjectPos(int objID, BK_Vector2 newPos);
@@ -32,13 +33,18 @@ public:
 
 	int GetSize() { return (int)listOfObjects.size(); }
 
-	void CreateLevel(std::string fileName);
+	void CreateLevel(std::string fileName, int numberOfPlayers);
 	void ResetAllObjects();
 
-	void a3_SetPlayerDirection(Direction newDir) { playerInputDirection = newDir; }
+	void a3_SetPlayerDirection(int playerID, Direction newDir);
+
+	void a3_SetScore(int newScore) { score = newScore; }
+	int a3_GetScore() { return score; }
+
+	void a3_PowerGained();
+	void a3_EatenPip(int pipPos);
 
 private:
-	Direction playerInputDirection =Direction::left;
 	std::vector<a3_Object*> listOfObjects;
 	std::vector<a3_Object*> listOfDynamicObjects; // actually player but i dont want to rename
 	std::vector<a3_Object*> listOfGhostObjects;
