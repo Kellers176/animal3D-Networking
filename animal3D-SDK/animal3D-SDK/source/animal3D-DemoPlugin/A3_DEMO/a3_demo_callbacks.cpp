@@ -624,19 +624,6 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey
 	case 'd':
 		gameManager.objectManager.a3_SetPlayerDirection(gameManager.net->userID, Direction::right);
 		break;
-
-	case '8':
-		gameManager.objectManager.a3_SetPlayerDirection(1, Direction::up);
-		break;
-	case '4':
-		gameManager.objectManager.a3_SetPlayerDirection(1, Direction::left);
-		break;
-	case '5':
-		gameManager.objectManager.a3_SetPlayerDirection(1, Direction::down);
-		break;
-	case '6':
-		gameManager.objectManager.a3_SetPlayerDirection(1, Direction::right);
-		break;
 		// reload (T) or toggle (t) text
 //	case 'T':
 //		if (!a3textIsInitialized(demoState->text))

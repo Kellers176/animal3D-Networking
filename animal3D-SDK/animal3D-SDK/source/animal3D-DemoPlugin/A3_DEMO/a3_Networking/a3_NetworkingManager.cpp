@@ -427,7 +427,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 
 						// redo these functions in object manager
 						newObjMan.a3_SetObjectPos(unitsID, BK_Vector2(newPosX, newPosY));
-						newObjMan.a3_SetPlayerDirection(net->userID, (Direction) newObjectDir);
+						newObjMan.a3_SetPlayerDirection(unitsID, (Direction) newObjectDir);
 						//newObjMan.a3_SetObjectVel(unitsID, BK_Vector2(newVelX, newVelY));
 					}
 
