@@ -57,7 +57,8 @@ enum a3_NetGameMessages
 	ID_START_GAME,
 	ID_PLAYER_DIED,
 
-	ID_SET_ID
+	ID_SET_ID,
+	ID_RESET_OBJ_POS
 
 };
 
@@ -315,6 +316,13 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 
 						bsOut->Write((RakNet::MessageID)ID_START_GAME);
 
+						// received by the server
+						std::string pacManMapFileName = "../../../../resource/PacManMap.txt";
+
+						int numOfPlayers = 2;
+
+						newObjMan.CreateLevel(pacManMapFileName, numOfPlayers);
+
 						if (net->numberOfParticipants > 0)
 						{
 							for (int i = 0; i < net->numberOfParticipants; i++)
@@ -327,8 +335,8 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 
 
 
-
-					net->userID = -1;
+					if (net->isServer)
+						net->userID = -1;
 
 					break;
 				}
@@ -396,8 +404,6 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					int unitsID = -1;
 					bs_in.Read(unitsID);
 
-					printf("\nupdating pos of" + unitsID);
-
 					float newPosX, newPosY, newVelX, newVelY;
 
 					bs_in.Read(newPosX);
@@ -411,6 +417,8 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 
 					if (unitsID != net->userID)
 					{
+						printf("\nupdating pos of" + unitsID);
+
 						// redo these functions in object manager
 						newObjMan.a3_SetObjectPos(unitsID, BK_Vector2(newPosX, newPosY));
 						newObjMan.a3_SetPlayerDirection(net->userID, newObjectDir);
