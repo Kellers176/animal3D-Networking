@@ -588,44 +588,56 @@ void a3_ObjectManager::a3_RenderAllObjects(a3_TextRenderer* newRenderer)
 
 	BK_Vector2 scorePos = BK_Vector2(0, 0.1f);
 
-	stringstream intToString;
-	std::string scoreString;
-	intToString <<"Score:"<< score;
-	intToString >> scoreString;
+//	stringstream intToString;
+//	std::string scoreString;
+//	intToString <<"Score:"<< score;
+//	intToString >> scoreString;
 
-	a3byte* scoreShape[128][1];
+	string titleScore;
+	std::string scoreString;
+	titleScore = "Score:";
+	titleScore = titleScore + scoreString;
+	//	cout  <<"Score:"<< score;
+
+//	a3byte* scoreShape[128];
+	a3byte* scoreShape;
+	scoreShape = "Score: ";
 	
 
-	for (int i = 0; i < scoreString.size(); i++)
-	{
-		scorePos.xVal += 0.03f;
-		a3i8* charVal = new a3i8();
-		*charVal = scoreString[i];
-		scoreShape[i][0] = charVal;
-
-		a3textDraw(newRenderer, scorePos.xVal, scorePos.yVal, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, scoreShape[i][0]);
-	}
+//	for (int i = 0; i < titleScore.size(); i++)
+//	{
+//		scorePos.xVal += 0.03f;
+//		a3i8* charVal = new a3i8();
+//		*charVal = titleScore[i];
+//		scoreShape[i] = charVal;
+//
+//	}
+	a3textDraw(newRenderer, scorePos.xVal, scorePos.yVal, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, scoreShape);
 
 	// show lives
 
 
 	BK_Vector2 livesPos = BK_Vector2(0, 0);
 
-	stringstream livesToString;
-	std::string livesString;
-	livesToString <<"Lives:"<< lives;
-	livesToString >> livesString;
+//	stringstream livesToString;
+//	std::string livesString;
+//	livesToString <<"Lives:"<< lives;
+//	livesToString >> livesString;
 
-	a3byte* livesShape[128][1];
-	for (int i = 0; i < livesString.size(); i++)
-	{
-		livesPos.xVal += 0.03f;
-		a3i8* charVal = new a3i8();
-		*charVal = livesString[i];
-		livesShape[i][0] = charVal;
+	a3byte* livesShape;
+	livesShape = "Lives: ";
 
-		a3textDraw(newRenderer, livesPos.xVal, livesPos.yVal, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, livesShape[i][0]);
-	}
+
+
+//	for (int i = 0; i < livesString.size(); i++)
+//	{
+//		livesPos.xVal += 0.03f;
+//		a3i8* charVal = new a3i8();
+//		*charVal = livesString[i];
+//		livesShape[i][0] = charVal;
+//
+//	}
+	a3textDraw(newRenderer, livesPos.xVal, livesPos.yVal, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, livesShape);
 	
 }
 
