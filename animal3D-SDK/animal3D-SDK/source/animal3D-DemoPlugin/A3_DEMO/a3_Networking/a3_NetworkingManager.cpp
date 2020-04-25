@@ -560,11 +560,11 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 
 					// newObjMan.a3_GetObjectInPos(j);
 
-					bsServerOut->Write(newObjMan.a3_GetObjectInPos(j)->getObjectID());
-					bsServerOut->Write(newObjMan.a3_GetObjectInPos(j)->getPosition().xVal);
-					bsServerOut->Write(newObjMan.a3_GetObjectInPos(j)->getPosition().yVal);
-					bsServerOut->Write(newObjMan.a3_GetObjectInPos(j)->getVelocity().xVal);
-					bsServerOut->Write(newObjMan.a3_GetObjectInPos(j)->getVelocity().yVal);
+					bsServerOut->Write(newObjMan.a3_GetObjectFromID(j)->getObjectID());
+					bsServerOut->Write(newObjMan.a3_GetObjectFromID(j)->getPosition().xVal);
+					bsServerOut->Write(newObjMan.a3_GetObjectFromID(j)->getPosition().yVal);
+					bsServerOut->Write(newObjMan.a3_GetObjectFromID(j)->getVelocity().xVal);
+					bsServerOut->Write(newObjMan.a3_GetObjectFromID(j)->getVelocity().yVal);
 					bsServerOut->Write((int)newObjMan.a3_GetObjectFromID(j)->getDirection());
 
 
