@@ -587,21 +587,25 @@ void a3_ObjectManager::a3_RenderAllObjects(a3_TextRenderer* newRenderer)
 	// show teh score
 
 	BK_Vector2 scorePos = BK_Vector2(0, 0.1f);
+	BK_Vector2 scorePos2 = BK_Vector2(0, 0.2f);
 
 //	stringstream intToString;
 //	std::string scoreString;
 //	intToString <<"Score:"<< score;
 //	intToString >> scoreString;
 
-	string titleScore;
-	std::string scoreString;
-	titleScore = "Score:";
-	titleScore = titleScore + scoreString;
-	//	cout  <<"Score:"<< score;
-
 //	a3byte* scoreShape[128];
+
+	//first display score
 	a3byte* scoreShape;
 	scoreShape = "Score: ";
+
+	//next display number
+	int i = score;
+	a3i8 c = i;
+ 	a3byte* scoreInt[1];
+	scoreInt[0] = (a3byte*)c;
+	//scoreInt = score;
 	
 
 //	for (int i = 0; i < titleScore.size(); i++)
@@ -613,21 +617,24 @@ void a3_ObjectManager::a3_RenderAllObjects(a3_TextRenderer* newRenderer)
 //
 //	}
 	a3textDraw(newRenderer, scorePos.xVal, scorePos.yVal, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, scoreShape);
+//	a3textDraw(newRenderer, scorePos2.xVal, scorePos2.yVal, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, c);
 
 	// show lives
 
 
 	BK_Vector2 livesPos = BK_Vector2(0, 0);
+	BK_Vector2 livesPos2 = BK_Vector2(0, 0.1f);
 
 //	stringstream livesToString;
 //	std::string livesString;
 //	livesToString <<"Lives:"<< lives;
 //	livesToString >> livesString;
 
+	//first display Lives
 	a3byte* livesShape;
 	livesShape = "Lives: ";
 
-
+	//next display number
 
 //	for (int i = 0; i < livesString.size(); i++)
 //	{
