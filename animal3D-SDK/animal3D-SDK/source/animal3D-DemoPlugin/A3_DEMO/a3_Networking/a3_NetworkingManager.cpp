@@ -551,7 +551,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 			// sending to everyone:
 			for (unsigned int i = 0; i < net->peer->GetNumberOfAddresses(); i++)
 			{
-				for (int j = 0; j < newObjMan.GetSize(); j++)
+				for (int j = 0; j < newObjMan.GetDynamicObjectSize(); j++)
 				{
 					RakNet::BitStream bsServerOut[1];
 

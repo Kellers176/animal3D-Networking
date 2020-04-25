@@ -31,7 +31,9 @@ public:
 	void a3_SetObjectVel(int objID, BK_Vector2 newPos);
 	void a3_SetObjectRotation(int objID, float newRotation);
 
-	int GetSize() { return (int)listOfObjects.size(); }
+	int GetObjectMapSize() { return (int)listOfObjects.size(); }
+	int GetDynamicObjectSize() { return (int)listOfDynamicObjects.size(); }
+	int GetGhostObjectSize() { return (int)listOfGhostObjects.size(); }
 
 	void CreateLevel(std::string fileName, int numberOfPlayers);
 	void ResetAllObjects();
