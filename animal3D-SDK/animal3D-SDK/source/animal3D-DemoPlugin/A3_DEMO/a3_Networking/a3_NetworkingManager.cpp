@@ -46,7 +46,7 @@ enum a3_NetGameMessages
 	ID_UPDATE_FOR_USER = 137,
 	ID_ADD_EVENT = 138,
 
-	//ID_UPDATE_OBJECT_POS = 139,
+	ID_UPDATE_OBJECT_POS = 139,
 	ID_CREATE_USERS_OBJECT = 140,
 	ID_CREATE_OWN_OBJECT = 141,
 	ID_SEND_PIP_GAINED, // from player to server to other player
@@ -391,7 +391,6 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					net->userID = newID;
 					break;
 				}
-				/*
 				case ID_UPDATE_OBJECT_POS:
 				{
 					int unitsID = -1;
@@ -406,10 +405,15 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					bs_in.Read(newVelX);
 					bs_in.Read(newVelY);
 
+					Direction newObjectDir;
+
+					bs_in.Read(newObjectDir);
+
 					if (unitsID != net->userID)
 					{
 						// redo these functions in object manager
 						newObjMan.a3_SetObjectPos(unitsID, BK_Vector2(newPosX, newPosY));
+						newObjMan.a3_SetPlayerDirection(net->userID, newObjectDir);
 						//newObjMan.a3_SetObjectVel(unitsID, BK_Vector2(newVelX, newVelY));
 					}
 
@@ -423,7 +427,6 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 
 					break;
 				}
-				*/
 				case ID_CREATE_USERS_OBJECT:
 				{
 					printf("\ncreating a new unit\n");
@@ -528,7 +531,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 // process outbound packets
 a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan)
 {
-	/*
+
 	RakNet::RakPeerInterface* peer = (RakNet::RakPeerInterface*)net->peer;
 
 	//RakNet::BitStream bsOut[1];
@@ -554,6 +557,8 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 					bsServerOut->Write(newObjMan.a3_GetObjectInPos(j)->getPosition().yVal);
 					bsServerOut->Write(newObjMan.a3_GetObjectInPos(j)->getVelocity().xVal);
 					bsServerOut->Write(newObjMan.a3_GetObjectInPos(j)->getVelocity().yVal);
+					bsServerOut->Write((int)newObjMan.a3_GetObjectFromID(j)->getDirection());
+
 
 					net->peer->Send(bsServerOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, true);
 
@@ -577,6 +582,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 				bsClientOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getPosition().yVal);
 				bsClientOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getVelocity().xVal);
 				bsClientOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getVelocity().yVal);
+				bsClientOut->Write((int)newObjMan.a3_GetObjectFromID(net->userID)->getDirection());
 
 				//sending to server
 				net->peer->Send(bsClientOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, false);
@@ -585,7 +591,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 		}
 
 	}
-	*/
+	
 	return 0;
 }
 

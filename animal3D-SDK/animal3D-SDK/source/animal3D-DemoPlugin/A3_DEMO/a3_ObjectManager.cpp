@@ -586,9 +586,6 @@ void a3_ObjectManager::a3_RenderAllObjects(a3_TextRenderer* newRenderer)
 
 	// show teh score
 
-	float frameWidth = 960;
-	float frameHeight = 540;
-
 	BK_Vector2 scorePos = BK_Vector2(0, 0.1f);
 
 	stringstream intToString;
