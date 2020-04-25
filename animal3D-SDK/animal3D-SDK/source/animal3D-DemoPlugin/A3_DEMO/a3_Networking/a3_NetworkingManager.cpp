@@ -32,6 +32,8 @@
 #include "RakNet/BitStream.h"
 #include "RakNet/GetTime.h"
 #include <string>
+#include <sstream>
+#include <iostream>
 
 //-----------------------------------------------------------------------------
 // networking stuff
@@ -411,17 +413,21 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					bs_in.Read(newVelX);
 					bs_in.Read(newVelY);
 
-					Direction newObjectDir;
+					int newObjectDir;
 
 					bs_in.Read(newObjectDir);
 
 					if (unitsID != net->userID)
 					{
-						printf("\nupdating pos of" + unitsID);
+						std::stringstream ss;
+						ss << "\nupdating_pos_of" << unitsID;;
+						std::string outputString;
+						ss >> outputString;
+						std::cout << outputString << std::endl;
 
 						// redo these functions in object manager
 						newObjMan.a3_SetObjectPos(unitsID, BK_Vector2(newPosX, newPosY));
-						newObjMan.a3_SetPlayerDirection(net->userID, newObjectDir);
+						newObjMan.a3_SetPlayerDirection(unitsID, (Direction) newObjectDir);
 						//newObjMan.a3_SetObjectVel(unitsID, BK_Vector2(newVelX, newVelY));
 					}
 
@@ -497,13 +503,14 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					bs_in.Read(newScore);
 					newObjMan.a3_SetScore(newScore);
 				}
+				/*
 				case ID_SEND_DIRECTION:
 				{
 					int userID = -1;
 
 					bs_in.Read(userID);
 
-					int direction=-1;
+					int direction= -1;
 					bs_in.Read(direction);
 
 					if (userID != net->userID)
@@ -511,6 +518,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 
 					break;
 				}
+				*/
 				case ID_START_GAME:
 				{
 					// received by the server
