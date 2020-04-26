@@ -413,9 +413,10 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 					bs_in.Read(newVelX);
 					bs_in.Read(newVelY);
 
-					int newObjectDir;
-
+					int newObjectDir = -1;
+					int newCurrentNode = -1;
 					bs_in.Read(newObjectDir);
+					bs_in.Read(newCurrentNode);
 
 					if (unitsID != net->userID)
 					{
@@ -428,6 +429,7 @@ a3i32 a3netProcessInbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMan
 						// redo these functions in object manager
 						newObjMan.a3_SetObjectPos(unitsID, BK_Vector2(newPosX, newPosY));
 						newObjMan.a3_SetPlayerDirection(unitsID, (Direction) newObjectDir);
+						newObjMan.a3_GetObjectFromID(unitsID)->setCurrentNode(newCurrentNode);
 						//newObjMan.a3_SetObjectVel(unitsID, BK_Vector2(newVelX, newVelY));
 					}
 
@@ -574,6 +576,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 					bsServerOut->Write(newObjMan.a3_GetObjectFromID(j)->getVelocity().xVal);
 					bsServerOut->Write(newObjMan.a3_GetObjectFromID(j)->getVelocity().yVal);
 					bsServerOut->Write((int)newObjMan.a3_GetObjectFromID(j)->getDirection());
+					bsServerOut->Write((int)newObjMan.a3_GetObjectFromID(j)->getCurrentNode());
 
 
 					net->peer->Send(bsServerOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, true);
@@ -599,6 +602,7 @@ a3i32 a3netProcessOutbound(a3_NetworkingManager* net, a3_ObjectManager& newObjMa
 				bsClientOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getVelocity().xVal);
 				bsClientOut->Write(newObjMan.a3_GetObjectFromID(net->userID)->getVelocity().yVal);
 				bsClientOut->Write((int)newObjMan.a3_GetObjectFromID(net->userID)->getDirection());
+				bsClientOut->Write((int)newObjMan.a3_GetObjectFromID(net->userID)->getCurrentNode());
 
 				//sending to server
 				net->peer->Send(bsClientOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, net->serverAddress, false);
