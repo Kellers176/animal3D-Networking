@@ -437,7 +437,7 @@ void a3_ObjectManager::a3_UpdateAllObjects(float deltaTime)
 		if (listOfGhostObjects[i]->getHasStartedMoving())
 		{
 			BK_Vector2 diff = listOfGhostObjects[i]->getPosition() - listOfObjects[listOfGhostObjects[i]->getCurrentNode()]->getPosition();
-			if (diff.magnitude() <= 0.001f)
+			if (diff.magnitude() <= 0.0013f)
 			{
 				std::cout << "\nwe reached our goal baby\n";
 
