@@ -714,22 +714,22 @@ a3_Object* a3_ObjectManager::a3_GetObjectFromID(int unitID)
 //for all other objects that are not us, update Position
 void a3_ObjectManager::a3_SetObjectPos(int objID, BK_Vector2 newPos)
 {
-	for (int i = 0; i < listOfObjects.size(); i++)
+	for (int i = 0; i < listOfDynamicObjects.size(); i++)
 	{
-		if (listOfObjects[i]->getObjectID() == objID)
+		if (listOfDynamicObjects[i]->getObjectID() == objID)
 		{
-			listOfObjects[i]->setObjectPos(newPos.xVal, newPos.yVal);
+			listOfDynamicObjects[i]->setObjectPos(newPos.xVal, newPos.yVal);
 		}
 	}
 }
 
 void a3_ObjectManager::a3_SetObjectVel(int objID, BK_Vector2 newVel)
 {
-	for (int i = 0; i < listOfObjects.size(); i++)
+	for (int i = 0; i < listOfDynamicObjects.size(); i++)
 	{
-		if (listOfObjects[i]->getObjectID() == objID)
+		if (listOfDynamicObjects[i]->getObjectID() == objID)
 		{
-			listOfObjects[i]->setObjectVelocity(newVel.xVal, newVel.yVal);
+			listOfDynamicObjects[i]->setObjectVelocity(newVel.xVal, newVel.yVal);
 		}
 	}
 }
