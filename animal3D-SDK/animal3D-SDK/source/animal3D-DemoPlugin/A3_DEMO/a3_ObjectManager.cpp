@@ -300,7 +300,7 @@ void a3_ObjectManager::a3_UpdateAllObjects(float deltaTime)
 	{
 		// pacman's movement:
 		BK_Vector2 diff = listOfDynamicObjects[i]->getPosition() - listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->getPosition();
-		if (diff.magnitude() <= 0.003f)
+		if (diff.magnitude() <= 0.0035f)
 		{
 			if (listOfObjects[listOfDynamicObjects[i]->getCurrentNode()]->getIsEdible())
 			{
@@ -437,7 +437,7 @@ void a3_ObjectManager::a3_UpdateAllObjects(float deltaTime)
 		if (listOfGhostObjects[i]->getHasStartedMoving())
 		{
 			BK_Vector2 diff = listOfGhostObjects[i]->getPosition() - listOfObjects[listOfGhostObjects[i]->getCurrentNode()]->getPosition();
-			if (diff.magnitude() <= 0.0013f)
+			if (diff.magnitude() <= 0.001f)
 			{
 				std::cout << "\nwe reached our goal baby\n";
 
@@ -600,9 +600,9 @@ void a3_ObjectManager::a3_RenderAllObjects(a3_TextRenderer* newRenderer)
 	
 	for (int i = 0; i < intToString.size() - 1; i++)
 	{
-		a3i8 charVal;
-		charVal = intToString[i];
-		scoreInt[i][0] = &charVal;
+		a3i8* charVal = new a3i8();
+		*charVal = intToString[i];
+		scoreInt[i][0] = charVal;
 		a3textDraw(newRenderer, scorePos2.xVal, scorePos2.yVal, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, scoreInt[i][0]);
 		scorePos2.xVal += 0.03f;
 	}
@@ -619,9 +619,9 @@ void a3_ObjectManager::a3_RenderAllObjects(a3_TextRenderer* newRenderer)
 	intToString2 = to_string(lives);
 	a3byte* livesInt[1];
 
-	a3i8 charVal2;
-	charVal2 = intToString2[0];
-	livesInt[0] = &charVal2;
+	a3i8* charVal2 = new a3i8();
+	*charVal2 = intToString2[0];
+	livesInt[0] = charVal2;
 
 	a3textDraw(newRenderer, livesPos.xVal, livesPos.yVal, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, livesShape);
 	a3textDraw(newRenderer, livesPos2.xVal, livesPos2.yVal, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, livesInt[0]);
